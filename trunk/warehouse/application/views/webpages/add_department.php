@@ -156,7 +156,7 @@
                     success: function(json) {
                         if (json == 1) {
                             $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إضافة الدائرة بنجاح");
+                            $('#message').text("تم إضافة الدائرة  بنجاح");
                             $('#reset').click();
                         }else{
                             $('#status').addClass('alert alert-error');
