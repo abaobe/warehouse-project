@@ -31,7 +31,7 @@ class Departments extends CI_Controller {
         $this->load->view('webpages/add_department');
     }
     
-    public function do_add_product() {
+    public function do_add_department() {
         $data['department_name'] = $this->input->post('department_name');
         $data['address'] = $this->input->post('address');
         $data['phone'] = $this->input->post('phone');
