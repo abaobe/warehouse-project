@@ -88,12 +88,12 @@
                                                 <tr class="odd gradeX">
                                                     <td status="<?= $value['STATUS'] ?>"><input type="checkbox" class="checkboxes" value="1" /></td>
                                                     <td name="pname" class="hidden-phone"><?= $value['ORDER_NUMBER'] ?></td>
-                                                    <td name="pname" class="hidden-phone"><?= $value['PROVIDED_FROM'] ?></td>
+                                                    <td name="pname" class="hidden-phone"><?= $value['DEPARTMENT_NAME'] ?></td>
                                                     <td class="hidden-phone"><?= $value['ADDED_DATE'] ?></td>
                                                     <td class="hidden-phone">
                                                         <a href='#' id="disburse" class="btn mini purple" order_number="<?= $value['ORDER_NUMBER'] ?>" data-reveal-id="myModal">صرف لوازم</a>
                                                         <a href='#' class="btn mini purple"><i class="icon-edit"></i> عرض</a>
-                                                        <button id="refuse" class="btn mini purple" onclick="refuse_order('<?= $value['ORDER_NUMBER'] ?>', this)"><i class="icon-edit"></i> عرض</button>
+                                                        <button id="refuse" class="btn mini purple" onclick="refuse_order('<?= $value['ORDER_NUMBER'] ?>', this)"><i class="icon-edit"></i> رفـض</button>
                                                     </td>
                                                 </tr>
                                             <?php } ?>

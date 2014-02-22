@@ -9,6 +9,7 @@ class Product extends CI_Controller {
         parent::__construct();
         $this->load->model('category_model');
         $this->load->model('product_model');
+        $this->load->model('department_model');
     }
 
     public function index() {
@@ -116,7 +117,8 @@ class Product extends CI_Controller {
     }
 
     public function supplies_order() {
-        $this->load->view('webpages/supplies_order');
+        $result['departments'] = $this->department_model->get_departments_names();
+        $this->load->view('webpages/supplies_order', $result);
     }
 
     public function do_supply_order() {
@@ -178,6 +180,11 @@ class Product extends CI_Controller {
         if ($index == $size) {
             echo json_encode($result);
         }
+    }
+    
+    public function inventory_supplies(){
+        $result['categories'] = $this->category_model->get_all_categories();
+        $this->load->view('webpages/inventory_supplies',$result);
     }
 
 }

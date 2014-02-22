@@ -30,7 +30,7 @@
                                     <div class="control-group">
                                         <label class="control-label">مقدم من</label>
                                         <div class="controls">
-                                            <label class="control-label"><?= $info['PROVIDED_FROM'] ?></label>
+                                            <label class="control-label"><?= $info['DEPARTMENT_NAME'] ?></label>
                                         </div>
                                     </div>
                                     <div class="control-group">

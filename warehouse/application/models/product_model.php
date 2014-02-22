@@ -146,7 +146,7 @@ class Product_model extends CI_Model {
         $params = array(
             array('name' => ':product_id', 'value' => &$order_info[0]),
             array('name' => ':quantity', 'value' => &$order_info[3]),
-            array('name' => ':provided_from', 'value' => &$order_info[1]),
+            array('name' => ':department_id', 'value' => &$order_info[1]),
             array('name' => ':notes', 'value' => &$order_info[2]),
             array('name' => ':applicant_id', 'value' => &$r), //notes: this will take value from session
             array('name' => ':unit_type', 'value' => &$order_info[4]),
@@ -155,7 +155,7 @@ class Product_model extends CI_Model {
         );
 
         $conn = $this->db->conn_id;
-        $stmt = oci_parse($conn, "begin :res := product_actions.supplies_order(:product_id,:quantity,:provided_from,:notes,:applicant_id,:unit_type,:order_number); end;");
+        $stmt = oci_parse($conn, "begin :res := product_actions.supplies_order(:product_id,:quantity,:department_id,:notes,:applicant_id,:unit_type,:order_number); end;");
 
         foreach ($params as $variable) {
             oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
