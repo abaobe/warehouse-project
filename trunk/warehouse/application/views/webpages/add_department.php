@@ -19,7 +19,6 @@
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.css" rel="stylesheet" type="text/css"/>
-        <link href="<?php echo base_url(); ?>resource/css/jquery-ui.css" rel="stylesheet">
     </head>
     <!-- END HEAD -->
     <!-- BEGIN BODY -->
@@ -44,16 +43,16 @@
                             <!-- END THEME CUSTOMIZER-->
                             <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
                             <h3 class="page-title">
-                                إدارة الأصناف
+                                إدارة الفروع
                             </h3>
                             <ul class="breadcrumb">
                                 <li>
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">إدارة الأصناف</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">إضافة دائـرة جديدة</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">إدخال لوازم</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">إضافة دائـرة جديدة</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -65,7 +64,7 @@
                             <!-- BEGIN SAMPLE FORM widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>نموذج إدخال لوازم</h4>
+                                    <h4><i class="icon-reorder"></i>نموذج إدخال</h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -81,46 +80,21 @@
                                     <!-- BEGIN FORM-->
                                     <form method="POST" id="add_form" onsubmit="return false;" class="form-horizontal">
                                         <div class="control-group">
-                                            <label class="control-label">إسم الصنف</label>
+                                            <label class="control-label">إسم الدائرة</label>
                                             <div class="controls">
-                                                <input type="text" id="product_name" placeholder="البحث عن اسم الصنف أو رقمة" class="span6" />
-                                                <span id="img"></span>
-                                                <input type="hidden" id="product_id"/>
+                                                <input type="text" id="department_name" class="span6" />
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                            <label class="control-label">إستلمت من</label>
+                                            <label class="control-label">العنوان</label>
                                             <div class="controls">
-                                                <input type="text" id="received_from" class="span6" />
+                                                <input type="text" id="address" class="span6 " />
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                            <label class="control-label">رقم الفاتورة</label>
+                                            <label class="control-label">رقم الهاتف</label>
                                             <div class="controls">
-                                                <input type="text" id="billing_id" class="span6" />
-                                            </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <label class="control-label">الكمية المضافة</label>
-                                            <div class="controls">
-                                                <select class="span3" id="unit_type" name="unit_type" data-placeholder="الوحدة" tabindex="1">
-                                                    <option value="">إختيار</option>
-                                                </select>
-                                                <input type="text" id="quantity" placeholder="الكمية بالأرقام" class="input-medium" />
-                                            </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <label class="control-label">سعر الوحدة</label>
-                                            <div class="controls">
-                                                <input type="text" id="unit_price" placeholder="سعر الوحدة" class="input-medium" />
-                                                <select class="span2" id="currency_type" name="currency_type" data-placeholder="الوحدة" tabindex="1">
-                                                    <option value="">إختيار</option>
-                                                    <option value="شيكل">شيكل</option>
-                                                    <option value="دولار">دولار</option>
-                                                    <option value="دينار">دينار</option>
-                                                    <option value="يورو">يورو</option>
-                                                </select>
-                                                <input readonly type="text" id="total_cost" placeholder="التكلفة الكلية" class="input-mini"/>
+                                                <input type="text" id="phone" class="span6 " />
                                             </div>
                                         </div>
                                         <div class="control-group">
@@ -130,7 +104,7 @@
                                             </div>
                                         </div>
                                         <div class="form-actions">
-                                            <button type="button" class="btn btn-success" onclick="insert_product()">إرسال</button>
+                                            <button type="button" class="btn btn-success" onclick="add_department()">إرسال</button>
                                             <button type="reset" id="reset" class="btn">إلغاء</button>
                                         </div>
                                     </form>
@@ -162,61 +136,29 @@
         <![endif]-->
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
-        <script type="text/javascript" src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
-        <script type="text/javascript" src="<?php echo base_url(); ?>resource/js/jquery-ui.js"></script>
+        <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script>
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
             });
-
-            $('#product_name').focusout(function() {
-                if ($('#product_id').val()) {
-                    product_unit_names();
-                }
-            });
-
-            $('#total_cost').click(function() {
-                if ($('#quantity').val() && $('#unit_price').val()) {
-                    $(this).val($('#quantity').val() * $('#unit_price').val());
-                }
-            });
-
-            $('#product_name').autocomplete({
-                source: '<?php echo base_url() . "product/dynamic_product_search/"; ?>',
-                minLength: 2,
-                search: function(event, ui) {
-                    $('#img').html('<img src="<?php echo base_url(); ?>resource/assets/pre-loader/Rounded blocks.gif" alt="Linear star">');
-                },
-                select: function(event, ui) {
-                    $('#img').html("");
-                    $("#product_id").val(ui.item.value);
-                    $("#product_name").val(ui.item.label);
-                    return false;
-                }
-            });
-
-            function insert_product() {
+            function add_department() {
                 $.ajax({
                     type: "POST",
-                    url: '<?php echo base_url() . "product/do_insert_product/"; ?>',
+                    url: '<?php echo base_url() . "departments/do_add_department/"; ?>',
                     data: {
-                        product_id: $('#product_id').val(),
-                        received_from: $('#received_from').val(),
-                        billing_id: $('#billing_id').val(),
-                        notes: $('#notes').val(),
-                        quantity: $('#quantity').val(),
-                        unit_type: $('#unit_type').val(),
-                        unit_price: $('#unit_price').val(),
-                        currency_type: $('#currency_type').val()
+                        department_name: $('#department_name').val(),
+                        address: $('#address').val(),
+                        phone: $('#phone').val(),
+                        notes: $('#notes').val()
                     },
                     dataType: "json",
                     success: function(json) {
                         if (json == 1) {
                             $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إدخال الكمية بنجاح");
-                            //$('#reset').click();
-                        } else {
+                            $('#message').text("تم إضافة الدائرة بنجاح");
+                            $('#reset').click();
+                        }else{
                             $('#status').addClass('alert alert-error');
                             $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
                         }
@@ -224,25 +166,7 @@
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });
-            }
-
-            function product_unit_names() {
-                $.ajax({
-                    type: "POST",
-                    url: '<?php echo base_url() . "product/product_unit_names/"; ?>',
-                    data: {
-                        product_id: $('#product_id').val()
-                    },
-                    dataType: "json",
-                    success: function(json) {
-                        if (json.length != 0) {
-                            $('#unit_type').empty().append('<option value=primary>' + json[0]['PRIMARY_UNIT_NAME'] + '</option>');
-                            $('#unit_type').append('<option value=secondary>' + json[0]['SECONDARY_UNIT_NAME'] + '</option>').selectmenu('refresh');
-                        } else {
-                            $('#unit_type').empty().append('<option value=nothing>لا يوجد وحدات مدخلة</option>').selectmenu('refresh');
-                        }
-                    }
-                });
+                return false;
             }
         </script>
         <!-- END JAVASCRIPTS -->   

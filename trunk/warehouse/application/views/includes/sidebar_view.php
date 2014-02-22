@@ -34,6 +34,8 @@
                 <li><a class="" href="<?php echo base_url() . "product/insert_products"; ?>">نموذج إدخال لوازم</a></li>
                 <li><a class="" href="<?php echo base_url() . "product/supplies_order"; ?>">نموذج طلب لوازم</a></li>
                 <li><a class="" href="<?php echo base_url() . "product/show_ordered_supplies"; ?>">إدارة صرف اللوازم</a></li>
+                <li><a class="" href="<?php echo base_url() . "departments/inventory_supplies"; ?>">جـرد اللوازم</a></li>
+                <li><a class="" href="<?php echo base_url() . "departments/add_department"; ?>">إضافة دائرة جديدة</a></li>
             </ul>
         </li>
         <!-- END SIDEBAR MENU -->

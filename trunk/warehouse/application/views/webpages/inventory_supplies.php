@@ -17,8 +17,11 @@
         <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
 
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
-        <link  href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+        <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
         <link href="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.css" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>resource/assets/bootstrap-daterangepicker/daterangepicker.css" />
+
+        <link href="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.css" rel="stylesheet" type="text/css"/>
     </head>
     <!-- END HEAD -->
     <!-- BEGIN BODY -->
@@ -65,13 +68,37 @@
                             <!-- BEGIN EXAMPLE TABLE widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>جدول يحتوي على جميع الأصناف المخزنة</h4>
+                                    <h4><i class="icon-reorder"></i>جــرد اللوزام في المستودعات</h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
                                     </span>
                                 </div>
                                 <div class="widget-body">
+                                    <div class="form-horizontal">
+                                        <div class="control-group">
+                                            <label class="control-label">الجهـة المطلوبة</label>
+                                            <div class="controls">
+                                                <select id="department_id" name="category_id" class="span4 chosen" data-placeholder="إختيـار فئة..." tabindex="1">
+                                                    <option value=""></option>
+                                                    <?php foreach ($departments as $value) { ?>
+                                                        <option value="<?= $value['DEPARTMENT_ID'] ?>"><?= $value['DEPARTMENT_NAME'] ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label">الـتاريخ</label>
+                                            <div class="controls">
+                                                <div id="form-date-range" class="btn span4">
+                                                    <i class="icon-calendar"></i>
+                                                    &nbsp;<span id="date_range">asd</span>
+                                                    <b class="caret"></b>
+                                                </div>&nbsp;
+                                                <button id="refresh" onclick="get_department_inventory()" class="btn btn-primary">تحديث الجدول </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <table class="table table-striped table-bordered" id="sample_1">
                                         <thead>
                                             <tr>
@@ -89,25 +116,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($products as $value) { ?>
-                                                <tr class="odd gradeX">
-                                                    <td><input type="checkbox" class="checkboxes" value="1" /></td>
-                                                    <td name="pname" class="hidden-phone"><?= $value['PRODUCT_NAME'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['PRODUCT_NUMBER'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['PRODUCT_TYPE'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['RE_DEMAND_BORDER'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['PRIMARY_UNIT_NAME'] ?>=<?= $value['PRIMARY_UNIT_QUANTITY'] . ' || ' ?><?= $value['SECONDARY_UNIT_NAME'] ?>=<?= $value['SECONDARY_UNIT_QUANTITY'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['H_LENGTH'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['WIDTH'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['HEIGHT'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['NOTES'] ?></td>
-                                                    <td class="hidden-phone">
-                                                        <a href='<?php echo base_url() . "product/update_product/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
-                                                        <a id="delete" href="javascript:delete_product(<?= $value['PRODUCT_ID'] ?>)" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
-                                                        <a href='<?php echo base_url() . "product/update_product/" . $value['PRODUCT_ID']; ?>' class="btn mini purple">عـرض</a>
-                                                    </td>
-                                                </tr>
-                                            <?php } ?>
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -115,9 +124,7 @@
                             <!-- END EXAMPLE TABLE widget-->
                         </div>
                     </div>
-
                     <!-- END ADVANCED TABLE widget-->
-
                     <!-- END PAGE CONTENT-->
                 </div>
                 <!-- END PAGE CONTAINER-->
@@ -141,31 +148,43 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/data-tables/jquery.dataTables.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
         <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
-        <script src="<?php echo base_url(); ?>resource/js/jquery.confirm.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/bootstrap-daterangepicker/date.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
+
         <script>
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
             });
 
-            function delete_product(product_id) {
-                $.confirm({
-                    text: "هل أنت متأكد من حذف هذا الصنف ؟",
-                    confirm: function() {
-                        $.ajax({type: "POST",
-                            url: '<?php echo base_url() . "product/do_delete_product/"; ?>',
-                            data: {product_id: product_id},
-                            dataType: "json",
-                            success: function(json) {
-                                var oTable = $('#sample_1').dataTable();
-                                var nRow = $('#delete').parents('tr')[0];
-                                oTable.fnDeleteRow(nRow);
-                            }
-                        });
+            function get_department_inventory() {
+                var date_range = ($('#form-date-range span').text()).split('-');
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url() . "product/get_department_inventory/"; ?>',
+                    data: {
+                        department_id: $('#department_id').val(),
+                        start_date: date_range[0],
+                        end_date: date_range[1]
+                    },
+                    dataType: "json",
+                    success: function(json) {
+                        if (json == 1) {
+                            $('#status').removeClass('alert-error').addClass('alert alert-success');
+                            $('#message').text("تم إدخال الكمية بنجاح");
+                            //$('#reset').click();
+                        } else {
+                            $('#status').addClass('alert alert-error');
+                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        }
+                    }, error: function() {
+                        $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });
             }
+
         </script>
     </body>
     <!-- END BODY -->

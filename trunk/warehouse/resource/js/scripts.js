@@ -1953,19 +1953,19 @@ var App = function() {
                 toLabel: 'To',
                 customRangeLabel: 'Custom Range',
                 daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-                monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                monthNames: ['Januaryy', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 firstDay: 1
             },
             showWeekNumbers: true,
             buttonClasses: ['btn-danger']
         },
         function(start, end) {
-            $('#form-date-range span').html(start.toString('MMMM d, yyyy') + ' - ' + end.toString('MMMM d, yyyy'));
+            $('#form-date-range span').html(start.toString('yyyy/MM/dd') + ' - ' + end.toString('yyyy/MM/dd'));
         });
 
         $('#form-date-range span').html(Date.today().add({
             days: -29
-        }).toString('MMMM d, yyyy') + ' - ' + Date.today().toString('MMMM d, yyyy'));
+        }).toString('yyyy/MM/dd') + ' - ' + Date.today().toString('yyyy/MM/dd'));
 
 
         if (!jQuery().datepicker || !jQuery().timepicker) {

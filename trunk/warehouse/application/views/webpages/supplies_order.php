@@ -90,13 +90,21 @@
                                         <div class="control-group">
                                             <label class="control-label">إسم الصنف</label>
                                             <div class="controls">
-                                                <input type="text" id="product_id" placeholder="البحث عن اسم الصنف أو رقمة" class="span6" />
+                                                <input type="text" id="product_name" placeholder="البحث عن اسم الصنف أو رقمة" class="span6" />
+                                                <span id="img"></span>
+                                                <input type="hidden" id="product_id"/>
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label">الجهة الطالبة</label>
                                             <div class="controls">
-                                                <input type="text" id="provided_from" class="span6" />
+                                                <input type="hidden" readonly="" value="" id="depID">
+                                                <select id="department_id" class="chosen" data-placeholder="إختيـار فئة..." tabindex="1">
+                                                    <option value=""></option>
+                                                    <?php foreach ($departments as $value) { ?>
+                                                        <option value="<?= $value['DEPARTMENT_ID'] ?>"><?= $value['DEPARTMENT_NAME'] ?></option>
+                                                    <?php } ?>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="control-group">
@@ -155,32 +163,44 @@
             var data=new Array();
             var index=0;
             var order_number;
-            var provided_from;
+            var department_id;
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
                 get_order_number();
             });
   
-            $('#product_id').focusout(function() {
+            $('#product_name').focusout(function() {
                 if ($('#product_id').val()) {
                     product_unit_names();
                 }
             });
 
-            $('#product_id').autocomplete({source: '<?php echo base_url() . "product/dynamic_product_search/"; ?>', minLength: 2});
+            $('#product_name').autocomplete({
+                source: '<?php echo base_url() . "product/dynamic_product_search/"; ?>',
+                minLength: 2,
+                search: function(event, ui) {
+                    $('#img').html('<img src="<?php echo base_url(); ?>resource/assets/pre-loader/Rounded blocks.gif" alt="Linear star">');
+                },
+                select: function(event, ui) {
+                    $('#img').html("");
+                    $("#product_id").val(ui.item.value);
+                    $("#product_name").val(ui.item.label);
+                    return false;
+                }
+            });
 
             function next_product(){
                 var d=new Array();
                 d[0]=$('#product_id').val();
-                d[1]=$('#provided_from').val();
+                d[1]=$('#department_id').val();
                 d[2]=$('#notes').val();
                 d[3]= $('#quantity').val();
                 d[4]= $('#unit_type').val();
                 d[5]= $('#order_number').val();
                 data[index]=d;
                 //index++;
-                provided_from= $('#provided_from').val();
+                department_id= $('#department_id').val();
                 $("#add_form").fadeOut().fadeIn();
                 $('#reset').click();
                 $('#order_number').val(order_number);
@@ -201,8 +221,9 @@
                             $('#message').text('تم إضافة الصنف بنجاح');
                             $('#reset').click();
                             $('#order_number').val(order_number);
-                            $('#provided_from').val(provided_from);
-                            $('#provided_from').prop('readonly',true);
+                            $('#department_id').val(department_id);
+                            $('#department_id').attr('disabled', true).trigger("liszt:updated");
+                            $('#depID').prop('type', 'text').val($('#department_id option:selected').text());
                         }else{
                             $('#status').addClass('alert alert-error');
                             $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
@@ -240,7 +261,8 @@
                     success: function(json) {
                         $('#order_number').val(json);
                         order_number=json;
-                        $('#provided_from').prop('readonly',false).val("");
+                        $('#department_id').attr('disabled', false).trigger("liszt:updated");
+                        $('#depID').prop('type', 'hidden');
                     }, error: function() {
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
