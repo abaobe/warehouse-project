@@ -172,7 +172,7 @@ class Product_model extends CI_Model {
     function get_supplies_id() {
         return $this->DBObject->readCursor("product_actions.get_all_ordered_supplies", null);
     }
-    
+
     function get_ordered_supplies_byNumber($order_number) {
         $params[0] = array("name" => ":order_number", "value" => &$order_number);
         return $this->DBObject->readCursor("product_actions.get_supplies_info_byNumber(:order_number)", $params);
@@ -188,10 +188,10 @@ class Product_model extends CI_Model {
         }
         return $result;
     }
-    
+
     function refuse_order($order_number) {
         $params = array(array('name' => ':order_number', 'value' => &$order_number),
-                        array('name' => ':res', 'value' => &$result));
+            array('name' => ':res', 'value' => &$result));
         $conn = $this->db->conn_id;
         $stmt = oci_parse($conn, "begin :res := product_actions.refuse_order(:order_number); end;");
 
@@ -221,7 +221,7 @@ class Product_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
-    
+
     function get_order_status($order_number) {
         $conn = $this->db->conn_id;
         $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.get_order_status(:order_number); END;");
@@ -231,6 +231,36 @@ class Product_model extends CI_Model {
         if (!oci_execute($stmt)) {
             return oci_error($stmt);
         }
+        return $result;
+    }
+
+    function get_all_borrowing() {
+        return $this->DBObject->readCursor("product_actions.get_all_borrowing", null);
+    }
+
+    function get_borrowing_by_department_name($department_name) {
+        $params[0] = array("name" => ":department_name", "value" => &$department_name);
+        return $this->DBObject->readCursor("product_actions.get_borrowing_byDep_name(:department_name)", $params);
+    }
+
+    function return_borrowing($info) {
+        $params = array(
+            array('name' => ':notes', 'value' => &$info['notes']),
+            array('name' => ':borrowing_id', 'value' => &$info['borrowing_id']),
+            array('name' => ':quantity_returned', 'value' => &$info['quantity_returned']),
+            array('name' => ':unit_type', 'value' => &$info['unit_type']),
+            array('name' => ':status_returned', 'value' => &$info['status_returned']),
+            array('name' => ':res', 'value' => &$result)
+        );
+
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := product_actions.return_borrowing(:borrowing_id,:notes,:quantity_returned,:unit_type,:status_returned); end;");
+
+        foreach ($params as $variable) {
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
+        }
+
+        oci_execute($stmt);
         return $result;
     }
 
