@@ -40,7 +40,7 @@ class Product extends CI_Controller {
         $data['secondary_unit_name'] = $this->input->post('secondary_unit_name');
         $data['primary_unit_quantity'] = $this->input->post('primary_unit_quantity');
         $data['secondary_unit_quantity'] = $this->input->post('secondary_unit_quantity');
-        $data['status']=  $this->input->post('status');
+        $data['status'] = $this->input->post('status');
 
         $result = $this->product_model->add_new_product($data);
         echo json_encode($result);
@@ -133,9 +133,9 @@ class Product extends CI_Controller {
         $result = $this->product_model->get_order_number();
         echo json_encode($result);
     }
-    
+
     function get_order_status() {
-        $order_number= $this->input->post('order_number');
+        $order_number = $this->input->post('order_number');
         $result = $this->product_model->get_order_status($order_number);
         echo json_encode($result);
     }
@@ -181,10 +181,32 @@ class Product extends CI_Controller {
             echo json_encode($result);
         }
     }
-    
-    public function inventory_supplies(){
+
+    public function inventory_supplies() {
         $result['categories'] = $this->category_model->get_all_categories();
-        $this->load->view('webpages/inventory_supplies',$result);
+        $this->load->view('webpages/inventory_supplies', $result);
+    }
+
+    public function show_all_borrowing() {
+        $result['borrowing'] = $this->product_model->get_all_borrowing();
+        $this->load->view('webpages/show_all_borrowing', $result);
+    }
+
+    public function return_borrowing() {
+        $data['department_name'] = $this->input->post('department_name');
+        $result = $this->product_model->get_borrowing_by_department_name($data['department_name']);
+        $data['borrowing'] = $result;
+        $this->load->view('webpages/return_borrowing', $data);
+    }
+
+    public function do_return_borrowing() {
+        $data['borrowing_id'] = $this->input->post('borrowing_id');
+        $data['quantity_returned'] = $this->input->post('quantity_returned');
+        $data['unit_type'] = $this->input->post('unit_type');
+        $data['status_returned'] = $this->input->post('status_returned');
+        $data['notes'] = $this->input->post('notes');
+        $result=  $this->product_model->return_borrowing($data);
+        echo json_encode($result);
     }
 
 }
