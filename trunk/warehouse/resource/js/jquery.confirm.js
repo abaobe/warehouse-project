@@ -43,8 +43,8 @@
         var settings = $.extend({
             text: "Are you sure?",
             title: "",
-            confirmButton: "Yes",
-            cancelButton: "Cancel",
+            confirmButton: "نـعم",
+            cancelButton: "إلـغاء",
             post: false,
             confirm: function (o) {
                 var url = e.currentTarget.attributes['href'].value;
@@ -79,7 +79,7 @@
                             '<div class="modal-footer">' +
                                 '<button class="confirm btn btn-primary" type="button" data-dismiss="modal">' +
                                     settings.confirmButton +
-                                '</button>' +
+                                '</button>' +"  "+
                                 '<button class="cancel btn btn-default" type="button" data-dismiss="modal">' +
                                     settings.cancelButton +
                                 '</div>' +

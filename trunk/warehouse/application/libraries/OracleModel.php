@@ -44,5 +44,4 @@ class OracleModel extends CI_Model {
     }
 
 }
-
-?> 
+/* END OF FILE*/

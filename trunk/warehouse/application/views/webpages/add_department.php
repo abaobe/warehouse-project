@@ -18,7 +18,6 @@
 
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
-        <link href="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.css" rel="stylesheet" type="text/css"/>
     </head>
     <!-- END HEAD -->
     <!-- BEGIN BODY -->
@@ -134,7 +133,6 @@
         <script src="js/excanvas.js"></script>
         <script src="js/respond.js"></script>
         <![endif]-->
-        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
         <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script>

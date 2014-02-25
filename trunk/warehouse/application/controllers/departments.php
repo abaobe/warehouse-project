@@ -24,7 +24,7 @@ class Departments extends CI_Controller {
         $data['start_date'] = $this->input->post('start_date');
         $data['end_date'] = $this->input->post('end_date');
         $result['inventory'] = $this->department_model->get_department_inventory($data);
-        $this->load->view('webpages/inventory_supplies', $result);
+        echo json_encode($result);
     }
     
     public function add_department() {

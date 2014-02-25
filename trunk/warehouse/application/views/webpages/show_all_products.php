@@ -151,7 +151,7 @@
 
             function delete_product(product_id) {
                 $.confirm({
-                    text: "هل أنت متأكد من حذف هذا الصنف ؟",
+                    text: "<h4>هل أنت متأكد من حذف هذا الصنف ؟</h4>",
                     confirm: function() {
                         $.ajax({type: "POST",
                             url: '<?php echo base_url() . "product/do_delete_product/"; ?>',

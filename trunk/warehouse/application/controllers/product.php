@@ -194,8 +194,7 @@ class Product extends CI_Controller {
 
     public function return_borrowing() {
         $data['department_name'] = $this->input->post('department_name');
-        $result = $this->product_model->get_borrowing_by_department_name($data['department_name']);
-        $data['borrowing'] = $result;
+        $data['borrowing'] = $this->product_model->get_borrowing_by_department_name($data['department_name']);
         $this->load->view('webpages/return_borrowing', $data);
     }
 
