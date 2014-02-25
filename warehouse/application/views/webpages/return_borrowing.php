@@ -156,36 +156,9 @@
             $(this).addClass('badge badge-important').text("لم يتم الارجاع");
         } else if (status == "true") {
             $(this).addClass('badge badge-success').text("تم الارجاع");
+        } else if (status == "some") {
+            $(this).addClass('badge badge-info').text("تم إرجاع جزء");
         }
     });
-//
-//    function do_all_disburse_supplies() {
-//        for (i = 0; i < <?= $i ?>; i++) {
-//            $.ajax({
-//                type: "POST",
-//                url: '<?php echo base_url() . "product/do_all_disburse_supplies/"; ?>',
-//                data: {
-//                    order_number: $('#add_form' + i + ' #order_number').attr('order_id'),
-//                    quantity_disbursed: $('#add_form' + i + ' #quantity_disbursed').val(),
-//                    unit_type: $('#add_form' + i + ' #unit_type').val(),
-//                    notes: $('#add_form' + i + ' #notes').val(),
-//                    size: <?php echo $i - 1 ?>,
-//                    index: i
-//                },
-//                dataType: "json",
-//                success: function(json) {
-//                    if (json == 1) {
-//                        $('#add_form' + i + ' #status').removeClass('alert-error').addClass('alert alert-success');
-//                        $('#add_form' + i + ' #message').text("تم صرف الكمية");
-//                        reloadPage = '<?php echo base_url() . "product/show_ordered_supplies/"; ?>';
-//                    } else {
-//                        $('#add_form' + i + ' #status').addClass('alert alert-error');
-//                        $('#add_form' + i + ' #message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
-//                    }
-//                }, error: function() {
-//                    $('#message').text("هناك خطأ في تخزين البيانات");
-//                }
-//            });
-//        }
-//    }
+    
 </script>

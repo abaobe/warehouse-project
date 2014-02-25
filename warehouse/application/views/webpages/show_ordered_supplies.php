@@ -143,8 +143,8 @@
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
-
-                oTable = $('#sample_1').dataTable();
+                
+                var oTable = $('#sample_1').dataTable();
                 $('#disburse').live('click', function(e) {
                     e.preventDefault();
                     disburse_supplies($(this).attr('order_number'));
@@ -177,7 +177,7 @@
 
             function refuse_order(order_number, hh) {
                 $.confirm({
-                    text: "هل أنت متأكد من رفض هذا الطلب ؟",
+                    text: "<h4>هل أنت متأكد من رفض هذا الطلب ؟</h4>",
                     confirm: function() {
                         $.ajax({type: "POST",
                             url: '<?php echo base_url() . "product/do_refuse_order/"; ?>',

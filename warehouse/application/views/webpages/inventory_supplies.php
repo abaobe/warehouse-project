@@ -104,19 +104,14 @@
                                             <tr>
                                                 <th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
                                                 <th class="hidden-phone">إسم الصنف</th>
-                                                <th class="hidden-phone">رقم الصنف</th>
-                                                <th class="hidden-phone">نوع الصنف</th>
-                                                <th class="hidden-phone">حد إعادة الطلب</th>
-                                                <th class="hidden-phone">الكمية المتبقية</th>
-                                                <th class="hidden-phone">الطول</th>
-                                                <th class="hidden-phone">العرض</th>
-                                                <th class="hidden-phone">الإرتفاع</th>
+                                                <th class="hidden-phone">الكمية الموجودة</th>
+                                                <th class="hidden-phone">الحالة</th>
+                                                <th class="hidden-phone">تاريخ الإستعارة</th>
                                                 <th class="hidden-phone">ملاحظات</th>
-                                                <th class="hidden-phone">قائـمة المهام</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -157,13 +152,14 @@
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
+                var oTable = $('#sample_1').dataTable();
             });
 
             function get_department_inventory() {
-                var date_range = ($('#form-date-range span').text()).split('-');
+                var date_range = (($('#form-date-range span').text()).replace(/\s/g, '').split('-'));
                 $.ajax({
                     type: "POST",
-                    url: '<?php echo base_url() . "product/get_department_inventory/"; ?>',
+                    url: '<?php echo base_url() . "departments/get_department_inventory/"; ?>',
                     data: {
                         department_id: $('#department_id').val(),
                         start_date: date_range[0],
@@ -171,20 +167,13 @@
                     },
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إدخال الكمية بنجاح");
-                            //$('#reset').click();
-                        } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
-                        }
-                    }, error: function() {
-                        $('#message').text("هناك خطأ في تخزين البيانات");
+                        /* after retrun json*/
+                    },
+                     error: function() {
+                     alert("failed!");
                     }
                 });
             }
-
         </script>
     </body>
     <!-- END BODY -->
