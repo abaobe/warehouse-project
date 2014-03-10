@@ -14,7 +14,7 @@
     <ul class="sidebar-menu">
         <li class="has-sub">
             <a href="javascript:;" class="">
-                <span class="icon-box"> <i class="icon-dashboard"></i></span> Dashboard
+                <span class="icon-box"> <i class="icon-dashboard"></i></span> إحـصـائـيات
                 <span class="arrow"></span>
             </a>
             <ul class="sub">
