@@ -131,7 +131,7 @@
                                         <div class="control-group">
                                             <label class="control-label">الفئة التي ينتمي إليها</label>
                                             <div class="controls">
-                                                <select id="parent_id" class="span6 chosen" data-placeholder="الفئة التي ينتمي إليها" tabindex="1">
+                                                <select id="category_id" class="span6 chosen" data-placeholder="الفئة التي ينتمي إليها" tabindex="1">
                                                     <option value=""></option>
                                                     <?php
                                                     $current_main = "";
@@ -217,8 +217,7 @@
                         primary_unit_name: $('#primary_unit_name').val(),
                         secondary_unit_name: $('#secondary_unit_name').val(),
                         primary_unit_quantity: $('#primary_unit_quantity').val(),
-                        secondary_unit_quantity: $('#secondary_unit_quantity').val(),
-                        status: $('#product_status').val()
+                        secondary_unit_quantity: $('#secondary_unit_quantity').val()
                     },
                     dataType: "json",
                     success: function(json) {

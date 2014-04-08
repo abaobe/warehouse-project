@@ -97,8 +97,8 @@
                                             <label class="control-label">نـوع الصنف</label>
                                             <div class="controls">
                                                 <select class="span6" id="product_type" name="product_type" data-placeholder="Choose a Category" tabindex="1">
-                                                    <option <?php if (!(strcmp($product_info[0]['PRODUCT_TYPE'],"مواد مستهلكة"))) {echo "selected=\"selected\"";} ?> value="مواد مستهلكة">مـواد مستهلكة</option>
-                                                    <option <?php if (!(strcmp($product_info[0]['PRODUCT_TYPE'],'مواد ثابتة'))) {echo "selected=\"selected\"";} ?>value="مواد ثابتة">مـواد ثابتة "عهد"</option>
+                                                    <option <?php if (!(strcmp($product_info[0]['PRODUCT_TYPE'],"مواد مستهلكة"))) {echo "selected=\"selected\"";} ?> value="1">مواد مستهلكة</option>
+                                                    <option <?php if (!(strcmp($product_info[0]['PRODUCT_TYPE'],'مواد ثابتة'))) {echo "selected=\"selected\"";} ?> value="2">مواد معمرة</option>
                                                 </select>
                                             </div>
                                         </div>

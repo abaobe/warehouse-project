@@ -18,7 +18,7 @@ class Product extends CI_Controller {
     }
 
     public function add_product() {
-        $result['categories'] = $this->category_model->get_all_categories();
+        $result['categories'] = $this->category_model->get_categories_id_name();
         $this->load->view('webpages/add_new_product', $result);
     }
 
@@ -56,14 +56,13 @@ class Product extends CI_Controller {
         $data['secondary_unit_name'] = $this->input->post('secondary_unit_name');
         $data['primary_unit_quantity'] = $this->input->post('primary_unit_quantity');
         $data['secondary_unit_quantity'] = $this->input->post('secondary_unit_quantity');
-        $data['status'] = $this->input->post('status');
 
         $result = $this->product_model->add_new_product($data);
         echo json_encode($result);
     }
 
     public function update_product($product_id) {
-        $result['categories'] = $this->category_model->get_all_categories();
+        $result['categories'] = $this->category_model->get_categories_id_name();
         $result['product_info'] = $this->product_model->get_product_by_id($product_id);
         $this->load->view('webpages/update_product', $result);
     }
@@ -213,7 +212,7 @@ class Product extends CI_Controller {
     }
 
     public function supplies_order() {
-        $result['categories'] = $this->category_model->get_all_categories();
+        $result['categories'] = $this->category_model->get_categories_id_name();
         $result['departments'] = $this->department_model->get_departments_id_name();
         $this->load->view('webpages/supplies_order', $result);
     }
@@ -235,7 +234,7 @@ class Product extends CI_Controller {
     }
 
     public function static_supplies_order() {
-        $result['categories'] = $this->category_model->get_all_categories();
+        $result['categories'] = $this->category_model->get_categories_id_name();
         $result['departments'] = $this->department_model->get_departments_id_name();
         $this->load->view('webpages/static_supplies_order', $result);
     }
@@ -334,7 +333,7 @@ class Product extends CI_Controller {
     }
 
 //    public function inventory_supplies() {
-//        $result['categories'] = $this->category_model->get_all_categories();
+//        $result['categories'] = $this->category_model->get_categories_id_name();
 //        $this->load->view('webpages/inventory_supplies', $result);
 //    }
 //    public function show_all_borrowing() {
