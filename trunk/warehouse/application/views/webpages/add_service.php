@@ -49,9 +49,9 @@
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">إضافة دائـرة جديدة</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">إضافة خدمة جديدة</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">إضافة دائـرة جديدة</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">إضافة خدمة جديدة</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -79,21 +79,35 @@
                                     <!-- BEGIN FORM-->
                                     <form method="POST" id="add_form" onsubmit="return false;" class="form-horizontal">
                                         <div class="control-group">
-                                            <label class="control-label">إسم الدائرة</label>
+                                            <label class="control-label">إسم الخدمة</label>
                                             <div class="controls">
-                                                <input type="text" id="department_name" class="span6" />
+                                                <input type="text" id="service_name" class="span6" />
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                            <label class="control-label">العنوان</label>
+                                            <label class="control-label">الجهة التي قدمت الخدمة</label>
                                             <div class="controls">
-                                                <input type="text" id="address" class="span6 " />
+                                                <input type="text" id="provided_by" class="span6" />
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                            <label class="control-label">رقم الهاتف</label>
+                                            <label class="control-label">رقم الفاتورة</label>
                                             <div class="controls">
-                                                <input type="text" id="phone" class="span6 " />
+                                                <input type="text" id="billing" class="span6 " />
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label">إجمالي التكلفة</label>
+                                            <div class="controls">
+                                                <input type="text" id="cost" placeholder="تكلفة الخدمة" class="input-medium" />
+                                                <select class="span2" id="currency_type" name="currency_type" data-placeholder="الوحدة" tabindex="1">
+                                                    <option value="">إختيار</option>
+                                                    <option value="أغورة">أغورة</option>
+                                                    <option value="شيكل">شيكل</option>
+                                                    <option value="دولار">دولار</option>
+                                                    <option value="دينار">دينار</option>
+                                                    <option value="يورو">يورو</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="control-group">
@@ -103,7 +117,7 @@
                                             </div>
                                         </div>
                                         <div class="form-actions">
-                                            <button type="button" class="btn btn-success" onclick="add_department()">حـفظ</button>
+                                            <button type="button" class="btn btn-success" onclick="add_service()">حـفظ</button>
                                             <button type="reset" id="reset" class="btn">إلغاء</button>
                                         </div>
                                     </form>
@@ -140,21 +154,23 @@
                 // initiate layout and plugins
                 App.init();
             });
-            function add_department() {
+            function add_service() {
                 $.ajax({
                     type: "POST",
-                    url: '<?php echo base_url() . "departments/do_add_department/"; ?>',
+                    url: '<?php echo base_url() . "services/do_add_service/"; ?>',
                     data: {
-                        department_name: $('#department_name').val(),
-                        address: $('#address').val(),
-                        phone: $('#phone').val(),
+                        service_name: $('#service_name').val(),
+                        provided_by: $('#provided_by').val(),
+                        billing: $('#billing').val(),
+                        cost: $('#cost').val(),
+                        currency_type: $('#currency_type').val(),
                         notes: $('#notes').val()
                     },
                     dataType: "json",
                     success: function(json) {
                         if (json == 1) {
                             $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إضافة الدائرة  بنجاح");
+                            $('#message').text("تم إضافة الخدمة  بنجاح");
                             $('#reset').click();
                         }else{
                             $('#status').addClass('alert alert-error');

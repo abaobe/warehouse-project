@@ -80,57 +80,75 @@
                                     <!-- End Alert Message -->
                                     <!-- BEGIN FORM-->
                                     <form method="POST" id="add_form" onsubmit="return false;" class="form-horizontal">
+                                        <table style="table-layout:fixed;" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="span3">إسم الصنف</th>
+                                                    <th>إستلمت من</th>
+                                                    <th>رقم الفاتورة</th>
+                                                    <th>الوحدة</th>
+                                                    <th>الكمية المضافة</th>
+                                                    <th>سعر الوحدة</th>
+                                                    <th>العملة</th>
+                                                    <th>إجمالي التكلفة</th>
+                                                    <th width="8%"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="rows">
+                                                <tr id="row1">
+                                                    <td>
+                                                        <select style="width:100%;" onchange="product_unit_names(this)" id="product_id1" class="chosen" data-placeholder="إختيار صنف" tabindex="1">
+                                                           <option value=""></option>
+                                                           <?php foreach ($products as $product) {?>
+                                                           <option value="<?= $product['PRODUCT_ID'] ?>"><?= $product['PRODUCT_ID'].' '.$product['PRODUCT_NAME']; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="received_from1" style="width:100%;" class="chosen" placeholder="إستلمت من" tabindex="1">
+                                                            <option value="">إختيار</option>
+                                                            <?php foreach ($companies as $company) {?>
+                                                            <option value="<?=$company['COMPANY_ID']?>"><?=$company['COMPANY_NAME']?></option>
+                                                            <?php }?>
+                                                        </select>
+                                                    </td>
+                                                    <td><input style="width:90%;" type="text" id="billing_id" placeholder="رقم الفاتورة" /></td>
+                                                    <td>
+                                                        <select style="width:100%;" id="unit_type" name="unit_type" data-placeholder="الوحدة" tabindex="1">
+                                                            <option value="">إختيار</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input style="width:90%;" type="text" oninput="calculate_cost(this)" id="quantity" placeholder="الكمية بالأرقام" /></td>
+                                                    <td><input style="width:90%;" type="text" oninput="calculate_cost(this)" id="unit_price" placeholder="سعر الوحدة" /></td>
+                                                    <td>
+                                                        <select style="width:100%;" id="currency_type" name="currency_type" data-placeholder="الوحدة" tabindex="1">
+                                                            <option value="">إختيار</option>
+                                                            <option value="أغورة">أغورة</option>
+                                                            <option value="شيكل">شيكل</option>
+                                                            <option value="دولار">دولار</option>
+                                                            <option value="دينار">دينار</option>
+                                                            <option value="يورو">يورو</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input style="width:90%;" readonly type="text" id="total_cost" placeholder="التكلفة" /></td>
+                                                    <td><button style="width:40%;" onclick="addnew_row(this)" id="more" class="btn-info"><i class="icon-plus"></i></button>    
+                                                        <button style="width:40%;" onclick="remove_row(this)" id="remove" class="btn-danger"><i class="icon-remove"></i></button>
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="7"></td>
+                                                    <td colspan="2"><input style="width:90%;" readonly type="text" id="final_cost" placeholder="إجمالي التكلفة" /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
                                         <div class="control-group">
-                                            <label class="control-label">إسم الصنف</label>
-                                            <div class="controls">
-                                                <input type="text" id="product_name" placeholder="البحث عن اسم الصنف أو رقمة" class="span6" />
-                                                <span id="img"></span>
-                                                <input type="hidden" id="product_id"/>
-                                            </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <label class="control-label">إستلمت من</label>
-                                            <div class="controls">
-                                                <input type="text" id="received_from" class="span6" />
-                                            </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <label class="control-label">رقم الفاتورة</label>
-                                            <div class="controls">
-                                                <input type="text" id="billing_id" class="span6" />
-                                            </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <label class="control-label">الكمية المضافة</label>
-                                            <div class="controls">
-                                                <select class="span3" id="unit_type" name="unit_type" data-placeholder="الوحدة" tabindex="1">
-                                                    <option value="">إختيار</option>
-                                                </select>
-                                                <input type="text" id="quantity" placeholder="الكمية بالأرقام" class="input-medium" />
-                                            </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <label class="control-label">سعر الوحدة</label>
-                                            <div class="controls">
-                                                <input type="text" id="unit_price" placeholder="سعر الوحدة" class="input-medium" />
-                                                <select class="span2" id="currency_type" name="currency_type" data-placeholder="الوحدة" tabindex="1">
-                                                    <option value="">إختيار</option>
-                                                    <option value="شيكل">شيكل</option>
-                                                    <option value="دولار">دولار</option>
-                                                    <option value="دينار">دينار</option>
-                                                    <option value="يورو">يورو</option>
-                                                </select>
-                                                <input readonly type="text" id="total_cost" placeholder="التكلفة الكلية" class="input-mini"/>
-                                            </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <label class="control-label">ملاحـظات</label>
-                                            <div class="controls">
-                                                <textarea id="notes" class="span6 " rows="3"></textarea>
-                                            </div>
+                                            <label class="control-label">ملاحظات متعلقة بالإدخال</label>
+                                            <textarea id="notes" class="span6 " rows="1"></textarea>
                                         </div>
                                         <div class="form-actions">
-                                            <button type="button" class="btn btn-success" onclick="insert_product()">إرسال</button>
+                                            <button type="button" class="btn btn-success" onclick="insert_product()">حـفظ</button>
                                             <button type="reset" id="reset" class="btn">إلغاء</button>
                                         </div>
                                     </form>
@@ -140,6 +158,77 @@
                             <!-- END SAMPLE FORM widget-->
                         </div>
                     </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <!-- BEGIN SAMPLE FORM widget-->
+                            <div class="widget">
+                                <div class="widget-title">
+                                    <h4><i class="icon-reorder"></i>نموذج إدخال لوازم</h4>
+                                    <span class="tools">
+                                        <a href="javascript:;" class="icon-chevron-down"></a>
+                                        <a href="javascript:;" class="icon-remove"></a>
+                                    </span>
+                                </div>
+                                <div class="widget-body form">
+                                    <!-- Start Alert Message -->
+                                    <div id="status2" class="alert">
+                                        <button class="close" data-dismiss="alert">×</button>
+                                        <span id="message2"></span>
+                                    </div>
+                                    <!-- End Alert Message -->
+                                    <!-- BEGIN FORM-->
+                                    <form method="POST" id="add_form2" onsubmit="return false;" class="form-horizontal">
+                                        <table style="table-layout:fixed;" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="span3">إسم الخدمة</th>
+                                                    <th>الجهة المقدمة للخدمة</th>
+                                                    <th>رقم الفاتورة</th>
+                                                    <th>تكلفة الخدمة</th>
+                                                    <th>العملة</th>
+                                                    <th>ملاحظات</th>
+                                                    <th width="8%"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="rows">
+                                                <tr id="service1">
+                                                    <td><input style="width:90%;" type="text" id="service_name" placeholder="إسم الخدمة" /></td>
+                                                    <td><input style="width:90%;" type="text" id="provided_by" placeholder="الجهة المقدمة للخدمة" /></td>
+                                                    <td><input style="width:90%;" type="text" id="billing_id" placeholder="رقم الفاتورة" /></td>
+                                                    <td><input style="width:90%;" type="text" id="service_cost" placeholder="تكلفة الخدمة" /></td>
+                                                    <td>
+                                                        <select style="width:95%;" id="currency_type" name="currency_type" data-placeholder="الوحدة" tabindex="1">
+                                                            <option value="">إختيار</option>
+                                                            <option value="أغورة">أغورة</option>
+                                                            <option value="شيكل">شيكل</option>
+                                                            <option value="دولار">دولار</option>
+                                                            <option value="دينار">دينار</option>
+                                                            <option value="يورو">يورو</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input style="width:90%;" type="text" id="notes" placeholder="ملاحظة" /></td>
+                                                    <td><button style="width:42%;" onclick="addnew_service(this)" id="more" class="btn-info"><i class="icon-plus"></i></button>    
+                                                        <button style="width:42%;" onclick="remove_row(this)" id="remove" class="btn-danger"><i class="icon-remove"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="5"></td>
+                                                    <td colspan="2"><input style="width:90%;" readonly type="text" id="final_cost" placeholder="إجمالي التكلفة" /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="form-actions">
+                                            <button type="button" class="btn btn-success" onclick="insert_service()">حـفظ</button>
+                                            <button type="reset" id="reset" class="btn">إلغاء</button>
+                                        </div>
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+                            <!-- END SAMPLE FORM widget-->
+                        </div>
+                    </div>
+                    
                     <!-- END PAGE CONTENT-->
                 </div>
                 <!-- END PAGE CONTAINER-->
@@ -165,51 +254,129 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/js/jquery-ui.js"></script>
         <script>
+            var data = new Array();
+            var SecData = new Array();
+            var count = 2;
+            var SecCount = 2;
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
             });
-
-            $('#product_name').focusout(function() {
-                if ($('#product_id').val()) {
-                    product_unit_names();
+            
+            function addnew_row(current){
+                var new_row = jQuery('<tr id=row'+count+'>'+
+                '<td><select style="width:100%;" id=product_id'+count+' onchange="product_unit_names(this)" class="chosen" data-placeholder="إختيار صنف" tabindex="1">'+
+                     '<option value=""></option>'+
+                     '<?php foreach ($products as $product) {?>'+
+                     '<option value="<?= $product['PRODUCT_ID'] ?>"><?= $product['PRODUCT_ID'].' '.$product['PRODUCT_NAME']; ?></option>'+
+                     '<?php } ?>'+
+                     '</select>'+
+                '</td>'+
+                '<td><select style="width:100%;" id=received_from'+count+' class="chosen" placeholder="إستلمت من" tabindex="1">'+
+                     '<option value="">إختيار</option>'+
+                     '<?php foreach ($companies as $company) {?>'+
+                     '<option value="<?=$company['COMPANY_ID']?>"><?=$company['COMPANY_NAME']?></option>'+
+                     '<?php }?>'+
+                     '</select>'+
+                '</td>'+
+                '<td><input style="width:90%;" type="text" id="billing_id" placeholder="رقم الفاتورة" /></td>'+
+                '<td><select style="width:100%;" id="unit_type" name="unit_type" data-placeholder="الوحدة" tabindex="1"><option value="">إختيار</option></select></td>'+
+                '<td><input style="width:90%;" type="text" id="quantity" oninput="calculate_cost(this)" placeholder="الكمية بالأرقام" /></td>'+
+                '<td><input style="width:90%;" type="text" id="unit_price" oninput="calculate_cost(this)" placeholder="سعر الوحدة" /></td>'+
+                '<td><select style="width:100%;" id="currency_type" name="currency_type" data-placeholder="الوحدة" tabindex="1">'+
+                    '<option value="">إختيار</option>'+
+                    '<option value="أغورة">أغورة</option>'+
+                    '<option value="شيكل">شيكل</option>'+
+                    '<option value="دولار">دولار</option>'+
+                    '<option value="دينار">دينار</option>'+
+                    '<option value="يورو">يورو</option>'+
+                    '</select>'+
+                '</td>'+
+                '<td><input style="width:90%;" readonly type="text" id="total_cost" placeholder="التكلفة" /></td>'+
+                '<td><button style="width:42%;" onclick="addnew_row(this)" id="more" class="btn-info"><i class="icon-plus"></i></button>'+
+                '&nbsp;<button style="width:42%;" onclick="remove_row(this)" id="remove" class="btn-danger"><i class="icon-remove"></i></button></td>'+
+                '</tr>');
+                $(current).closest('TR').after(new_row);
+                $("#row"+count +" #product_id"+count).chosen();
+                $("#row"+count +" #received_from"+count).chosen();
+                count++;
+            }
+            
+            function addnew_service(current){
+                var new_row = jQuery('<tr id=service'+SecCount+'>'+
+                '<td><input style="width:90%;" type="text" id="service_name" placeholder="إسم الخدمة" /></td>'+
+                '<td><input style="width:90%;" type="text" id="provided_by" placeholder="الجهة المقدمة للخدمة" /></td>'+
+                '<td><input style="width:90%;" type="text" id="billing_id" placeholder="رقم الفاتورة" /></td>'+
+                '<td><input style="width:90%;" type="text" id="service_cost" placeholder="تكلفة الخدمة" /></td>'+
+                '<td><select style="width:95%;" id="currency_type" name="currency_type" data-placeholder="العملة" tabindex="1">'+
+                    '<option value="">إختيار</option>'+
+                    '<option value="أغورة">أغورة</option>'+
+                    '<option value="شيكل">شيكل</option>'+
+                    '<option value="دولار">دولار</option>'+
+                    '<option value="دينار">دينار</option>'+
+                    '<option value="يورو">يورو</option>'+
+                    '</select>'+
+                '</td>'+
+                '<td><input style="width:90%;" type="text" id="notes" placeholder="ملاحظة" /></td>'+
+                '<td><button style="width:42%;" onclick="addnew_service(this)" id="more" class="btn-info"><i class="icon-plus"></i></button>'+
+                '&nbsp;<button style="width:42%;" onclick="remove_row(this)" id="remove" class="btn-danger"><i class="icon-remove"></i></button></td>'+
+                '</tr>');
+                $(current).closest('TR').after(new_row);
+                SecCount++;
+            }
+            
+            function get_products_added(){
+                var index = 0;
+                for(var i=1; i < count; i++){
+                    if (jQuery.contains(document, $('#row'+i)[0])) {
+                        var d=new Array();
+                        d[0]=$('#row'+i +' #product_id'+i).val();
+                        d[1]=$('#row'+i +' #received_from'+i).val();
+                        d[2]=$('#row'+i +' #billing_id').val();
+                        d[3]=$('#notes').val();
+                        d[4]=$('#row'+i +' #quantity').val();
+                        d[5]=$('#row'+i +' #unit_type').val();
+                        d[6]=$('#row'+i +' #unit_price').val();
+                        d[7]=$('#row'+i +' #currency_type').val();
+                        data[index]=d;
+                        index++;
+                    }
                 }
-            });
-
-            $('#total_cost').click(function() {
-                if ($('#quantity').val() && $('#unit_price').val()) {
-                    $(this).val($('#quantity').val() * $('#unit_price').val());
+            }
+            
+            function remove_row(current){
+                $(current).parents('tr').remove();
+            }
+            
+            var x = 0;
+            var temp1 =0;
+            var temp2 =0;
+            var temp;
+            function calculate_cost(current){
+                var quantity = $(current).parents('tr').children().find($('td #quantity')).val();
+                var unit_price = $(current).parents('tr').children().find($('td #unit_price')).val();
+                temp = quantity * unit_price;
+                var total_cost = $(current).parents('tr').children().find($('td #total_cost'));
+                if(quantity && unit_price && quantity != 0 && unit_price != 0){
+                    temp1 = quantity;
+                    temp2 = unit_price;
+                    temp = quantity * unit_price;
+                    $(total_cost).val(quantity * unit_price);
+                    x += quantity * unit_price;
+                    $('#final_cost').val(x);
+                }else if(quantity=='' && unit_price == ''){
+                    $(total_cost).val(0);
+                    x = x - temp;
+                    $('#final_cost').val(x);
                 }
-            });
-
-            $('#product_name').autocomplete({
-                source: '<?php echo base_url() . "product/dynamic_product_search/"; ?>',
-                minLength: 2,
-                search: function(event, ui) {
-                    $('#img').html('<img src="<?php echo base_url(); ?>resource/assets/pre-loader/Rounded blocks.gif" alt="Linear star">');
-                },
-                select: function(event, ui) {
-                    $('#img').html("");
-                    $("#product_id").val(ui.item.value);
-                    $("#product_name").val(ui.item.label);
-                    return false;
-                }
-            });
+            }
 
             function insert_product() {
+                get_products_added();
                 $.ajax({
                     type: "POST",
                     url: '<?php echo base_url() . "product/do_insert_product/"; ?>',
-                    data: {
-                        product_id: $('#product_id').val(),
-                        received_from: $('#received_from').val(),
-                        billing_id: $('#billing_id').val(),
-                        notes: $('#notes').val(),
-                        quantity: $('#quantity').val(),
-                        unit_type: $('#unit_type').val(),
-                        unit_price: $('#unit_price').val(),
-                        currency_type: $('#currency_type').val()
-                    },
+                    data: {insert_orders: JSON.stringify(data)},
                     dataType: "json",
                     success: function(json) {
                         if (json == 1) {
@@ -226,23 +393,65 @@
                 });
             }
 
-            function product_unit_names() {
+            function product_unit_names(current) {
+            if ($(current).val()) {
                 $.ajax({
                     type: "POST",
                     url: '<?php echo base_url() . "product/product_unit_names/"; ?>',
                     data: {
-                        product_id: $('#product_id').val()
+                        product_id: $(current).val()
                     },
                     dataType: "json",
                     success: function(json) {
                         if (json.length != 0) {
-                            $('#unit_type').empty().append('<option value=primary>' + json[0]['PRIMARY_UNIT_NAME'] + '</option>');
-                            $('#unit_type').append('<option value=secondary>' + json[0]['SECONDARY_UNIT_NAME'] + '</option>').selectmenu('refresh');
+                            $(current).parents('tr').children().find($('td #unit_type')).empty().append('<option value=primary>' + json[0]['PRIMARY_UNIT_NAME'] + '</option>');
+                            $(current).parents('tr').children().find($('td #unit_type')).append('<option value=secondary>' + json[0]['SECONDARY_UNIT_NAME'] + '</option>').selectmenu('refresh');
                         } else {
-                            $('#unit_type').empty().append('<option value=nothing>لا يوجد وحدات مدخلة</option>').selectmenu('refresh');
+                            $(current).parents('tr').children().find($('td #unit_type')).empty().append('<option value=nothing>لا يوجد وحدات مدخلة</option>').selectmenu('refresh');
                         }
                     }
                 });
+              }
+            }
+            
+            function get_services_added(){
+                var SecIndex=  0;
+                for(var i=1; i < SecCount; i++){
+                    if (jQuery.contains(document, $('#service'+i)[0])) {
+                        var d=new Array();
+                        d[0]=$('#service'+i +' #service_name').val();
+                        d[1]=$('#service'+i +' #provided_by').val();
+                        d[2]=$('#service'+i +' #billing_id').val();
+                        d[3]=$('#service'+i +' #notes').val();
+                        d[4]=$('#service'+i +' #service_cost').val();
+                        d[5]=$('#service'+i +' #currency_type').val();
+                        SecData[SecIndex]=d;
+                        SecIndex++;
+                    }
+                }
+            }
+            
+            function insert_service(){
+                get_services_added();
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url() . "services/insert_multiple_service/"; ?>',
+                    data: {services: JSON.stringify(SecData)},
+                    dataType: "json",
+                    success: function(json) {
+                        if (json == 1) {
+                            $('#status2').removeClass('alert-error').addClass('alert alert-success');
+                            $('#message2').text("تم إضافة الخدمة  بنجاح");
+                            $('#reset').click();
+                        }else{
+                            $('#status2').addClass('alert alert-error');
+                            $('#message2').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        }
+                    }, error: function() {
+                        $('#message').text("هناك خطأ في تخزين البيانات");
+                    }
+                });
+                return false;
             }
         </script>
         <!-- END JAVASCRIPTS -->   

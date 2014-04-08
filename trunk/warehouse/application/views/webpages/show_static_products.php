@@ -65,7 +65,7 @@
                             <!-- BEGIN EXAMPLE TABLE widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>جدول يحتوي على جميع الأصناف المخزنة</h4>
+                                    <h4><i class="icon-reorder"></i>جدول يحتوي العهد  </h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -92,29 +92,19 @@
                                             <?php foreach ($products as $value) { ?>
                                                 <tr class="odd gradeX">
                                                     <td><input type="checkbox" class="checkboxes" value="1" /></td>
-                                                    <td class="text-info bold"><?= $value['PRODUCT_NAME'] ?></td>
-                                                    <td><?= $value['PRODUCT_NUMBER'] ?></td>
-                                                    <td>
-                                                        <?php if($value['PRODUCT_TYPE'] == '1'){?>
-                                                            <span class="text-info">مـواد مستهلكة</span>
-                                                        <?php }else if($value['PRODUCT_TYPE'] == '2'){?>
-                                                            <span class="text-info">مواد دائـمة</span>
-                                                    <?php }?>
-                                                    </td>
-                                                    <td><?= $value['RE_DEMAND_BORDER'] ?></td>
-                                                    <td><?= $value['PRIMARY_UNIT_NAME'] ?>=<?= $value['PRIMARY_UNIT_QUANTITY'] . ' || ' ?><?= $value['SECONDARY_UNIT_NAME'] ?>=<?= $value['SECONDARY_UNIT_QUANTITY'] ?></td>
-                                                    <td><?= $value['H_LENGTH'] ?></td>
-                                                    <td><?= $value['WIDTH'] ?></td>
-                                                    <td><?= $value['HEIGHT'] ?></td>
-                                                    <td><?= $value['NOTES'] ?></td>
-                                                    <td>
+                                                    <td name="pname" class="hidden-phone"><?= $value['PRODUCT_NAME'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['PRODUCT_NUMBER'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['PRODUCT_TYPE'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['RE_DEMAND_BORDER'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['PRIMARY_UNIT_NAME'] ?>=<?= $value['PRIMARY_UNIT_QUANTITY'] . ' || ' ?><?= $value['SECONDARY_UNIT_NAME'] ?>=<?= $value['SECONDARY_UNIT_QUANTITY'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['H_LENGTH'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['WIDTH'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['HEIGHT'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['NOTES'] ?></td>
+                                                    <td class="hidden-phone">
                                                         <a href='<?php echo base_url() . "product/update_product/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
                                                         <a id="delete" href="javascript:delete_product(<?= $value['PRODUCT_ID'] ?>)" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
-                                                        <?php if($value['PRODUCT_TYPE'] == 1){ ?>
-                                                            <a href='<?php echo base_url() . "product/inserted_temp_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-th-list"> تفصيل</i></a>
-                                                        <?php } else if($value['PRODUCT_TYPE'] ==2){?>    
-                                                            <a href='<?php echo base_url() . "product/inserted_static_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-th-list"> تفصيل</i></a>
-                                                        <?php }?>
+                                                        <a href='<?php echo base_url() . "product/inserted_static_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple">تفصيل</a>
                                                     </td>
                                                 </tr>
                                             <?php } ?>
