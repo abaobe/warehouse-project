@@ -15,7 +15,6 @@
         <link href="<?php echo base_url(); ?>resource/css/style.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
-
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.css" rel="stylesheet" type="text/css"/>
@@ -96,13 +95,8 @@
                                             <div class="controls">
                                                 <select id="product_type" name="product_type" data-placeholder="Choose a Category" tabindex="1">
                                                     <option value="">إختيار</option>
-                                                    <option value="1">مــواد مستهلكة</option>
-                                                    <option value="2">مــواد ثابتة "عهد"</option>
-                                                </select>
-                                                <select id="product_status" name="product_status" >
-                                                    <option value="ممتازة">ممتازة</option>
-                                                    <option selected value="جيدة">جيدة</option>
-                                                    <option value="سيئة">سيئة</option>
+                                                    <option value="1">مواد مستهلكة</option>
+                                                    <option value="2">مواد معمرة</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -135,13 +129,28 @@
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                            <label class="control-label">إسم الفئة</label>
+                                            <label class="control-label">الفئة التي ينتمي إليها</label>
                                             <div class="controls">
-                                                <select id="category_id" name="category_id" class="span6 chosen" data-placeholder="إختيـار فئة..." tabindex="1">
+                                                <select id="parent_id" class="span6 chosen" data-placeholder="الفئة التي ينتمي إليها" tabindex="1">
                                                     <option value=""></option>
-                                                    <?php foreach ($categories as $value) { ?>
-                                                        <option value="<?= $value['CATEGORY_ID'] ?>"><?= $value['CATEGORY_NAME'] ?></option>
-                                                    <?php } ?>
+                                                    <?php
+                                                    $current_main = "";
+                                                    foreach ($categories as $category) {
+                                                        if ($current_main != $category['ROOT_NAME']) {
+                                                            $current_main = $category['ROOT_NAME'];
+                                                            ?>
+                                                            <option class="text-success bold large" value="<?= $category['ROOT_ID'] ?>"><?= $category['ROOT_NAME'] ?></option>
+                                                            <option value="<?= $category['DOWN1_ID'] ?>"><?php if ($category['DOWN1_NAME'] != null) echo ' > ' . $category['DOWN1_NAME'] ?></option>
+                                                            <option value="<?= $category['DOWN2_ID'] ?>"><?php if ($category['DOWN2_NAME'] != null) echo '  >> ' . $category['DOWN2_NAME'] ?></option>
+                                                            <option value="<?= $category['DOWN3_ID'] ?>"><?php if ($category['DOWN3_NAME'] != null) echo '   >>> ' . $category['DOWN3_NAME'] ?></option>
+                                                        <?php } else { ?>
+                                                            <option value="<?= $category['DOWN1_ID'] ?>"><?php if ($category['DOWN1_NAME'] != null) echo ' > ' . $category['DOWN1_NAME'] ?></option>
+                                                            <option value="<?= $category['DOWN2_ID'] ?>"><?php if ($category['DOWN2_NAME'] != null) echo '  >> ' . $category['DOWN2_NAME'] ?></option>
+                                                            <option value="<?= $category['DOWN3_ID'] ?>"><?php if ($category['DOWN3_NAME'] != null) echo '   >>> ' . $category['DOWN3_NAME'] ?></option>  
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -152,7 +161,7 @@
                                             </div>
                                         </div>
                                         <div class="form-actions">
-                                            <button type="button" class="btn btn-success" onclick="add_product()">إرسال</button>
+                                            <button type="button" class="btn btn-success" onclick="add_product()">حـفظ</button>
                                             <button type="reset" id="reset" class="btn">إلغاء</button>
                                         </div>
                                     </form>
@@ -184,20 +193,13 @@
         <![endif]-->
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
-        <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script>
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
-                $('#product_status').hide();
-                $('#product_type').on('change',function (){
-                   if ($('#product_type').val()=='2') {
-                         $('#product_status').show()();
-                    } else{
-                        $('#product_status').hide();
-                    }
-                });
             });
+            
             function add_product() {
                 $.ajax({
                     type: "POST",
@@ -224,7 +226,7 @@
                             $('#status').removeClass('alert-error').addClass('alert alert-success');
                             $('#message').text("تم إضافة الصنف بنجاح");
                             $('#reset').click();
-                        }else{
+                        } else {
                             $('#status').addClass('alert alert-error');
                             $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
                         }

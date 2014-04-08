@@ -18,7 +18,6 @@
 
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" type="text/css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
-        <link href="<?php echo base_url(); ?>resource/assets/custombox/reveal.css" type="text/css" rel="stylesheet">	
         <link href="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.css" type="text/css" rel="stylesheet">	
     </head>
     <!-- END HEAD -->
@@ -79,6 +78,7 @@
                                                 <th style="width:8px;" ><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
                                                 <th class="hidden-phone">رقم الطلب</th>
                                                 <th class="hidden-phone">مقدم من</th>
+                                                <th class="hidden-phone">نوع الأصناف</th>
                                                 <th class="hidden-phone">تاريخ الطلب</th>
                                                 <th class="hidden-phone">قائـمة المهام</th>
                                             </tr>
@@ -87,11 +87,18 @@
                                             <?php foreach ($orders as $value) { ?>
                                                 <tr class="odd gradeX">
                                                     <td status="<?= $value['STATUS'] ?>"><input type="checkbox" class="checkboxes" value="1" /></td>
-                                                    <td name="pname" class="hidden-phone"><?= $value['ORDER_NUMBER'] ?></td>
-                                                    <td name="pname" class="hidden-phone"><?= $value['DEPARTMENT_NAME'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['ORDER_NUMBER'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['DEPARTMENT_NAME'] ?></td>
+                                                    <td class="hidden-phone">
+                                                    <?php if($value['PRODUCT_TYPE'] == '1'){?>
+                                                        <span class="text-info">مـواد مستهلكة</span>
+                                                    <?php }else if($value['PRODUCT_TYPE'] == '2'){?>
+                                                        <span class="text-info">مواد دائـمة</span>
+                                                    <?php }?>
+                                                    </td>
                                                     <td class="hidden-phone"><?= $value['ADDED_DATE'] ?></td>
                                                     <td class="hidden-phone">
-                                                        <a href='#' id="disburse" class="btn mini purple" order_number="<?= $value['ORDER_NUMBER'] ?>" data-reveal-id="myModal">صرف لوازم</a>
+                                                        <a href='#' onclick="redirect(this);return false;" order_number="<?=$value["ORDER_NUMBER"]?>" product_type="<?=$value['PRODUCT_TYPE']?>" class="btn mini purple">صرف لوازم</a>
                                                         <a href='#' class="btn mini purple"><i class="icon-edit"></i> عرض</a>
                                                         <button id="refuse" class="btn mini purple" onclick="refuse_order('<?= $value['ORDER_NUMBER'] ?>', this)"><i class="icon-edit"></i> رفـض</button>
                                                     </td>
@@ -105,12 +112,6 @@
                         </div>
                     </div>
                     <!-- END ADVANCED TABLE widget-->
-                    <!-- START POPUP PAGE -->
-                    <div id="myModal" class="reveal-modal">
-                        <div id="modal" class=""><h4>لم يتم إيجاد الصفحة التي قمت بطلبها</h4></div>
-                        <a class="close-reveal-modal">&#215;</a>
-                    </div>
-                    <!-- END POPUP PAGE -->
                     <!-- END PAGE CONTENT-->
                 </div>
                 <!-- END PAGE CONTAINER-->
@@ -137,19 +138,13 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.js"></script>
         <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script src="<?php echo base_url(); ?>resource/js/jquery.confirm.js"></script>
-        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/custombox/jquery.reveal.js"></script>
         <script>
-            var order_status;
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
-                
                 var oTable = $('#sample_1').dataTable();
-                $('#disburse').live('click', function(e) {
-                    e.preventDefault();
-                    disburse_supplies($(this).attr('order_number'));
-                });
-
+                
+                //this function should put after each paging
                 $("tr td[status]").each(function() {
                     var status = $(this).attr('status');
                     if (status == "refuse") {
@@ -161,21 +156,18 @@
                     }
                 });
             });
-
-            function disburse_supplies(order_number) {
-                $.ajax({
-                    type: "POST",
-                    url: '<?php echo base_url() . "product/disburse_supplies/"; ?>',
-                    data: {
-                        order_number: order_number
-                    },
-                    success: function(data) {
-                        $('#modal').html(data);
-                    }
-                });
+            
+            function redirect (current){
+                var number = $(current).attr('order_number').replace('/', '-');
+                var type = $(current).attr('product_type');
+                if(type == 1){
+                   window.location = '<?php echo base_url() . "product/manage_temp_orders/" ?>'+ number;
+                }else if(type = 2){
+                   window.location = '<?php echo base_url() . "product/manage_static_orders/" ?>'+ number;
+                }
             }
 
-            function refuse_order(order_number, hh) {
+            function refuse_order(order_number, current) {
                 $.confirm({
                     text: "<h4>هل أنت متأكد من رفض هذا الطلب ؟</h4>",
                     confirm: function() {
@@ -184,7 +176,7 @@
                             data: {order_number: order_number},
                             dataType: "json",
                             success: function(json) {
-                                var column = $(hh).parents('tr').children('td[status]');
+                                var column = $(current).parents('tr').children('td[status]');
                                 $(column).fadeOut().fadeIn().addClass('label-important');
                             }
                         });

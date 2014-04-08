@@ -8,8 +8,8 @@ class Department_model extends CI_Model {
         $this->DBObject = new OracleModel();
     }
 
-    function get_departments_names() {
-        return $this->DBObject->readCursor("department_actions.get_depatments_names", null);
+    function get_departments_id_name() {
+        return $this->DBObject->readCursor("department_actions.get_depatments_id_name", null);
     }
 
     function get_department_inventory($data) {
@@ -38,4 +38,4 @@ class Department_model extends CI_Model {
 
 }
 
-/* End of file category_model.php */
+/* End of file department_model.php */

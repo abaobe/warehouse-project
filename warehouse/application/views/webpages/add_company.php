@@ -49,9 +49,9 @@
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">إضافة دائـرة جديدة</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">إضافة خدمة جديدة</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">إضافة دائـرة جديدة</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">إضافة خدمة جديدة</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -79,9 +79,15 @@
                                     <!-- BEGIN FORM-->
                                     <form method="POST" id="add_form" onsubmit="return false;" class="form-horizontal">
                                         <div class="control-group">
-                                            <label class="control-label">إسم الدائرة</label>
+                                            <label class="control-label">إسم الشركة</label>
                                             <div class="controls">
-                                                <input type="text" id="department_name" class="span6" />
+                                                <input type="text" id="company_name" class="span6" />
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label">رقم الترخيص</label>
+                                            <div class="controls">
+                                                <input type="text" id="license_number" class="span6" />
                                             </div>
                                         </div>
                                         <div class="control-group">
@@ -93,17 +99,17 @@
                                         <div class="control-group">
                                             <label class="control-label">رقم الهاتف</label>
                                             <div class="controls">
-                                                <input type="text" id="phone" class="span6 " />
+                                                <input type="text" id="telephone" class="span6 " />
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                            <label class="control-label">ملاحـظات</label>
+                                            <label class="control-label">رقم الجوال</label>
                                             <div class="controls">
-                                                <textarea id="notes" class="span6 " rows="3"></textarea>
+                                                <input type="text" id="mobile" class="span6 " />
                                             </div>
                                         </div>
                                         <div class="form-actions">
-                                            <button type="button" class="btn btn-success" onclick="add_department()">حـفظ</button>
+                                            <button type="button" class="btn btn-success" onclick="add_company()">حـفظ</button>
                                             <button type="reset" id="reset" class="btn">إلغاء</button>
                                         </div>
                                     </form>
@@ -140,21 +146,23 @@
                 // initiate layout and plugins
                 App.init();
             });
-            function add_department() {
+            function add_company() {
                 $.ajax({
                     type: "POST",
-                    url: '<?php echo base_url() . "departments/do_add_department/"; ?>',
+                    url: '<?php echo base_url() . "companies/do_add_company/"; ?>',
                     data: {
-                        department_name: $('#department_name').val(),
+                        company_name: $('#company_name').val(),
+                        license_number: $('#license_number').val(),
                         address: $('#address').val(),
-                        phone: $('#phone').val(),
-                        notes: $('#notes').val()
+                        telephone: $('#telephone').val(),
+                        mobile: $('#mobile').val(),
+                        adddress: $('#address').val()
                     },
                     dataType: "json",
                     success: function(json) {
                         if (json == 1) {
                             $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إضافة الدائرة  بنجاح");
+                            $('#message').text("تم إضافة الخدمة  بنجاح");
                             $('#reset').click();
                         }else{
                             $('#status').addClass('alert alert-error');

@@ -15,7 +15,7 @@
         <link href="<?php echo base_url(); ?>resource/css/style.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
-
+        <link href="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.css" rel="stylesheet" type="text/css"/>
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
     </head>
@@ -79,31 +79,69 @@
                                     <!-- BEGIN FORM-->
                                     <form method="POST" id="add_form" onsubmit="return false;" class="form-horizontal">
                                         <div class="control-group">
-                                            <label class="control-label">إسم الدائرة</label>
+                                            <label class="control-label">إسم الفئة</label>
                                             <div class="controls">
-                                                <input type="text" id="department_name" class="span6" />
+                                                <input type="text" id="category_name" class="span6" />
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                            <label class="control-label">العنوان</label>
+                                            <label class="control-label">نوع الفئة</label>
                                             <div class="controls">
-                                                <input type="text" id="address" class="span6 " />
+                                                <label class="radio">
+                                                    <input type="radio" name="category_type" value="main" onclick="checkType()" />
+                                                    فئة رئـيسية
+                                                </label>
+                                                <label class="radio">
+                                                    <input type="radio" name="category_type" value="sub" onclick="checkType()" />
+                                                    فئة فرعـية
+                                                </label>
                                             </div>
                                         </div>
-                                        <div class="control-group">
-                                            <label class="control-label">رقم الهاتف</label>
-                                            <div class="controls">
-                                                <input type="text" id="phone" class="span6 " />
+                                        <div id="main_category">
+                                            <div class="control-group">
+                                                <label class="control-label">وصف الفئة</label>
+                                                <div class="controls">
+                                                    <input type="text" id="category_description" class="span6 " />
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label">فئة فرعية</label>
+                                                <div class="controls">
+                                                    <input type="text" id="sub_1" class="span6 " />
+                                                    <button id="more" class="btn btn-info"><i class="icon-plus icon-white"></i> مزيد</button>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="control-group">
-                                            <label class="control-label">ملاحـظات</label>
-                                            <div class="controls">
-                                                <textarea id="notes" class="span6 " rows="3"></textarea>
+                                        <div id="sub_category">
+                                            <div class="control-group">
+                                                <label class="control-label">الفئة الرئيسية التي ينتمي إليها</label>
+                                                <div class="controls">
+                                                    <select id="parent_id" class="span6 chosen" data-placeholder="الفئة التي ينتمي إليها" tabindex="1">
+                                                        <option value=""></option>
+                                                        <?php
+                                                        $current_main = "";
+                                                        foreach ($categories as $category) {
+                                                            if ($current_main != $category['ROOT_NAME']) {
+                                                                $current_main = $category['ROOT_NAME'];
+                                                                ?>
+                                                                <option class="text-success bold large" value="<?= $category['ROOT_ID'] ?>"><?= $category['ROOT_NAME'] ?></option>
+                                                                <option value="<?= $category['DOWN1_ID'] ?>"><?php if ($category['DOWN1_NAME'] != null) echo ' > ' . $category['DOWN1_NAME'] ?></option>
+                                                                <option value="<?= $category['DOWN2_ID'] ?>"><?php if ($category['DOWN2_NAME'] != null) echo '  >> ' . $category['DOWN2_NAME'] ?></option>
+                                                                <option value="<?= $category['DOWN3_ID'] ?>"><?php if ($category['DOWN3_NAME'] != null) echo '   >>> ' . $category['DOWN3_NAME'] ?></option>
+                                                            <?php } else { ?>
+                                                                <option value="<?= $category['DOWN1_ID'] ?>"><?php if ($category['DOWN1_NAME'] != null) echo ' > ' . $category['DOWN1_NAME'] ?></option>
+                                                                <option value="<?= $category['DOWN2_ID'] ?>"><?php if ($category['DOWN2_NAME'] != null) echo '  >> ' . $category['DOWN2_NAME'] ?></option>
+                                                                <option value="<?= $category['DOWN3_ID'] ?>"><?php if ($category['DOWN3_NAME'] != null) echo '   >>> ' . $category['DOWN3_NAME'] ?></option>  
+                                                                <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-actions">
-                                            <button type="button" class="btn btn-success" onclick="add_department()">إرسال</button>
+                                            <button type="button" class="btn btn-success" onclick="add_category()">حـفظ</button>
                                             <button type="reset" id="reset" class="btn">إلغاء</button>
                                         </div>
                                     </form>
@@ -134,37 +172,86 @@
         <script src="js/respond.js"></script>
         <![endif]-->
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
         <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script>
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
+                $('#main_category').hide();
+                $('#sub_category').hide();
             });
-            function add_department() {
-                $.ajax({
-                    type: "POST",
-                    url: '<?php echo base_url() . "departments/do_add_department/"; ?>',
-                    data: {
-                        department_name: $('#department_name').val(),
-                        address: $('#address').val(),
-                        phone: $('#phone').val(),
-                        notes: $('#notes').val()
-                    },
-                    dataType: "json",
-                    success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إضافة الدائرة  بنجاح");
-                            $('#reset').click();
-                        }else{
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
-                        }
-                    }, error: function() {
-                        $('#message').text("هناك خطأ في تخزين البيانات");
+
+            var count = 2;
+            $('#more').click(function() {
+                var new_sub = '<div class="control-group"><label class="control-label">فئة فرعية</label><div class="controls"><input type="text" class="span6" id="sub_' + count + '"/></div></div>';
+                $('#main_category').append(new_sub);
+                count++;
+            });
+
+            function checkType() {
+                if ($("input:radio[name=category_type]:checked").val() == 'main') {
+                    $('#sub_category').hide();
+                    $('#main_category').show();
+                } else if ($("input:radio[name=category_type]:checked").val() == 'sub') {
+                    $('#main_category').hide();
+                    $('#sub_category').show();
+                }
+            }
+
+            function add_category() {
+                if ($("input:radio[name=category_type]:checked").val() == 'main') {
+
+                    var subs = ",";
+                    for (var i = 1; i < count; i++) {
+                        subs += $("#sub_" + i).val() + ',';
                     }
-                });
-                return false;
+                    $.ajax({
+                        type: "POST",
+                        url: '<?php echo base_url() . "categories/do_add_category/"; ?>',
+                        data: {
+                            category_name: $('#category_name').val(),
+                            category_description: $('#category_description').val(),
+                            subs: subs
+                        },
+                        dataType: "json",
+                        success: function(json) {
+                            if (json == 1) {
+                                $('#status').removeClass('alert-error').addClass('alert alert-success');
+                                $('#message').text("تم إضافة الفئة  بنجاح");
+                                $('#reset').click();
+                            } else {
+                                $('#status').addClass('alert alert-error');
+                                $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                            }
+                        }, error: function() {
+                            $('#message').text("هناك خطأ في تخزين البيانات");
+                        }
+                    });
+                }
+                else if ($("input:radio[name=category_type]:checked").val() == 'sub') {
+                    $.ajax({
+                        type: "POST",
+                        url: '<?php echo base_url() . "categories/do_add_subCategory/"; ?>',
+                        data: {
+                            category_name: $('#category_name').val(),
+                            parent_id: $('#parent_id').val()
+                        },
+                        dataType: "json",
+                        success: function(json) {
+                            if (json == 1) {
+                                $('#status').removeClass('alert-error').addClass('alert alert-success');
+                                $('#message').text("تم إضافة الفئة  بنجاح");
+                                $('#reset').click();
+                            } else {
+                                $('#status').addClass('alert alert-error');
+                                $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                            }
+                        }, error: function() {
+                            $('#message').text("هناك خطأ في تخزين البيانات");
+                        }
+                    });
+                }
             }
         </script>
         <!-- END JAVASCRIPTS -->   

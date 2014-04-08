@@ -106,7 +106,7 @@
                                         </div>
                                     </div>
                                     <div class="form-actions">
-                                        <button type="button" class="btn btn-success" id="back_btn" borrowing_id="<?= $info['VOUCHER_ID'] ?>" onclick="do_return_borrowing(this)">ارجاع</button>
+                                        <button type="button" class="btn btn-success" id="back_btn" borrowing_id="<?= $info['VOUCHER_ID'] ?>" onclick="do_return_borrowing(this)">إرجـاع</button>
                                         <button type="reset" id="reset" class="btn">إلغاء</button>
                                     </div>
                                 </form>

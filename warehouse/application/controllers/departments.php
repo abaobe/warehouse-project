@@ -15,10 +15,10 @@ class Departments extends CI_Controller {
     }
 
     public function inventory_supplies() {
-        $result['departments'] = $this->department_model->get_departments_names();
+        $result['departments'] = $this->department_model->get_departments_id_name();
         $this->load->view('webpages/inventory_supplies', $result);
     }
-    
+
     public function get_department_inventory() {
         $data['department_id'] = $this->input->post('department_id');
         $data['start_date'] = $this->input->post('start_date');
@@ -26,16 +26,16 @@ class Departments extends CI_Controller {
         $result['inventory'] = $this->department_model->get_department_inventory($data);
         echo json_encode($result);
     }
-    
+
     public function add_department() {
         $this->load->view('webpages/add_department');
     }
-    
+
     public function do_add_department() {
         $data['department_name'] = $this->input->post('department_name');
         $data['address'] = $this->input->post('address');
         $data['phone'] = $this->input->post('phone');
-        $data['notes']=  $this->input->post('notes');
+        $data['notes'] = $this->input->post('notes');
 
         $result = $this->department_model->add_department($data);
         echo json_encode($result);

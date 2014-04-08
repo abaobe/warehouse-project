@@ -33,10 +33,18 @@
                 <li><a class="" href="<?php echo base_url() . "product/show_all_products"; ?>">حذف وتعديل الأصناف</a></li>
                 <li><a class="" href="<?php echo base_url() . "product/insert_products"; ?>">نموذج إدخال لوازم</a></li>
                 <li><a class="" href="<?php echo base_url() . "product/supplies_order"; ?>">نموذج طلب لوازم</a></li>
+                <li><a class="" href="<?php echo base_url() . "product/static_supplies_order"; ?>">طلب لوازم ثابتة</a></li>
                 <li><a class="" href="<?php echo base_url() . "product/show_ordered_supplies"; ?>">إدارة صرف اللوازم</a></li>
                 <li><a class="" href="<?php echo base_url() . "departments/inventory_supplies"; ?>">جـرد اللوازم</a></li>
                 <li><a class="" href="<?php echo base_url() . "departments/add_department"; ?>">إضافة دائرة جديدة</a></li>
                 <li><a class="" href="<?php echo base_url() . "product/show_all_borrowing"; ?>">إدارة الأصناف المعارة</a></li>
+                <li><a class="" href="<?php echo base_url() . "categories/add_category"; ?>"> إضـافة فئـه </a></li>
+                <li><a class="" href="<?php echo base_url() . "services/add_service"; ?>">إضـافة خـدمة</a></li>
+                <li><a class="" href="<?php echo base_url() . "product/insert_static_product"; ?>">إضـافة عهدة</a></li>
+                <li><a class="" href="<?php echo base_url() . "product/show_static_products"; ?>">إدارة العهد</a></li>
+                <li><a class="" href="<?php echo base_url() . "companies/add_company"; ?>">إضافة شركة</a></li>
+                <li><a class="" href="<?php echo base_url() . "product/department_borrowing"; ?>">العهد الموجود في الدائرة</a></li>
+                <li><a class="" href="<?php echo base_url() . "product/audit_returns"; ?>">تدقيق العهد المرجعه والمستحقه</a></li>
             </ul>
         </li>
         <!-- END SIDEBAR MENU -->

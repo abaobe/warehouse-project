@@ -15,6 +15,7 @@
         <link href="<?php echo base_url(); ?>resource/css/style.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
+
         <link href="<?php echo base_url(); ?>resource/assets/custombox/reveal.css" type="text/css" rel="stylesheet">	
     </head>
     <!-- END HEAD -->
@@ -100,7 +101,7 @@
                                         </div>
                                         <!-- END VOUCHER NUMBER INFO -->
                                     </div>
-                                    <div class="widget-body form" style="overflow-y: auto; height: 600px;">
+                                    <div class="widget-body form" style="overflow-y: auto; height: 500px;">
                                         <!-- Start Alert Message -->
                                         <div id="status" class="alert">
                                             <button class="close" data-dismiss="alert">×</button>
@@ -173,12 +174,26 @@
                                     <div class="control-group">
                                         <label class="control-label">الجهة الطالبة</label>
                                         <div class="controls">
-                                            <select class="span12" id="department_id" data-placeholder="إختيـار فئة..." tabindex="1">
+                                            <select class="span6" id="department_id" data-placeholder="إختيـار فئة..." tabindex="1">
                                                 <option value=""></option>
                                                 <?php foreach ($departments as $value) { ?>
                                                     <option value="<?= $value['DEPARTMENT_ID'] ?>"><?= $value['DEPARTMENT_NAME'] ?></option>
                                                 <?php } ?>
                                             </select>
+                                            <input type="text" class="span6" id="section_name" placeholder="القسم" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label">إسم الموظف</label>
+                                        <div class="controls">
+                                            <input type="text" class="span12" id="employee_name" placeholder="إسم الموظف" value="" />
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label"></label>
+                                        <div class="controls">
+                                            <input type="text" class="span6" id="employee_number" placeholder="الرقم الوظيفي" value="" />
+                                            <input type="text" class="span6" id="room_number" placeholder="رقم الغرفة" value="" />
                                         </div>
                                     </div>
                                     <div class="control-group">
@@ -259,7 +274,7 @@
                     url: '<?php echo base_url() . "product/get_ProductsBy_CatID/"; ?>',
                     data: {
                         category_id: category_id,
-                        prodType: 1
+                        prodType: 2
                     },
                     dataType: "json",
                     success: function(json) {
@@ -300,11 +315,16 @@
                 d[3] = $('#quantity').val();
                 d[4] = $('#unit_type').val();
                 d[5] = $('#order_number').val();
+                d[6] = $('#employee_name').val();
+                d[7] = $('#employee_number').val();
+                d[8] = $('#section_name').val();
+                d[9] = $('#room_number').val();
                 data[index] = d;
 
                 var product = jQuery('<tr id=' + index + '><td>' + [++index] + '</td><td class="text-info"><b>' + product_name
                         + '</b></td><td>' + $('#unit_type option:selected').text() + '</td><td>' + $('#quantity').val() + '</td><td>'
-                        + $('#notes').val() + '</td><td><button onclick="remove_row(this)" id="remove" class="btn-danger"><i class="icon-trash"></i></button></td></tr>');
+                        + $('#notes').val() + '</td><td><button onclick="remove_row(this)" id="remove" class="btn-danger"><i class="icon-trash">'
+                        + '</i></button></td></tr>');
                 $('#products').show().fadeOut().fadeIn();
                 $('tbody[id^=added_products] > tr:last').before(product);
 
@@ -322,7 +342,7 @@
             function supply_order() {
                 $.ajax({
                     type: "POST",
-                    url: '<?php echo base_url() . "product/do_supply_order/"; ?>',
+                    url: '<?php echo base_url() . "product/do_static_supply_order/"; ?>',
                     data: {supplies_data: JSON.stringify(data)
                     },
                     dataType: "json",

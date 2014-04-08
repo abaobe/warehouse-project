@@ -65,7 +65,7 @@
                             <!-- BEGIN EXAMPLE TABLE widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>جدول يحتوي على جميع الأصناف المخزنة</h4>
+                                    <h4><i class="icon-reorder"></i>جدول يحتوي العهد   </h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -76,45 +76,28 @@
                                         <thead>
                                             <tr>
                                                 <th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
-                                                <th class="hidden-phone">إسم الصنف</th>
-                                                <th class="hidden-phone">رقم الصنف</th>
-                                                <th class="hidden-phone">نوع الصنف</th>
-                                                <th class="hidden-phone">حد إعادة الطلب</th>
-                                                <th class="hidden-phone">الكمية المتبقية</th>
-                                                <th class="hidden-phone">الطول</th>
-                                                <th class="hidden-phone">العرض</th>
-                                                <th class="hidden-phone">الإرتفاع</th>
+                                                <th class="hidden-phone">تاريخ الإدخال</th>
+                                                <th class="hidden-phone">تم شراءه من</th>
+                                                <th class="hidden-phone">رقم الفاتورة</th>
+                                                <th class="hidden-phone">الكمية</th>
+                                                <th class="hidden-phone">السعر</th>
                                                 <th class="hidden-phone">ملاحظات</th>
                                                 <th class="hidden-phone">قائـمة المهام</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($products as $value) { ?>
+                                            <?php foreach ($product_info as $value) { ?>
                                                 <tr class="odd gradeX">
                                                     <td><input type="checkbox" class="checkboxes" value="1" /></td>
-                                                    <td class="text-info bold"><?= $value['PRODUCT_NAME'] ?></td>
-                                                    <td><?= $value['PRODUCT_NUMBER'] ?></td>
-                                                    <td>
-                                                        <?php if($value['PRODUCT_TYPE'] == '1'){?>
-                                                            <span class="text-info">مـواد مستهلكة</span>
-                                                        <?php }else if($value['PRODUCT_TYPE'] == '2'){?>
-                                                            <span class="text-info">مواد دائـمة</span>
-                                                    <?php }?>
-                                                    </td>
-                                                    <td><?= $value['RE_DEMAND_BORDER'] ?></td>
-                                                    <td><?= $value['PRIMARY_UNIT_NAME'] ?>=<?= $value['PRIMARY_UNIT_QUANTITY'] . ' || ' ?><?= $value['SECONDARY_UNIT_NAME'] ?>=<?= $value['SECONDARY_UNIT_QUANTITY'] ?></td>
-                                                    <td><?= $value['H_LENGTH'] ?></td>
-                                                    <td><?= $value['WIDTH'] ?></td>
-                                                    <td><?= $value['HEIGHT'] ?></td>
-                                                    <td><?= $value['NOTES'] ?></td>
-                                                    <td>
-                                                        <a href='<?php echo base_url() . "product/update_product/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
-                                                        <a id="delete" href="javascript:delete_product(<?= $value['PRODUCT_ID'] ?>)" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
-                                                        <?php if($value['PRODUCT_TYPE'] == 1){ ?>
-                                                            <a href='<?php echo base_url() . "product/inserted_temp_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-th-list"> تفصيل</i></a>
-                                                        <?php } else if($value['PRODUCT_TYPE'] ==2){?>    
-                                                            <a href='<?php echo base_url() . "product/inserted_static_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-th-list"> تفصيل</i></a>
-                                                        <?php }?>
+                                                    <td class="hidden-phone"><?= $value['ADDED_DATE'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['COMPANY_NAME'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['BILLING_ID'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['QUANTITY'] ?><?=' '.$value['UNIT_NAME'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['UNIT_PRICE'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['NOTES'] ?></td>
+                                                    <td class="hidden-phone">
+                                                        <a href='<?php echo base_url() . "product/update_temp_product/" . $value['VOUCHER_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
+                                                        <a id="delete" href="javascript:delete_inserted_product(<?= $value['VOUCHER_ID'] ?>)" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
                                                     </td>
                                                 </tr>
                                             <?php } ?>
@@ -159,13 +142,13 @@
                 App.init();
             });
 
-            function delete_product(product_id) {
+            function delete_inserted_product(voucher_id) {
                 $.confirm({
-                    text: "<h4>هل أنت متأكد من حذف هذا الصنف ؟</h4>",
+                    text: "<h4>هل أنت متأكد من حذف هذا الإدخال ؟</h4>",
                     confirm: function() {
                         $.ajax({type: "POST",
-                            url: '<?php echo base_url() . "product/do_delete_product/"; ?>',
-                            data: {product_id: product_id},
+                            url: '<?php echo base_url() . "product/do_delete_inserted_product/"; ?>',
+                            data: {voucher_id: voucher_id},
                             dataType: "json",
                             success: function(json) {
                                 var oTable = $('#sample_1').dataTable();
