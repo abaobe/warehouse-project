@@ -15,8 +15,13 @@ class categories extends CI_Controller {
     }
     
     public function add_category() {
-        $result['categories'] = $this->category_model->get_all_categories();
+        $result['categories'] = $this->category_model->get_categories_id_name();
         $this->load->view('webpages/add_category',$result);
+    }
+    
+    public function manage_categories() {
+        $result['categories'] = $this->category_model->get_all_categories();
+        $this->load->view('webpages/manage_categories',$result);
     }
     
     public function do_add_category(){

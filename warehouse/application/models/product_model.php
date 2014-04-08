@@ -24,12 +24,11 @@ class Product_model extends CI_Model {
                 array('name' => ':secondary_unit_name', 'value' => &$product_info['secondary_unit_name']),
                 array('name' => ':primary_unit_quantity', 'value' => &$product_info['primary_unit_quantity']),
                 array('name' => ':secondary_unit_quantity', 'value' => &$product_info['secondary_unit_quantity']),
-                array('name' => ':status', 'value' => &$product_info['status']),
                 array('name' => ':res', 'value' => &$result)
             );
 
             $conn = $this->db->conn_id;
-            $stmt = oci_parse($conn, "begin :res := product_actions.add_new_product(:product_name,:product_number,:product_type,:notes,:category_id,:width,:height,:h_length,:re_demand_border,:primary_unit_name,:secondary_unit_name,:primary_unit_quantity,:secondary_unit_quantity,:status); end;");
+            $stmt = oci_parse($conn, "begin :res := product_actions.add_new_product(:product_name,:product_number,:product_type,:notes,:category_id,:width,:height,:h_length,:re_demand_border,:primary_unit_name,:secondary_unit_name,:primary_unit_quantity,:secondary_unit_quantity); end;");
 
             foreach ($params as $variable) {
                 oci_bind_by_name($stmt, $variable["name"], $variable["value"]);

@@ -39,6 +39,7 @@
                 <li><a class="" href="<?php echo base_url() . "departments/add_department"; ?>">إضافة دائرة جديدة</a></li>
                 <li><a class="" href="<?php echo base_url() . "product/show_all_borrowing"; ?>">إدارة الأصناف المعارة</a></li>
                 <li><a class="" href="<?php echo base_url() . "categories/add_category"; ?>"> إضـافة فئـه </a></li>
+                <li><a class="" href="<?php echo base_url() . "categories/manage_categories"; ?>">إدراة الفئات</a></li>
                 <li><a class="" href="<?php echo base_url() . "services/add_service"; ?>">إضـافة خـدمة</a></li>
                 <li><a class="" href="<?php echo base_url() . "product/insert_static_product"; ?>">إضـافة عهدة</a></li>
                 <li><a class="" href="<?php echo base_url() . "product/show_static_products"; ?>">إدارة العهد</a></li>

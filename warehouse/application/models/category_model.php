@@ -8,9 +8,15 @@ class Category_model extends CI_Model {
         $this->DBObject = new OracleModel();
     }
 
+    function get_categories_id_name() {
+        return $this->DBObject->readCursor("category_actions.get_categories_id_name", null);
+    }
+    
     function get_all_categories() {
         return $this->DBObject->readCursor("category_actions.get_all_categories", null);
     }
+    
+    
 
     function add_category($category_info) {
         $params = array(
