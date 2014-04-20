@@ -86,7 +86,8 @@
                                                 <th style="width:8px;" ><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
                                                 <th class="hidden-phone">إسم الصنف</th>
                                                 <th class="hidden-phone">الرقم التسلسلي</th>
-                                                <th class="hidden-phone">الجهه المستعيرة</th>
+                                                <th class="hidden-phone">إسم الإدارة</th>
+                                                <th class="hidden-phone">إسم الدائرة</th>
                                                 <th class="hidden-phone">إسم القسم</th>
                                                 <th class="hidden-phone">الحالة عند الإستعارة</th>
                                                 <th class="hidden-phone">تاريخ الإستعارة</th>
@@ -101,6 +102,7 @@
                                                     <td class="text-info bold"><?= $value['PRODUCT_NAME'] ?></td>
                                                     <td><?= $value['SERIAL_NUMBER'] ?></td>
                                                     <td class="text-info bold"><?= $value['DEPARTMENT_NAME'] ?></td>
+                                                    <td class="text-info bold"><?= $value['MAIN_DEPARTMENT'] ?></td>
                                                     <td><?= $value['SECTION_NAME'] ?></td>
                                                     <td><?= $value['PRODUCT_STATUS'] ?></td>
                                                     <td><?= $value['ADDED_DATE'] ?></td>
@@ -290,7 +292,7 @@
                             $('#myModal').trigger('reveal:close');
                             $('#status').removeClass('alert-error').addClass('alert alert-success');
                             $('#message').text("تـم تأكيد الإستلام وتعديل حالة الصنف");
-                            $(parent).parent().remove();
+                            $(parent).parent().empty();
                         } else {
                             $('#status').addClass('alert alert-error');
                             $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");

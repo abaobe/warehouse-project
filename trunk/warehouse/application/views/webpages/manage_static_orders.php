@@ -114,16 +114,13 @@
                                                     <td class="hidden-phone"><?= $value['EMPLOYEE_NAME'] ?></td>
                                                     <td class="hidden-phone"><?= $value['ROOM_NUMBER'] ?></td>
                                                     <td class="hidden-phone"><?= $value['DEPARTMENT_NAME'] ?></td>
-                                                    <td class="hidden-phone">
-                                                        <?php
-                                                        if ($value['UNIT_TYPE'] == 'primary') {
-                                                            echo $value['QUANTITY'] . ' ' . $value['PRIMARY_UNIT_NAME'];
+                                                    <?php if ($value['UNIT_TYPE'] == 'primary') {
+                                                            echo '<td class="hidden-phone">'.$value['QUANTITY']." ".$value['PRIMARY_UNIT_NAME'].'</td>';
                                                         } else if ($value['UNIT_TYPE'] == 'secondary') {
-                                                            echo $value['QUANTITY'] . ' ' . $value['SECONDARY_UNIT_NAME'];
+                                                            echo '<td class="hidden-phone">'.$value['QUANTITY']." ".$value['SECONDARY_UNIT_NAME'].'</td>';
                                                         }
-                                                        ?>
-                                                    </td>
-                                                    <td class="hidden-phone"><?php echo $value['PRIMARY_UNIT_NAME'] . $value['PRIMARY_UNIT_QUANTITY'] . ' || ' . $value['SECONDARY_UNIT_NAME'] . $value['SECONDARY_UNIT_QUANTITY'] ?></td>
+                                                    ?>
+                                                    <td class="hidden-phone"><?php echo $value['PRIMARY_UNIT_NAME'] ." ". $value['PRIMARY_UNIT_QUANTITY'] ?></td>
                                                     <td class="hidden-phone"><?= $value['NOTES'] ?></td>
                                                     <td class="hidden-phone">
                                                         <button id="more" class="btn btn-mini btn-info" onclick="getInserted(<?=$value['PRODUCT_ID']?>,this)"><i class="icon-plus"></i></button>
@@ -263,14 +260,6 @@
                     }
                 });
             }
-            
-            function supply_order() {
-                for (var i=0; i < info.length; i++){
-                    console.log(info[i][0]);
-                    console.log('-------------');
-                }
-            }
-
         </script>
     </body>
     <!-- END BODY -->

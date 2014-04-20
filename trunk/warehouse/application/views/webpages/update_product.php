@@ -125,6 +125,19 @@
                                             </div>
                                         </div>
                                         <div class="control-group">
+                                            <label class="control-label">هل تريد إظهار الكمية للدوائر</label>
+                                            <div class="controls">
+                                                <label class="radio">
+                                                    <input type="radio" name="quantity_status" id="quantity_status" value="visible" <?php if(!strcmp($product_info[0]['QUANTITY_STATUS'], 'visible')) echo 'checked'?>/>
+                                                    إظهار
+                                                </label>
+                                                <label class="radio">
+                                                    <input type="radio" name="quantity_status" id="quantity_status" value="invisible" <?php if(!strcmp($product_info[0]['QUANTITY_STATUS'], 'invisible')) echo 'checked'?>/>
+                                                    إخفاء
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
                                             <label class="control-label">حد إعادة الطلب</label>
                                             <div class="controls">
                                                 <input type="text" value="<?=$product_info[0]['RE_DEMAND_BORDER']?>" id="re_demand_border" class="input-medium" />
@@ -133,8 +146,7 @@
                                         <div class="control-group">
                                             <label class="control-label">الفئة التي ينتمي إليها</label>
                                             <div class="controls">
-                                                <select id="parent_id" class="span6 chosen" data-placeholder="الفئة التي ينتمي إليها" tabindex="1">
-                                                    <option value=""></option>
+                                                <select id="category_id" class="span6 chosen" data-placeholder="الفئة التي ينتمي إليها" tabindex="1">
                                                     <?php
                                                     $current_main = "";
                                                     foreach ($categories as $category) {
@@ -219,7 +231,8 @@
                         primary_unit_name: $('#primary_unit_name').val(),
                         secondary_unit_name: $('#secondary_unit_name').val(),
                         primary_unit_quantity: $('#primary_unit_quantity').val(),
-                        secondary_unit_quantity: $('#secondary_unit_quantity').val()
+                        secondary_unit_quantity: $('#secondary_unit_quantity').val(),
+                        quantity_status: $('input[name="quantity_status"]:checked').val()
                     },
                     dataType: "json",
                     success: function(json) {

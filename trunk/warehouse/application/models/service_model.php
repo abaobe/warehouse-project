@@ -16,10 +16,13 @@ class Service_model extends CI_Model {
             array('name' => ':service_cost', 'value' => &$service_info['cost']),
             array('name' => ':currency_type', 'value' => &$service_info['currency_type']),
             array('name' => ':notes', 'value' => &$service_info['notes']),
+            array('name' => ':received_date', 'value' => &$service_info['received_date']),
+            array('name' => ':insert_number', 'value' => &$service_info['insert_number']),
+            array('name' => ':quantity', 'value' => &$service_info['quantity']),
             array('name' => ':res', 'value' => &$result)
         );
         $conn = $this->db->conn_id;
-        $stmt = oci_parse($conn, "begin :res := service_actions.add_service(:service_name,:provided_by,:billing,:service_cost,:currency_type,:notes); end;");
+        $stmt = oci_parse($conn, "begin :res := service_actions.add_service(:service_name,:provided_by,:billing,:service_cost,:currency_type,:notes,:received_date,:insert_number,:quantity); end;");
 
         foreach ($params as $variable) {
             oci_bind_by_name($stmt, $variable["name"], $variable["value"]);

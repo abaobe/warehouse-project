@@ -16,6 +16,10 @@ class Product extends CI_Controller {
     public function index() {
         $this->load->view('webpages/login');
     }
+    
+    public function main_page() {
+        $this->load->view('webpages/index');
+    }
 
     public function add_product() {
         $result['categories'] = $this->category_model->get_categories_id_name();
@@ -56,6 +60,7 @@ class Product extends CI_Controller {
         $data['secondary_unit_name'] = $this->input->post('secondary_unit_name');
         $data['primary_unit_quantity'] = $this->input->post('primary_unit_quantity');
         $data['secondary_unit_quantity'] = $this->input->post('secondary_unit_quantity');
+        $data['quantity_status'] = $this->input->post('quantity_status');
 
         $result = $this->product_model->add_new_product($data);
         echo json_encode($result);
@@ -127,6 +132,7 @@ class Product extends CI_Controller {
         $data['secondary_unit_name'] = $this->input->post('secondary_unit_name');
         $data['primary_unit_quantity'] = $this->input->post('primary_unit_quantity');
         $data['secondary_unit_quantity'] = $this->input->post('secondary_unit_quantity');
+        $data['quantity_status'] = $this->input->post('quantity_status');
 
         $result = $this->product_model->update_product($data);
         echo json_encode($result);
@@ -178,9 +184,11 @@ class Product extends CI_Controller {
             $data['billing_id'] = $item[2];
             $data['notes'] = $item[3];
             $data['quantity'] = $item[4];
-            $data['unit_type'] = $item[4];
+            $data['unit_type'] = $item[5];
             $data['unit_price'] = $item[6];
             $data['currency_type'] = $item[7];
+            $data['received_date'] = $item[8];
+            $data['insert_number'] = $item[9];
             $result = $this->product_model->insert_product($data);
         }
         echo json_encode($result);
@@ -212,8 +220,9 @@ class Product extends CI_Controller {
     }
 
     public function supplies_order() {
-        $result['categories'] = $this->category_model->get_categories_id_name();
-        $result['departments'] = $this->department_model->get_departments_id_name();
+//        $result['categories'] = $this->category_model->get_categories_id_name();
+//        $result['departments'] = $this->department_model->get_departments_id_name();
+        $result['products'] = $this->product_model->get_temp_products();
         $this->load->view('webpages/supplies_order', $result);
     }
 
@@ -234,13 +243,19 @@ class Product extends CI_Controller {
     }
 
     public function static_supplies_order() {
-        $result['categories'] = $this->category_model->get_categories_id_name();
+//        $result['categories'] = $this->category_model->get_categories_id_name();
         $result['departments'] = $this->department_model->get_departments_id_name();
+        $result['products'] = $this->product_model->get_static_products();
         $this->load->view('webpages/static_supplies_order', $result);
     }
 
     function get_order_number() {
         $result = $this->product_model->get_order_number();
+        echo json_encode($result);
+    }
+    
+    function get_insert_number() {
+        $result = $this->product_model->get_insert_number();
         echo json_encode($result);
     }
 
@@ -310,6 +325,18 @@ class Product extends CI_Controller {
     public function audit_returns() {
         $result['returns'] = $this->product_model->get_returned_products();
         $this->load->view('webpages/audit_returns', $result);
+    }
+    
+    public function damage_products() {
+        $result['products'] = $this->product_model->get_products_for_damage();
+        $this->load->view('webpages/damage_product', $result);
+    }
+    
+    public function accept_damage() {
+        $data['vouchers'] = $this->input->post('vouchers');
+        $data['monitor_ways'] = $this->input->post('monitor_ways');
+        $result = $this->product_model->accept_damge($data);
+        echo json_encode($result);
     }
     
     public function changeProdStatus() {

@@ -15,7 +15,7 @@
         <link href="<?php echo base_url(); ?>resource/css/style.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
-
+        <link href="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.css" rel="stylesheet" type="text/css"/>
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
     </head>
@@ -79,32 +79,105 @@
                                     <!-- BEGIN FORM-->
                                     <form method="POST" id="add_form" onsubmit="return false;" class="form-horizontal">
                                         <div class="control-group">
-                                            <label class="control-label">إسم الدائرة</label>
+                                            <label class="control-label">نوع الإدخال</label>
                                             <div class="controls">
-                                                <input type="text" id="department_name" class="span6" />
+                                                <label class="radio">
+                                                    <input type="radio" name="insertType" value="main" onclick="checkType()" />
+                                                    محكمة 
+                                                </label>
+                                                <label class="radio">
+                                                    <input type="radio" name="insertType" value="sub" onclick="checkType()" />
+                                                    دائرة 
+                                                </label>
                                             </div>
                                         </div>
-                                        <div class="control-group">
-                                            <label class="control-label">العنوان</label>
-                                            <div class="controls">
-                                                <input type="text" id="address" class="span6 " />
+                                        <div id="main">
+                                            <div class="control-group">
+                                                <label class="control-label">إسم المحكمة/الإدارة</label>
+                                                <div class="controls">
+                                                    <input type="text" id="department_name" class="span6" />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <label class="control-label">رقم الهاتف</label>
-                                            <div class="controls">
-                                                <input type="text" id="phone" class="span6 " />
+                                            <div class="control-group">
+                                                <label class="control-label">العنوان</label>
+                                                <div class="controls">
+                                                    <input type="text" id="address" class="span6 " />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <label class="control-label">ملاحـظات</label>
-                                            <div class="controls">
-                                                <textarea id="notes" class="span6 " rows="3"></textarea>
+                                            <div class="control-group">
+                                                <label class="control-label">ملاحـظات</label>
+                                                <div class="controls">
+                                                    <textarea id="notes" class="span6 " rows="3"></textarea>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-actions">
-                                            <button type="button" class="btn btn-success" onclick="add_department()">حـفظ</button>
-                                            <button type="reset" id="reset" class="btn">إلغاء</button>
+                                            <div class="form-actions">
+                                                <button type="button" class="btn btn-success" onclick="add_department()">حـفظ</button>
+                                                <button type="reset" id="reset" class="btn">إلغاء</button>
+                                            </div>
+                                        </div>    
+                                        <div id="sub">
+                                            <div class="control-group">
+                                                <label class="control-label">إسم الدائرة</label>
+                                                <div class="controls">
+                                                    <input type="text" id="branch_name" class="span6" />
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label">إسم المحكمة</label>
+                                                <div class="controls">
+                                                    <select id="parent_id" class="span6 chosen" data-placeholder="المحكمة التي تنتمي إليها" tabindex="1">
+                                                        <option value=""></option>
+                                                        <?php
+                                                        $current_main = "";
+                                                        foreach ($departments as $department) {
+                                                            if ($current_main != $department['ROOT_NAME']) {
+                                                                $current_main = $department['ROOT_NAME'];
+                                                                ?>
+                                                                <option class="text-success bold large" value="<?= $department['ROOT_ID'] ?>"><?= $department['ROOT_NAME'] ?></option>
+                                                                <option id="test"><?php if ($department['DOWN1_NAME'] != null) echo $department['DOWN1_NAME'] ?></option>
+                                                            <?php } else { ?>
+                                                                <option value="<?= $department['DOWN1_ID'] ?>"><?php if ($department['DOWN1_NAME'] != null) echo $department['DOWN1_NAME'] ?></option>
+                                                                <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label">رقم الهاتف</label>
+                                                <div class="controls">
+                                                    <input type="text" id="phone" class="span6 " />
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label">العنوان</label>
+                                                <div class="controls">
+                                                    <input type="text" id="addressSub" placeholder="يجب إدخالة إذا كان مخالفا لمكان المحكمة" class="span6 " />
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label">رقم الجوال</label>
+                                                <div class="controls">
+                                                    <input type="text" id="mobile" class="span6 " />
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label">رقم الفاكس</label>
+                                                <div class="controls">
+                                                    <input type="text" id="fax" class="span6 " />
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label">ملاحـظات</label>
+                                                <div class="controls">
+                                                    <textarea id="notesSub" class="span6 " rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-actions">
+                                                <button type="button" class="btn btn-success" onclick="add_department()">حـفظ</button>
+                                                <button type="reset" id="reset" class="btn">إلغاء</button>
+                                            </div>
                                         </div>
                                     </form>
                                     <!-- END FORM-->
@@ -134,21 +207,57 @@
         <script src="js/respond.js"></script>
         <![endif]-->
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
         <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script>
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
+                $('#main').hide();
+                $('#sub').hide();
             });
+            var checked;
+            function checkType() {
+                if ($("input:radio[name=insertType]:checked").val() == 'main') {
+                    checked = 'main';
+                    $('#sub').hide();
+                    $('#main').show();
+                } else if ($("input:radio[name=insertType]:checked").val() == 'sub') {
+                    checked = 'sub';
+                    $('#main').hide();
+                    $('#sub').show();
+                }
+            }
+            
             function add_department() {
+                if (checked == 'main') {
+                    var department_name = $('#department_name').val();
+                    var address = $('#address').val();
+                    var notes = $('#notes').val();
+                    var phone = '';
+                    var mobile = '';
+                    var fax = '';
+                    var parent_id = 0;
+                } else if (checked == 'sub') {
+                    var department_name = $('#branch_name').val();
+                    var address = $('#addressSub').val();
+                    var phone = $('#phone').val();
+                    var mobile = $('#mobile').val();
+                    var fax = $('#fax').val();
+                    var parent_id = $('#parent_id').val();
+                    var notes = $('#notesSub').val();
+                }
                 $.ajax({
                     type: "POST",
                     url: '<?php echo base_url() . "departments/do_add_department/"; ?>',
                     data: {
-                        department_name: $('#department_name').val(),
-                        address: $('#address').val(),
-                        phone: $('#phone').val(),
-                        notes: $('#notes').val()
+                        department_name: department_name,
+                        address: address,
+                        phone: phone,
+                        notes: notes,
+                        mobile: mobile,
+                        fax: fax,
+                        parent_id: parent_id
                     },
                     dataType: "json",
                     success: function(json) {

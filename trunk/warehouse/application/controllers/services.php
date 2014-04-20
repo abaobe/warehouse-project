@@ -25,6 +25,7 @@ class Services extends CI_Controller {
         $data['cost'] = $this->input->post('cost');
         $data['currency_type'] = $this->input->post('currency_type');
         $data['notes'] = $this->input->post('notes');
+        $data['quantity'] = $this->input->post('quantity');
 
         $result = $this->service_model->add_service($data);
         echo json_encode($result);
@@ -39,6 +40,9 @@ class Services extends CI_Controller {
             $data['notes'] = $item[3];
             $data['cost'] = $item[4];
             $data['currency_type'] = $item[5];
+            $data['received_date'] = $item[6];
+            $data['insert_number'] = $item[7];
+            $data['quantity'] = $item[8];
 
             $result = $this->service_model->add_service($data);
         }

@@ -15,7 +15,7 @@
         <link href="<?php echo base_url(); ?>resource/css/style.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
-
+<link href="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.css" type="text/css" rel="stylesheet">
         <link href="<?php echo base_url(); ?>resource/assets/custombox/reveal.css" type="text/css" rel="stylesheet">	
     </head>
     <!-- END HEAD -->
@@ -101,7 +101,7 @@
                                         </div>
                                         <!-- END VOUCHER NUMBER INFO -->
                                     </div>
-                                    <div class="widget-body form" style="overflow-y: auto; height: 500px;">
+                                    <div class="widget-body">
                                         <!-- Start Alert Message -->
                                         <div id="status" class="alert">
                                             <button class="close" data-dismiss="alert">×</button>
@@ -109,38 +109,39 @@
                                         </div>
                                         <!-- End Alert Message -->
                                         <!-- BEGIN Porducts-->
-                                        <div class="accordion" id="accordion1">
-                                            <?php
-                                            $current_main = "";
-                                            $i = 1;
-                                            foreach ($categories as $category) {
-                                                if ($current_main != $category['ROOT_NAME']) {
-                                                    $current_main = $category['ROOT_NAME'];
-                                                    ?>
-                                                    <div class="accordion-group">
-                                                        <div class="accordion-heading">
-                                                            <a class="accordion-toggle collapsed" onclick="get_productsBy_CatID(this)" category_id="<?= $category['ROOT_ID'] ?>" data-toggle="collapse" data-parent="#accordion1" href="#collapse_<?= $i ?>">
-                                                                <i class=" icon-plus"></i>
-                                                                <?php echo '#' . $i; ?>
-                                                                <?= $category['ROOT_NAME'] ?>
-                                                            </a>
-                                                        </div>
-                                                        <div id="collapse_<?= $i ?>" class="accordion-body collapse">
-                                                            <div id="products" class="accordion-inner">
-                                                                <table class="table table-hover">
-                                                                    <tbody id="<?= $category['ROOT_ID'] ?>">
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <?php
-                                                    ++$i;
-                                                }
-                                            }
-                                            ?>
-                                        </div>
+                                        <table class="table table-striped table-bordered" id="sample_1">
+                                        <thead>
+                                            <tr>
+                                                <th class="hidden-phone">رقم الصنف</th>
+                                                <th class="hidden-phone">إسم الصنف</th>
+                                                <th class="hidden-phone">الوحدة</th>
+                                                <th class="hidden-phone">الرصيد الحالي</th>
+                                                <th class="hidden-phone">الطول</th>
+                                                <th class="hidden-phone">العرض</th>
+                                                <th class="hidden-phone">الإرتفاع</th>
+                                                <th class="hidden-phone">قائـمة المهام</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($products as $value) { ?>
+                                                <tr class="odd gradeX">
+                                                    <td><?= $value['PRODUCT_NUMBER'] ?></td>
+                                                    <td><?= $value['PRODUCT_NAME'] ?></td>
+                                                    <td><?=$value['PRIMARY_UNIT_NAME'] ?></td>
+                                                    <td>
+                                                        <?php if(!strcmp($value['QUANTITY_STATUS'], 'invisible')) {echo '<span class="label label-info"><i class="icon-eye-close"></i></span>';}?>
+                                                        <?php if(!strcmp($value['QUANTITY_STATUS'], 'visible')) {echo $value['PRIMARY_UNIT_QUANTITY'];}?>
+                                                    </td>
+                                                    <td><?= $value['H_LENGTH'] ?></td>
+                                                    <td><?= $value['WIDTH'] ?></td>
+                                                    <td><?= $value['HEIGHT'] ?></td>
+                                                    <td>
+                                                        <a id="doOrder" data-reveal-id="myModal" product_id="<?=$value['PRODUCT_ID']?>" product_name="<?=$value['PRODUCT_NAME']?>" class="btn mini purple"><i class="icon-edit"></i> طلب</a>
+                                                    </td>
+                                                </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
                                         <!-- END Products-->
                                     </div>
                                 </div>
@@ -234,6 +235,8 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/custombox/jquery.reveal.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/data-tables/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.js"></script>
         <script>
             var data = new Array();
             var index = 0;
@@ -245,12 +248,14 @@
                 // initiate layout and plugins
                 App.init();
                 get_order_number();
+                jsonData = JSON.parse('<?php echo json_encode($products); ?>');
             });
 
             $('#doOrder').live('click', function(e) {
                 e.preventDefault();
                 for (var i in jsonData) {
                     var servObj = jsonData[i];
+                    
                     if (servObj.PRODUCT_ID === $(this).attr('product_id')) {
                         product_id = servObj.PRODUCT_ID;
                         product_name = servObj.PRODUCT_NAME;
@@ -266,46 +271,6 @@
                     }
                 }
             });
-
-            function get_productsBy_CatID(current) {
-                var category_id = $(current).attr("category_id");
-                $.ajax({
-                    type: "POST",
-                    url: '<?php echo base_url() . "product/get_ProductsBy_CatID/"; ?>',
-                    data: {
-                        category_id: category_id,
-                        prodType: 2
-                    },
-                    dataType: "json",
-                    success: function(json) {
-                        if (json.length != 0) {
-                            jsonData = json;
-                            $('tbody[id^=' + category_id + ']').empty();
-                            $('tbody[id^=' + category_id + ']').append('<tr></tr>');
-                            var count = 1;
-                            for (var i = 0; i <= json.length; i++) {
-                                var product = jQuery('<td style="border:0;"><a class="icon-btn" data-reveal-id="myModal" id="doOrder" product_id=' + json[i]['PRODUCT_ID'] + ' style="width:100%;font-size:100%" href="#">'
-                                        + '<strong><span>' + json[i]['PRODUCT_NAME'] + ' ' + json[i]['PRODUCT_NUMBER'] + '</span></strong><br/>'
-                                        + '<strong><span>' + 'الطول:' + json[i]['H_LENGTH'] + ' ' + 'العرض:' + json[i]['WIDTH'] + ' ' + 'الإرتفاع:' + json[i]['HEIGHT'] + '</span></strong><br/>'
-                                        + '<strong><span>الكمية:</span><span>' + json[i]['PRIMARY_UNIT_NAME'] + json[i]['PRIMARY_UNIT_QUANTITY'] + ' ' + json[i]['SECONDARY_UNIT_NAME'] + json[i]['SECONDARY_UNIT_QUANTITY'] + '</span></strong><br/>'
-                                        + '</a>'
-                                        + '</td>');
-                                if (count <= 5) {
-                                    $('tbody[id^=' + category_id + '] tr:last').append(product);
-                                } else {
-                                    $('tbody[id^=' + category_id + ']').append('<tr>');
-                                    $('tbody[id^=' + category_id + ']').append(product);
-                                    $('tbody[id^=' + category_id + ']').append('</tr>');
-                                    count = 0;
-                                }
-                                count++;
-                            }
-                        } else {
-                            $('tbody[id^=' + category_id + ']').html('<p class="text-error"> عذراً لا يوجد أصناف مدخلة لهذه الفئــة</p>');
-                        }
-                    }
-                });
-            }
 
             function add_product() {
                 var d = new Array();
@@ -329,6 +294,11 @@
                 $('tbody[id^=added_products] > tr:last').before(product);
 
                 $('#quantity').val('');
+                $('#product_name').val('');
+                $('#section_name').val('');
+                $('#employee_name').val('');
+                $('#employee_number').val('');
+                $('#room_number').val('');
                 $('#notes').val('');
                 $('.close-reveal-modal').click();
             }

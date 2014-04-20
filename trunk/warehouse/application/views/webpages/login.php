@@ -74,7 +74,7 @@ Website: http://thevectorlab.net/
             </form>
             <!-- END LOGIN FORM -->        
             <!-- BEGIN FORGOT PASSWORD FORM -->
-            <form id="forgotform" class="form-vertical no-padding no-margin hide" action="<?php echo base_url() . "product/add_product"; ?>">
+            <form id="forgotform" class="form-vertical no-padding no-margin hide" action="<?php echo base_url() . "product/main_page"; ?>">
                 <p class="center">أدخـل بـريدك الإلكـتروني ليتم إستعادة بيانات الدخـول.</p>
                 <div class="control-group">
                     <div class="controls">

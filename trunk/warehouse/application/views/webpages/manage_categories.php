@@ -72,6 +72,12 @@
                                     </span>
                                 </div>
                                 <div class="widget-body">
+                                    <!-- Start Alert Message -->
+                                    <div id="status" class="alert">
+                                        <button class="close" data-dismiss="alert">×</button>
+                                        <span id="message"></span>
+                                    </div>
+                                    <!-- End Alert Message -->
                                     <table class="table table-striped table-bordered" id="sample_1">
                                         <thead>
                                             <tr>
@@ -94,7 +100,8 @@
                                                     <td></td>
                                                     <td><?= $value['PRODUCTS_NUMBER'] ?></td>
                                                     <td>
-                                                        
+                                                        <a href='<?php echo base_url() . "categories/update_category/" . $value['CATEGORY_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
+                                                        <a href="#" onclick="delete_category(<?= $value['CATEGORY_ID'] ?>,this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
                                                     </td>
                                                 </tr>
                                             <?php } ?>
@@ -139,18 +146,25 @@
                 App.init();
             });
 
-            function delete_product(product_id) {
+            function delete_category(category_id,current) {
                 $.confirm({
                     text: "<h4>هل أنت متأكد من حذف هذا الصنف ؟</h4>",
                     confirm: function() {
                         $.ajax({type: "POST",
-                            url: '<?php echo base_url() . "product/do_delete_product/"; ?>',
-                            data: {product_id: product_id},
+                            url: '<?php echo base_url() . "categories/do_delete_category/"; ?>',
+                            data: {category_id: category_id},
                             dataType: "json",
                             success: function(json) {
-                                var oTable = $('#sample_1').dataTable();
-                                var nRow = $('#delete').parents('tr')[0];
-                                oTable.fnDeleteRow(nRow);
+                                if(json == 1){
+                                    $(current).parents('tr').remove();
+                                    $('#status').removeClass('alert-error').addClass('alert alert-success');
+                                    $('#message').text("تم حذف الفئة بنجاح");
+                                }else if(json == 0){
+                                    $('#status').addClass('alert alert-error');
+                                    $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");  
+                                }
+                            }, error: function() {
+                                $('#message').text("هناك خطأ في تخزين البيانات");
                             }
                         });
                     }

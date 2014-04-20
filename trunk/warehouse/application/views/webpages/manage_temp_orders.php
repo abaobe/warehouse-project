@@ -88,7 +88,7 @@
                                                 <th class="hidden-phone">الكمية المطلوبة</th>
                                                 <th class="hidden-phone">الكمية المتوفرة</th>
                                                 <th class="hidden-phone">ملاحظات</th>
-                                                <th class="hidden-phone">الكمية المراد صرفها</th>
+                                                <th class="hidden-phone">معلومات الصرف</th>
                                                 <th class="hidden-phone">صرف</th>
                                             </tr>
                                         </thead>
@@ -107,30 +107,21 @@
                                                         <?php }?>
                                                     </td>
                                                     <td class="hidden-phone"><?= $value['DEPARTMENT_NAME'] ?></td>
-                                                    <td class="hidden-phone">
-                                                        <?php
-                                                        if ($value['UNIT_TYPE'] == 'primary') {
-                                                            echo $value['QUANTITY'] . ' ' . $value['PRIMARY_UNIT_NAME'];
+                                                    <?php if ($value['UNIT_TYPE'] == 'primary') {
+                                                            echo '<td class="hidden-phone">'.$value['QUANTITY']." ".$value['PRIMARY_UNIT_NAME'].'</td>';
                                                         } else if ($value['UNIT_TYPE'] == 'secondary') {
-                                                            echo $value['QUANTITY'] . ' ' . $value['SECONDARY_UNIT_NAME'];
+                                                            echo '<td class="hidden-phone">'.$value['QUANTITY']." ".$value['SECONDARY_UNIT_NAME'].'</td>';
                                                         }
-                                                        ?>
-                                                    </td>
-                                                    <td class="hidden-phone"><?php echo $value['PRIMARY_UNIT_NAME'] . $value['PRIMARY_UNIT_QUANTITY'] . ' || ' . $value['SECONDARY_UNIT_NAME'] . $value['SECONDARY_UNIT_QUANTITY'] ?></td>
+                                                    ?>
+                                                    <td class="hidden-phone"><?php echo $value['PRIMARY_UNIT_NAME'] ." ". $value['PRIMARY_UNIT_QUANTITY'] ?></td>
                                                     <td class="hidden-phone"><?= $value['NOTES'] ?></td>
                                                     <td class="hidden-phone">
-                                                            <select class="span4" id="unit_type" name="unit_type" data-placeholder="الوحدة" tabindex="1">
-                                                                <option value="span4">إختيار</option>
-                                                                <?php if ($value['UNIT_TYPE'] == $value['PRIMARY_UNIT_NAME']) { ?>
-                                                                    <option selected value="primary"><?= $value['PRIMARY_UNIT_NAME'] ?></option>
-                                                                    <option value="secondary"><?= $value['SECONDARY_UNIT_NAME'] ?></option>
-                                                                <?php } else { ?>
-                                                                    <option value="primary"><?= $value['PRIMARY_UNIT_NAME'] ?></option>
-                                                                    <option selected value="secondary"><?= $value['SECONDARY_UNIT_NAME'] ?></option>
-                                                                <?php } ?>
-                                                            </select>
-                                                            <input type="text" id="quantity_disbursed" placeholder="الكمية بالأرقام" class="span3" />
-                                                            <input type="text" id="notes" placeholder="ملاحظة" class="span5" />
+                                                        <select class="span4" id="unit_type" name="unit_type" data-placeholder="الوحدة" tabindex="1">
+                                                            <option selected value="primary"><?= $value['PRIMARY_UNIT_NAME'] ?></option>
+                                                            <option value="secondary" disabled="disabled"><?= $value['SECONDARY_UNIT_NAME'] ?></option>
+                                                        </select>
+                                                        <input type="text" id="quantity_disbursed" placeholder="الكمية بالأرقام" class="span3" />
+                                                        <input type="text" id="notes" placeholder="ملاحظة" class="span5" />
                                                     </td>
                                                     <td class="hidden-phone">
                                                         <button class="btn btn-success" onclick="addToCart(this)"><i class="icon-ok"></i></button>

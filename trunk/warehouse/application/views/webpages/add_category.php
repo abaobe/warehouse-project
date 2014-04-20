@@ -204,7 +204,8 @@
 
                     var subs = ",";
                     for (var i = 1; i < count; i++) {
-                        subs += $("#sub_" + i).val() + ',';
+                        if($("#sub_" + i).val() != null || $("#sub_" + i).val() !='')
+                            subs += $("#sub_" + i).val() + ',';
                     }
                     $.ajax({
                         type: "POST",
@@ -220,6 +221,7 @@
                                 $('#status').removeClass('alert-error').addClass('alert alert-success');
                                 $('#message').text("تم إضافة الفئة  بنجاح");
                                 $('#reset').click();
+                                count = 0;
                             } else {
                                 $('#status').addClass('alert alert-error');
                                 $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");

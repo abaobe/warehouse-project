@@ -104,14 +104,14 @@
                                             <label class="control-label">وحدة أساسية</label>
                                             <div class="controls">
                                                 <input type="text" id="primary_unit_name" placeholder="إسم الوحده" class="input-medium" />
-                                                <input type="text" id="primary_unit_quantity" placeholder="الكمية بالأرقام" class="input-medium" />
+                                                <input type="text" id="primary_unit_quantity" placeholder="رصيد أول المدة" class="input-medium" />
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label">وحدة ثانوية</label>
                                             <div class="controls">
                                                 <input type="text" id="secondary_unit_name" placeholder="إسم الوحده" class="input-medium" />
-                                                <input type="text" id="secondary_unit_quantity" placeholder="الكمية بالأرقام" class="input-medium" />
+                                                <input type="text" id="secondary_unit_quantity" placeholder="كم تحتوي من الأساسية" class="input-medium" />
                                             </div>
                                         </div>
                                         <div class="control-group">
@@ -123,13 +123,26 @@
                                             </div>
                                         </div>
                                         <div class="control-group">
+                                            <label class="control-label">هل تريد إظهار الكمية للدوائر</label>
+                                            <div class="controls">
+                                                <label class="radio">
+                                                    <input type="radio" name="quntity_status" value="visible" checked/>
+                                                    إظهار
+                                                </label>
+                                                <label class="radio">
+                                                    <input type="radio" name="quntity_status" value="invisible" />
+                                                    إخفاء
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
                                             <label class="control-label">حد إعادة الطلب</label>
                                             <div class="controls">
                                                 <input type="text" id="re_demand_border" class="input-medium" />
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                            <label class="control-label">الفئة التي ينتمي إليها</label>
+                                            <label class="control-label">الفئةوالفرع التي ينتمي إليها</label>
                                             <div class="controls">
                                                 <select id="category_id" class="span6 chosen" data-placeholder="الفئة التي ينتمي إليها" tabindex="1">
                                                     <option value=""></option>
@@ -217,7 +230,8 @@
                         primary_unit_name: $('#primary_unit_name').val(),
                         secondary_unit_name: $('#secondary_unit_name').val(),
                         primary_unit_quantity: $('#primary_unit_quantity').val(),
-                        secondary_unit_quantity: $('#secondary_unit_quantity').val()
+                        secondary_unit_quantity: $('#secondary_unit_quantity').val(),
+                        quantity_status: $('#quantity_status').val()
                     },
                     dataType: "json",
                     success: function(json) {

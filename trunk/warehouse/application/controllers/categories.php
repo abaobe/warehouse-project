@@ -33,6 +33,29 @@ class categories extends CI_Controller {
         echo json_encode($result);
     }
     
+    public function update_category($category_id){
+        $result['categories'] = $this->category_model->get_categories_id_name();
+        $data['category_id'] = $category_id;
+        $result['category_info'] = $this->category_model->get_category_byID($data);
+        $this->load->view('webpages/update_category',$result);
+    }
+    
+    public function do_update_category(){
+        $data['category_id'] = $this->input->post('category_id');
+        $data['category_name'] = $this->input->post('category_name');
+        $data['category_description'] = $this->input->post('category_description');
+        $data['parent_id'] = $this->input->post('parent_id');
+
+        $result = $this->category_model->update_category($data);
+        echo json_encode($result);
+    }
+    
+    public function do_delete_category(){
+        $data['category_id'] = $this->input->post('category_id');
+        $result = $this->category_model->delete_category($data);
+        echo json_encode($result);
+    }
+    
     public function do_add_subCategory(){
         $data['category_name'] = $this->input->post('category_name');
         $data['parent_id'] = $this->input->post('parent_id');

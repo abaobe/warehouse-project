@@ -76,14 +76,14 @@
                                         <thead>
                                             <tr>
                                                 <th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
-                                                <th class="hidden-phone">إسم الصنف</th>
                                                 <th class="hidden-phone">رقم الصنف</th>
-                                                <th class="hidden-phone">نوع الصنف</th>
-                                                <th class="hidden-phone">حد إعادة الطلب</th>
-                                                <th class="hidden-phone">الكمية المتبقية</th>
+                                                <th class="hidden-phone">إسم الصنف</th>
+                                                <th class="hidden-phone">الوحدة</th>
+                                                <th class="hidden-phone">الرصيد الحالي</th>
                                                 <th class="hidden-phone">الطول</th>
                                                 <th class="hidden-phone">العرض</th>
                                                 <th class="hidden-phone">الإرتفاع</th>
+                                                <th class="hidden-phone">حد إعادة الطلب</th>
                                                 <th class="hidden-phone">ملاحظات</th>
                                                 <th class="hidden-phone">قائـمة المهام</th>
                                             </tr>
@@ -92,19 +92,19 @@
                                             <?php foreach ($products as $value) { ?>
                                                 <tr class="odd gradeX">
                                                     <td><input type="checkbox" class="checkboxes" value="1" /></td>
-                                                    <td name="pname" class="hidden-phone"><?= $value['PRODUCT_NAME'] ?></td>
                                                     <td class="hidden-phone"><?= $value['PRODUCT_NUMBER'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['PRODUCT_TYPE'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['RE_DEMAND_BORDER'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['PRIMARY_UNIT_NAME'] ?>=<?= $value['PRIMARY_UNIT_QUANTITY'] . ' || ' ?><?= $value['SECONDARY_UNIT_NAME'] ?>=<?= $value['SECONDARY_UNIT_QUANTITY'] ?></td>
+                                                    <td name="pname" class="hidden-phone"><?= $value['PRODUCT_NAME'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['PRIMARY_UNIT_NAME'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['PRIMARY_UNIT_QUANTITY'] ?></td>
                                                     <td class="hidden-phone"><?= $value['H_LENGTH'] ?></td>
                                                     <td class="hidden-phone"><?= $value['WIDTH'] ?></td>
                                                     <td class="hidden-phone"><?= $value['HEIGHT'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['RE_DEMAND_BORDER'] ?></td>
                                                     <td class="hidden-phone"><?= $value['NOTES'] ?></td>
                                                     <td class="hidden-phone">
                                                         <a href='<?php echo base_url() . "product/update_product/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
                                                         <a id="delete" href="javascript:delete_product(<?= $value['PRODUCT_ID'] ?>)" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
-                                                        <a href='<?php echo base_url() . "product/inserted_static_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple">تفصيل</a>
+                                                        <a href='<?php echo base_url() . "product/inserted_static_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"> حركات الصنف</a>
                                                     </td>
                                                 </tr>
                                             <?php } ?>

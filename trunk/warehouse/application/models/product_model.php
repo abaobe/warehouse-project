@@ -24,11 +24,12 @@ class Product_model extends CI_Model {
                 array('name' => ':secondary_unit_name', 'value' => &$product_info['secondary_unit_name']),
                 array('name' => ':primary_unit_quantity', 'value' => &$product_info['primary_unit_quantity']),
                 array('name' => ':secondary_unit_quantity', 'value' => &$product_info['secondary_unit_quantity']),
+                array('name' => ':quantity_status', 'value' => &$product_info['quantity_status']),
                 array('name' => ':res', 'value' => &$result)
             );
 
             $conn = $this->db->conn_id;
-            $stmt = oci_parse($conn, "begin :res := product_actions.add_new_product(:product_name,:product_number,:product_type,:notes,:category_id,:width,:height,:h_length,:re_demand_border,:primary_unit_name,:secondary_unit_name,:primary_unit_quantity,:secondary_unit_quantity); end;");
+            $stmt = oci_parse($conn, "begin :res := product_actions.add_new_product(:product_name,:product_number,:product_type,:notes,:category_id,:width,:height,:h_length,:re_demand_border,:primary_unit_name,:secondary_unit_name,:primary_unit_quantity,:secondary_unit_quantity,:quantity_status); end;");
 
             foreach ($params as $variable) {
                 oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
@@ -173,11 +174,12 @@ class Product_model extends CI_Model {
                 array('name' => ':secondary_unit_name', 'value' => &$product_info['secondary_unit_name']),
                 array('name' => ':primary_unit_quantity', 'value' => &$product_info['primary_unit_quantity']),
                 array('name' => ':secondary_unit_quantity', 'value' => &$product_info['secondary_unit_quantity']),
+                array('name' => ':quantity_status', 'value' => &$product_info['quantity_status']),
                 array('name' => ':res', 'value' => &$result)
             );
 
             $conn = $this->db->conn_id;
-            $stmt = oci_parse($conn, "begin :res := product_actions.update_product(:product_id,:product_name,:product_number,:product_type,:notes,:category_id,:width,:height,:h_length,:re_demand_border,:primary_unit_name,:secondary_unit_name,:primary_unit_quantity,:secondary_unit_quantity); end;");
+            $stmt = oci_parse($conn, "begin :res := product_actions.update_product(:product_id,:product_name,:product_number,:product_type,:notes,:category_id,:width,:height,:h_length,:re_demand_border,:primary_unit_name,:secondary_unit_name,:primary_unit_quantity,:secondary_unit_quantity,:quantity_status); end;");
 
             foreach ($params as $variable)
                 oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
@@ -228,11 +230,13 @@ class Product_model extends CI_Model {
                 array('name' => ':unit_type', 'value' => &$product_info['unit_type']),
                 array('name' => ':unit_price', 'value' => &$product_info['unit_price']),
                 array('name' => ':currency_type', 'value' => &$product_info['currency_type']),
+                array('name' => ':received_date', 'value' => &$product_info['received_date']),
+                array('name' => ':insert_number', 'value' => &$product_info['insert_number']),
                 array('name' => ':res', 'value' => &$result)
             );
 
             $conn = $this->db->conn_id;
-            $stmt = oci_parse($conn, "begin :res := product_actions.insert_product(:product_id,:received_from,:billing_id,:notes,:receiver_id,:quantity,:unit_type,:unit_price,:currency_type); end;");
+            $stmt = oci_parse($conn, "begin :res := product_actions.insert_product(:product_id,:received_from,:billing_id,:notes,:receiver_id,:quantity,:unit_type,:unit_price,:currency_type,:received_date,:insert_number); end;");
 
             foreach ($params as $variable)
                 oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
@@ -367,6 +371,17 @@ class Product_model extends CI_Model {
         }
         return $result;
     }
+    
+    function get_insert_number() {
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.NEXT_INSERT_NUMBER(); END;");
+        oci_bind_by_name($stmt, ':v_Return', $result, SQLT_STR);
+
+        if (!oci_execute($stmt)) {
+            return oci_error($stmt);
+        }
+        return $result;
+    }
 
     function refuse_order($order_number) {
         $params = array(array('name' => ':order_number', 'value' => &$order_number),
@@ -487,7 +502,30 @@ class Product_model extends CI_Model {
         $params[1] = array("name" => ":prodType", "value" => &$data['prodType']);
         return $this->DBObject->readCursor("product_actions.get_ProductsBy_CatID(:category_id,:prodType)", $params);
     }
+    
+    function get_temp_products(){
+        return $this->DBObject->readCursor("product_actions.get_temp_products", null);
+    }
+    
+    function get_products_for_damage(){
+        return $this->DBObject->readCursor("product_actions.get_products_for_damage", null);
+    }
 
+    function accept_damge($data) {
+        $params = array(
+            array('name' => ':vouchers', 'value' => &$data['vouchers']),
+            array('name' => ':monitor_ways', 'value' => &$data['monitor_ways']),
+            array('name' => ':res', 'value' => &$result)
+        );
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := product_actions.accept_damage(:vouchers,:monitor_ways); end;");
+
+        foreach ($params as $variable) {
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
+        }
+        oci_execute($stmt);
+        return $result;
+    }
 }
 
 /* End of file product_model.php */

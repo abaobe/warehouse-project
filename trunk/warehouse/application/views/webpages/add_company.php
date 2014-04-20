@@ -108,6 +108,12 @@
                                                 <input type="text" id="mobile" class="span6 " />
                                             </div>
                                         </div>
+                                        <div class="control-group">
+                                            <label class="control-label">رقم الفاكس</label>
+                                            <div class="controls">
+                                                <input type="text" id="fax_number" class="span6 " />
+                                            </div>
+                                        </div>
                                         <div class="form-actions">
                                             <button type="button" class="btn btn-success" onclick="add_company()">حـفظ</button>
                                             <button type="reset" id="reset" class="btn">إلغاء</button>
@@ -156,7 +162,8 @@
                         address: $('#address').val(),
                         telephone: $('#telephone').val(),
                         mobile: $('#mobile').val(),
-                        adddress: $('#address').val()
+                        adddress: $('#address').val(),
+                        fax_number: $('#fax_number').val()
                     },
                     dataType: "json",
                     success: function(json) {

@@ -19,7 +19,7 @@
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.css" rel="stylesheet" type="text/css"/>
-        <link href="<?php echo base_url(); ?>resource/css/jquery-ui.css" rel="stylesheet">
+        <link href="<?php echo base_url(); ?>resource/assets/bootstrap-datepicker/css/datepicker.css" rel="stylesheet" type="text/css"/>
     </head>
     <!-- END HEAD -->
     <!-- BEGIN BODY -->
@@ -53,7 +53,7 @@
                                 <li>
                                     <a href="#">إدارة الأصناف</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">إدخال لوازم</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">نموذج إدخال لوازم مستهلكة</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -65,7 +65,7 @@
                             <!-- BEGIN SAMPLE FORM widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>نموذج إدخال لوازم</h4>
+                                    <h4><i class="icon-reorder"></i>إدخال لوازم مستهلكة</h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -79,17 +79,52 @@
                                     </div>
                                     <!-- End Alert Message -->
                                     <!-- BEGIN FORM-->
+                                    <div class="well left_info">
+                                        <label class="control-label">رقم السند</label>
+                                        <div class="controls form-horizontal">
+                                            <input readonly form="anyThing" type="text" id="insert_number" class="input-small" />
+                                            <button type="button" class="btn btn-success" onclick="get_insert_number()">مستند إدخال جديد</button>
+                                        </div>
+                                    </div>
                                     <form method="POST" id="add_form" onsubmit="return false;" class="form-horizontal">
+                                        <!-- START VOUCHER NUMBER INFO -->
+                                        
+                                        <!-- END VOUCHER NUMBER INFO -->
+                                        <div class="control-group">
+                                            <label class="control-label">تم الإستلام من</label>
+                                            <div class="controls">
+                                                <select id="received_from" class="chosen span3" placeholder="إستلمت من" tabindex="1">
+                                                    <option value="">إختيار</option>
+                                                    <?php foreach ($companies as $company) { ?>
+                                                        <option value="<?= $company['COMPANY_ID'] ?>"><?= $company['COMPANY_NAME'] ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label">رقم الفاتورة</label>
+                                            <div class="controls">
+                                                <input type="text" class="span3" id="billing_id" placeholder="رقم الفاتورة" />
+                                                <div class="input-append date date-picker" data-date="" data-date-format="yyyy/mm/dd" data-date-viewmode="years">
+                                                    <input placeholder="تـاريخ الإستلام" id="received_date" class="m-ctrl-medium date-picker" size="16" type="text" value="" /><span class="add-on"><i class="icon-calendar"></i></span>
+                                                </div>
+                                                <select id="currency_type" class="span3" name="currency_type" data-placeholder="نوع االعملة" tabindex="1">
+                                                    <option value="">نوع االعملة</option>
+                                                    <option value="أغورة">أغورة</option>
+                                                    <option value="شيكل">شيكل</option>
+                                                    <option value="دولار">دولار</option>
+                                                    <option value="دينار">دينار</option>
+                                                    <option value="يورو">يورو</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                         <table style="table-layout:fixed;" class="table table-bordered table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th class="span3">إسم الصنف</th>
-                                                    <th>إستلمت من</th>
-                                                    <th>رقم الفاتورة</th>
+                                                    <th class="span4">إسم الصنف</th>
                                                     <th>الوحدة</th>
                                                     <th>الكمية المضافة</th>
                                                     <th>سعر الوحدة</th>
-                                                    <th>العملة</th>
                                                     <th>إجمالي التكلفة</th>
                                                     <th width="8%"></th>
                                                 </tr>
@@ -97,48 +132,28 @@
                                             <tbody id="rows">
                                                 <tr id="row1">
                                                     <td>
-                                                        <select style="width:100%;" onchange="product_unit_names(this)" id="product_id1" class="chosen" data-placeholder="إختيار صنف" tabindex="1">
+                                                        <select style="width:100%;" onchange="product_unit_names(this)" id="product_id1" class="chosen" data-placeholder="رقم الصنف - إسم الصنف" tabindex="1">
                                                            <option value=""></option>
                                                            <?php foreach ($products as $product) {?>
-                                                           <option value="<?= $product['PRODUCT_ID'] ?>"><?= $product['PRODUCT_ID'].' '.$product['PRODUCT_NAME']; ?></option>
+                                                           <option value="<?= $product['PRODUCT_ID'] ?>"><?= $product['PRODUCT_ID'].'  -  '.$product['PRODUCT_NAME']; ?></option>
                                                             <?php } ?>
                                                         </select>
                                                     </td>
-                                                    <td>
-                                                        <select id="received_from1" style="width:100%;" class="chosen" placeholder="إستلمت من" tabindex="1">
-                                                            <option value="">إختيار</option>
-                                                            <?php foreach ($companies as $company) {?>
-                                                            <option value="<?=$company['COMPANY_ID']?>"><?=$company['COMPANY_NAME']?></option>
-                                                            <?php }?>
-                                                        </select>
-                                                    </td>
-                                                    <td><input style="width:90%;" type="text" id="billing_id" placeholder="رقم الفاتورة" /></td>
                                                     <td>
                                                         <select style="width:100%;" id="unit_type" name="unit_type" data-placeholder="الوحدة" tabindex="1">
                                                             <option value="">إختيار</option>
                                                         </select>
                                                     </td>
-                                                    <td><input style="width:90%;" type="text" oninput="calculate_cost(this)" id="quantity" placeholder="الكمية بالأرقام" /></td>
-                                                    <td><input style="width:90%;" type="text" oninput="calculate_cost(this)" id="unit_price" placeholder="سعر الوحدة" /></td>
-                                                    <td>
-                                                        <select style="width:100%;" id="currency_type" name="currency_type" data-placeholder="الوحدة" tabindex="1">
-                                                            <option value="">إختيار</option>
-                                                            <option value="أغورة">أغورة</option>
-                                                            <option value="شيكل">شيكل</option>
-                                                            <option value="دولار">دولار</option>
-                                                            <option value="دينار">دينار</option>
-                                                            <option value="يورو">يورو</option>
-                                                        </select>
-                                                    </td>
-                                                    <td><input style="width:90%;" readonly type="text" id="total_cost" placeholder="التكلفة" /></td>
+                                                    <td><input style="width:90%;" type="text" oninput="calculate_cost(this,1)" id="quantity" placeholder="الكمية بالأرقام" /></td>
+                                                    <td><input style="width:90%;" type="text" oninput="calculate_cost(this,2)" id="unit_price" placeholder="سعر الوحدة" /></td>
+                                                    <td><input style="width:90%;"  type="text" oninput="calculate_cost(this,3)" onkeyup="calculate_cost(this)" id="total_cost" placeholder="التكلفة" /></td>
                                                     <td><button style="width:40%;" onclick="addnew_row(this)" id="more" class="btn-info"><i class="icon-plus"></i></button>    
                                                         <button style="width:40%;" onclick="remove_row(this)" id="remove" class="btn-danger"><i class="icon-remove"></i></button>
                                                     </td>
-                                                    
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="7"></td>
-                                                    <td colspan="2"><input style="width:90%;" readonly type="text" id="final_cost" placeholder="إجمالي التكلفة" /></td>
+                                                    <td colspan="5"></td>
+                                                    <td><input style="width:90%;" readonly type="text" id="final_cost" placeholder="إجمالي التكلفة" /></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -163,7 +178,7 @@
                             <!-- BEGIN SAMPLE FORM widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>نموذج إدخال لوازم</h4>
+                                    <h4><i class="icon-reorder"></i>إدخال خدمات</h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -181,11 +196,9 @@
                                         <table style="table-layout:fixed;" class="table table-bordered table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th class="span3">إسم الخدمة</th>
-                                                    <th>الجهة المقدمة للخدمة</th>
-                                                    <th>رقم الفاتورة</th>
+                                                    <th class="span4">إسم الخدمة</th>
+                                                    <th class="span4">الكمية</th>
                                                     <th>تكلفة الخدمة</th>
-                                                    <th>العملة</th>
                                                     <th>ملاحظات</th>
                                                     <th width="8%"></th>
                                                 </tr>
@@ -193,27 +206,16 @@
                                             <tbody id="rows">
                                                 <tr id="service1">
                                                     <td><input style="width:90%;" type="text" id="service_name" placeholder="إسم الخدمة" /></td>
-                                                    <td><input style="width:90%;" type="text" id="provided_by" placeholder="الجهة المقدمة للخدمة" /></td>
-                                                    <td><input style="width:90%;" type="text" id="billing_id" placeholder="رقم الفاتورة" /></td>
+                                                    <td><input style="width:90%;" type="text" id="quantity" placeholder="الكمية" /></td>
                                                     <td><input style="width:90%;" type="text" id="service_cost" placeholder="تكلفة الخدمة" /></td>
-                                                    <td>
-                                                        <select style="width:95%;" id="currency_type" name="currency_type" data-placeholder="الوحدة" tabindex="1">
-                                                            <option value="">إختيار</option>
-                                                            <option value="أغورة">أغورة</option>
-                                                            <option value="شيكل">شيكل</option>
-                                                            <option value="دولار">دولار</option>
-                                                            <option value="دينار">دينار</option>
-                                                            <option value="يورو">يورو</option>
-                                                        </select>
-                                                    </td>
                                                     <td><input style="width:90%;" type="text" id="notes" placeholder="ملاحظة" /></td>
                                                     <td><button style="width:42%;" onclick="addnew_service(this)" id="more" class="btn-info"><i class="icon-plus"></i></button>    
                                                         <button style="width:42%;" onclick="remove_row(this)" id="remove" class="btn-danger"><i class="icon-remove"></i></button>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="5"></td>
-                                                    <td colspan="2"><input style="width:90%;" readonly type="text" id="final_cost" placeholder="إجمالي التكلفة" /></td>
+                                                    <td colspan="4"></td>
+                                                    <td ><input style="width:90%;" readonly type="text" id="final_cost2" placeholder="إجمالي التكلفة" /></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -252,71 +254,49 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
-        <script type="text/javascript" src="<?php echo base_url(); ?>resource/js/jquery-ui.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
         <script>
             var data = new Array();
             var SecData = new Array();
             var count = 2;
             var SecCount = 2;
+            var insert_number;
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
+                get_insert_number();
+            });
+            
+            $('.date-picker').datepicker({
+                format: "yyyy/mm/dd"
             });
             
             function addnew_row(current){
                 var new_row = jQuery('<tr id=row'+count+'>'+
-                '<td><select style="width:100%;" id=product_id'+count+' onchange="product_unit_names(this)" class="chosen" data-placeholder="إختيار صنف" tabindex="1">'+
+                '<td><select style="width:100%;" id=product_id'+count+' onchange="product_unit_names(this)" class="chosen" data-placeholder="رقم الصنف - إسم الصنف" tabindex="1">'+
                      '<option value=""></option>'+
                      '<?php foreach ($products as $product) {?>'+
-                     '<option value="<?= $product['PRODUCT_ID'] ?>"><?= $product['PRODUCT_ID'].' '.$product['PRODUCT_NAME']; ?></option>'+
+                     '<option value="<?= $product['PRODUCT_ID'] ?>"><?= $product['PRODUCT_ID'].'  -  '.$product['PRODUCT_NAME']; ?></option>'+
                      '<?php } ?>'+
                      '</select>'+
                 '</td>'+
-                '<td><select style="width:100%;" id=received_from'+count+' class="chosen" placeholder="إستلمت من" tabindex="1">'+
-                     '<option value="">إختيار</option>'+
-                     '<?php foreach ($companies as $company) {?>'+
-                     '<option value="<?=$company['COMPANY_ID']?>"><?=$company['COMPANY_NAME']?></option>'+
-                     '<?php }?>'+
-                     '</select>'+
-                '</td>'+
-                '<td><input style="width:90%;" type="text" id="billing_id" placeholder="رقم الفاتورة" /></td>'+
                 '<td><select style="width:100%;" id="unit_type" name="unit_type" data-placeholder="الوحدة" tabindex="1"><option value="">إختيار</option></select></td>'+
-                '<td><input style="width:90%;" type="text" id="quantity" oninput="calculate_cost(this)" placeholder="الكمية بالأرقام" /></td>'+
-                '<td><input style="width:90%;" type="text" id="unit_price" oninput="calculate_cost(this)" placeholder="سعر الوحدة" /></td>'+
-                '<td><select style="width:100%;" id="currency_type" name="currency_type" data-placeholder="الوحدة" tabindex="1">'+
-                    '<option value="">إختيار</option>'+
-                    '<option value="أغورة">أغورة</option>'+
-                    '<option value="شيكل">شيكل</option>'+
-                    '<option value="دولار">دولار</option>'+
-                    '<option value="دينار">دينار</option>'+
-                    '<option value="يورو">يورو</option>'+
-                    '</select>'+
-                '</td>'+
-                '<td><input style="width:90%;" readonly type="text" id="total_cost" placeholder="التكلفة" /></td>'+
+                '<td><input style="width:90%;" type="text" oninput="calculate_cost(this,1)" id="quantity" placeholder="الكمية بالأرقام" /></td>'+
+                '<td><input style="width:90%;" type="text" oninput="calculate_cost(this,2)" id="unit_price" placeholder="سعر الوحدة" /></td>'+
+                '<td><input style="width:90%;"  type="text" oninput="calculate_cost(this,3)" id="total_cost" placeholder="التكلفة" /></td>'+
                 '<td><button style="width:42%;" onclick="addnew_row(this)" id="more" class="btn-info"><i class="icon-plus"></i></button>'+
                 '&nbsp;<button style="width:42%;" onclick="remove_row(this)" id="remove" class="btn-danger"><i class="icon-remove"></i></button></td>'+
                 '</tr>');
                 $(current).closest('TR').after(new_row);
                 $("#row"+count +" #product_id"+count).chosen();
-                $("#row"+count +" #received_from"+count).chosen();
                 count++;
             }
             
             function addnew_service(current){
                 var new_row = jQuery('<tr id=service'+SecCount+'>'+
                 '<td><input style="width:90%;" type="text" id="service_name" placeholder="إسم الخدمة" /></td>'+
-                '<td><input style="width:90%;" type="text" id="provided_by" placeholder="الجهة المقدمة للخدمة" /></td>'+
-                '<td><input style="width:90%;" type="text" id="billing_id" placeholder="رقم الفاتورة" /></td>'+
+                '<td><input style="width:90%;" type="text" id="quantity" placeholder="الكمية" /></td>'+
                 '<td><input style="width:90%;" type="text" id="service_cost" placeholder="تكلفة الخدمة" /></td>'+
-                '<td><select style="width:95%;" id="currency_type" name="currency_type" data-placeholder="العملة" tabindex="1">'+
-                    '<option value="">إختيار</option>'+
-                    '<option value="أغورة">أغورة</option>'+
-                    '<option value="شيكل">شيكل</option>'+
-                    '<option value="دولار">دولار</option>'+
-                    '<option value="دينار">دينار</option>'+
-                    '<option value="يورو">يورو</option>'+
-                    '</select>'+
-                '</td>'+
                 '<td><input style="width:90%;" type="text" id="notes" placeholder="ملاحظة" /></td>'+
                 '<td><button style="width:42%;" onclick="addnew_service(this)" id="more" class="btn-info"><i class="icon-plus"></i></button>'+
                 '&nbsp;<button style="width:42%;" onclick="remove_row(this)" id="remove" class="btn-danger"><i class="icon-remove"></i></button></td>'+
@@ -331,13 +311,15 @@
                     if (jQuery.contains(document, $('#row'+i)[0])) {
                         var d=new Array();
                         d[0]=$('#row'+i +' #product_id'+i).val();
-                        d[1]=$('#row'+i +' #received_from'+i).val();
-                        d[2]=$('#row'+i +' #billing_id').val();
+                        d[1]=$('#received_from').val();
+                        d[2]=$('#billing_id').val();
                         d[3]=$('#notes').val();
                         d[4]=$('#row'+i +' #quantity').val();
                         d[5]=$('#row'+i +' #unit_type').val();
                         d[6]=$('#row'+i +' #unit_price').val();
-                        d[7]=$('#row'+i +' #currency_type').val();
+                        d[7]=$('#currency_type').val();
+                        d[8]=$('#received_date').val();
+                        d[9]=$('#insert_number').val();
                         data[index]=d;
                         index++;
                     }
@@ -349,27 +331,80 @@
             }
             
             var x = 0;
-            var temp1 =0;
-            var temp2 =0;
-            var temp;
-            function calculate_cost(current){
-                var quantity = $(current).parents('tr').children().find($('td #quantity')).val();
-                var unit_price = $(current).parents('tr').children().find($('td #unit_price')).val();
-                temp = quantity * unit_price;
-                var total_cost = $(current).parents('tr').children().find($('td #total_cost'));
-                if(quantity && unit_price && quantity != 0 && unit_price != 0){
-                    temp1 = quantity;
-                    temp2 = unit_price;
-                    temp = quantity * unit_price;
-                    $(total_cost).val(quantity * unit_price);
-                    x += quantity * unit_price;
-                    $('#final_cost').val(x);
-                }else if(quantity=='' && unit_price == ''){
-                    $(total_cost).val(0);
-                    x = x - temp;
-                    $('#final_cost').val(x);
+            var temp =false;
+            var quantity=0;
+            var total_cost = 0;
+            var unit_price = 0;
+            var q= false;
+            var p= false;
+            var c= false;
+            var sum= 0;
+            var costt =new Array();
+            function calculate_cost(current,flag){
+                var i = ($(current).parents('tr').attr('id')).split('row')[1];
+                quantity = $(current).parents('tr').children().find($('td #quantity')).val();
+                unit_price = $(current).parents('tr').children().find($('td #unit_price')).val();
+                total_cost = $(current).parents('tr').children().find($('td #total_cost')).val();
+                if(flag == 1){
+                    q=true;
+                    if(p){
+                        $(current).parents('tr').children().find($('td #total_cost')).empty();
+                        $(current).parents('tr').children().find($('td #total_cost')).val(quantity*unit_price);
+                        sum=0;
+                        sum= quantity*unit_price;
+                        temp = true;
+                        c=false;
+                    }else if(c){
+                        $(current).parents('tr').children().find($('td #unit_price')).empty();
+                        sum=0;
+                        if(quantity!=0){
+                            $(current).parents('tr').children().find($('td #unit_price')).val(total_cost/quantity);temp = true;
+                            
+                            sum= total_cost;
+                        p=false;
+                        }
+                    }
+                }else if(flag == 2){
+                    p= true;
+                    sum=0;
+                    if(quantity){
+                        $(current).parents('tr').children().find($('td #total_cost')).empty();
+                        $(current).parents('tr').children().find($('td #total_cost')).val(quantity*unit_price);temp = true;
+                        
+                        sum= quantity*unit_price;
+                        c= false;
+                    }
+                }else if(flag == 3){ 
+                    c = true;
+                    p = false;
+                    if(q){
+                        $(current).parents('tr').children().find($('td #unit_price')).empty();
+                        sum=0;
+                        if(quantity!=0){
+                            $(current).parents('tr').children().find($('td #unit_price')).val(total_cost/quantity);temp = true;
+                            
+                            sum= total_cost;
+                        }
+                        p = false;
+                    }
                 }
+                if(temp){
+                    if(costt[i]){
+                        delete costt[i];
+                    }
+                    costt[i] = sum;
+                sum=0;
+                var finalCost=0;
+                for(var x=1; x< costt.length; x++){
+                    finalCost ++;
+                    console.log(">>"+finalCost);
+                }
+                console.log("***"+finalCost);
+                $('#final_cost').empty();
+                $('#final_cost').val(finalCost);
+                finalCost=0;sum=0;
             }
+                }
 
             function insert_product() {
                 get_products_added();
@@ -420,11 +455,14 @@
                     if (jQuery.contains(document, $('#service'+i)[0])) {
                         var d=new Array();
                         d[0]=$('#service'+i +' #service_name').val();
-                        d[1]=$('#service'+i +' #provided_by').val();
-                        d[2]=$('#service'+i +' #billing_id').val();
+                        d[1]=$('#received_from').val();
+                        d[2]=$('#billing_id').val();
                         d[3]=$('#service'+i +' #notes').val();
                         d[4]=$('#service'+i +' #service_cost').val();
                         d[5]=$('#service'+i +' #currency_type').val();
+                        d[6]=$('#received_date').val();
+                        d[7]=$('#insert_number').val();
+                        d[8]=$('#service'+i +' #quantity').val();
                         SecData[SecIndex]=d;
                         SecIndex++;
                     }
@@ -452,6 +490,20 @@
                     }
                 });
                 return false;
+            }
+            
+            function get_insert_number() {
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url() . "product/get_insert_number/"; ?>',
+                    dataType: "json",
+                    success: function(json) {
+                        $('#insert_number').val(json);
+                        insert_number = json;
+                    }, error: function() {
+                        $('#message').text("خطأ في جلب رقم السند");
+                    }
+                });
             }
         </script>
         <!-- END JAVASCRIPTS -->   
