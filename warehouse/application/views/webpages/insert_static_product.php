@@ -129,6 +129,7 @@
                                                     <option value="مستأجرة">مستأجرة</option>
                                                     <option value="مستعارة">مستعارة</option>
                                                     <option value="مشتراه">مشتراه</option>
+                                                    <option value="منح/هبات">منح/هبات</option>
                                                 </select>
                                             </div>
                                         </div>

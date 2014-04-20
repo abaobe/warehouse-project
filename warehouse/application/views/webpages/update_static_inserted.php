@@ -125,6 +125,7 @@
                                                     <option <?php if($product_info[0]['PRODUCT_NATURE'] == 'مستأجرة'){echo 'selected';}?> value="مستأجرة">مستأجرة</option>
                                                     <option <?php if($product_info[0]['PRODUCT_NATURE'] == 'مستعارة'){echo 'selected';}?> value="مستعارة">مستعارة</option>
                                                     <option <?php if($product_info[0]['PRODUCT_NATURE'] == 'مشتراه'){echo 'selected';}?> value="مشتراه">مشتراه</option>
+                                                    <option <?php if($product_info[0]['PRODUCT_NATURE'] == 'منح/هبات'){echo 'selected';}?> value="منح/هبات">منح/هبات</option>
                                                 </select>
                                             </div>
                                         </div>

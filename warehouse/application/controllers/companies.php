@@ -24,8 +24,39 @@ class Companies extends CI_Controller {
         $data['telephone'] = $this->input->post('telephone');
         $data['mobile'] = $this->input->post('mobile');
         $data['address'] = $this->input->post('address');
+        $data['fax_number'] = $this->input->post('fax_number');
 
         $result = $this->company_model->add_company($data);
+        echo json_encode($result);
+    }
+    
+    public function manage_companies() {
+        $result['companies'] = $this->company_model->get_all_companies();
+        $this->load->view('webpages/manage_companies',$result);
+    }
+    
+    public function update_company($company_id){
+        $data['company_id'] = $company_id;
+        $result['company_info'] = $this->company_model->get_company_byID($data);
+        $this->load->view('webpages/update_company',$result);
+    }
+    
+    public function do_delete_company(){
+        $data['company_id'] = $this->input->post('company_id');
+        $result = $this->company_model->delete_company($data);
+        echo json_encode($result);
+    }
+    
+    public function do_update_company(){
+        $data['company_id'] = $this->input->post('company_id');
+        $data['company_name'] = $this->input->post('company_name');
+        $data['license_number'] = $this->input->post('license_number');
+        $data['telephone'] = $this->input->post('telephone');
+        $data['mobile'] = $this->input->post('mobile');
+        $data['address'] = $this->input->post('address');
+        $data['fax_number'] = $this->input->post('fax_number');
+
+        $result = $this->company_model->update_company($data);
         echo json_encode($result);
     }
     

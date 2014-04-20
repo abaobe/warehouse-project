@@ -1795,7 +1795,7 @@ var App = function() {
             "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
             "sPaginationType": "bootstrap",
             "oLanguage": {
-                "sLengthMenu": "_MENU_ per page",
+                "sLengthMenu": "_MENU_ عدد الصفوف في الصفحة",
                 "oPaginate": {
                     "sPrevious": "السابق",
                     "sNext": "التالي"

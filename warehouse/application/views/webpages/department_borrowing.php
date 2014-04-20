@@ -83,12 +83,12 @@
                                             <tr>
                                                 <th style="width:8px;" ><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
                                                 <th class="hidden-phone">إسم الصنف</th>
+                                                <th class="hidden-phone">الرقم التسلسلي</th>
                                                 <th class="hidden-phone">الحالة عند الإستعارة</th>
                                                 <th class="hidden-phone">تاريخ الإستعارة</th>
                                                 <th class="hidden-phone">تاريخ الإرجاع</th>
                                                 <th class="hidden-phone">إسم الموظف</th>
                                                 <th class="hidden-phone">رقم الغرفة</th>
-                                                <th class="hidden-phone">الرقم التسلسلي</th>
                                                 <th class="hidden-phone">ملاحظات</th>
                                                 <th class="hidden-phone">قائـمة المهام</th>
                                             </tr>
@@ -98,12 +98,12 @@
                                                 <tr class="odd gradeX">
                                                     <td><input type="checkbox" class="checkboxes" value="1" /></td>
                                                     <td class="hidden-phone"><?= $value['PRODUCT_NAME'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['SERIAL_NUMBER'] ?></td>
                                                     <td class="hidden-phone"><?= $value['PRODUCT_STATUS'] ?></td>
                                                     <td class="hidden-phone"><?= $value['ADDED_DATE'] ?></td>
                                                     <td class="hidden-phone"><?= $value['RETURN_DATE'] ?></td>
                                                     <td class="hidden-phone"><?= $value['EMPLOYEE_NAME'] ?></td>
                                                     <td class="hidden-phone"><?= $value['ROOM_NUMBER'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['SERIAL_NUMBER'] ?></td>
                                                     <td class="hidden-phone"><?= $value['NOTES'] ?></td>
                                                     <td class="hidden-phone">
                                                         <?php if ($value['ORDER_STATUS'] == 'active') { ?>

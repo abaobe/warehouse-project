@@ -28,7 +28,8 @@ class Departments extends CI_Controller {
     }
 
     public function add_department() {
-        $this->load->view('webpages/add_department');
+        $result['departments'] = $this->department_model->get_departments_id_name();
+        $this->load->view('webpages/add_department', $result);
     }
 
     public function do_add_department() {
@@ -36,6 +37,9 @@ class Departments extends CI_Controller {
         $data['address'] = $this->input->post('address');
         $data['phone'] = $this->input->post('phone');
         $data['notes'] = $this->input->post('notes');
+        $data['mobile'] = $this->input->post('mobile');
+        $data['fax'] = $this->input->post('fax');
+        $data['parent_id'] = $this->input->post('parent_id');
 
         $result = $this->department_model->add_department($data);
         echo json_encode($result);

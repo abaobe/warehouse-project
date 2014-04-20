@@ -81,15 +81,16 @@
                                     <table class="table table-striped table-bordered" id="sample_1">
                                         <thead>
                                             <tr>
-                                                <th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
-                                                <th class="hidden-phone">إسم الصنف</th>
+                                                <th style="width:8px;"></th>
                                                 <th class="hidden-phone">رقم الصنف</th>
-                                                <th class="hidden-phone">نوع الصنف</th>
-                                                <th class="hidden-phone">حد إعادة الطلب</th>
-                                                <th class="hidden-phone">الكمية المتبقية</th>
+                                                <th class="hidden-phone">إسم الصنف</th>
+                                                <th class="hidden-phone">الوحدة</th>
+                                                <th class="hidden-phone">الرصيد الحالي</th>
                                                 <th class="hidden-phone">الطول</th>
                                                 <th class="hidden-phone">العرض</th>
                                                 <th class="hidden-phone">الإرتفاع</th>
+                                                <th class="hidden-phone">حد إعادة الطلب</th>
+                                                <th class="hidden-phone">نوع الصنف</th>
                                                 <th class="hidden-phone">ملاحظات</th>
                                                 <th class="hidden-phone">قائـمة المهام</th>
                                             </tr>
@@ -97,9 +98,20 @@
                                         <tbody>
                                             <?php foreach ($products as $value) { ?>
                                                 <tr class="odd gradeX">
-                                                    <td><input type="checkbox" class="checkboxes" value="1" /></td>
-                                                    <td class="text-info bold"><?= $value['PRODUCT_NAME'] ?></td>
+                                                    <td>
+                                                    <?php if(!strcmp($value['QUANTITY_STATUS'], 'invisible')) {echo '<i class="icon-eye-close"></i>';}?>
+                                                    <?php if(!strcmp($value['QUANTITY_STATUS'], 'visible')) {echo '<i class="icon-eye-open"></i>';}?>
+                                                    </td>
                                                     <td><?= $value['PRODUCT_NUMBER'] ?></td>
+                                                    <td class="text-info bold"><?= $value['PRODUCT_NAME'] ?></td>
+                                                    <td><?= $value['PRIMARY_UNIT_NAME'] ?></td>
+                                                    <td><?= $value['PRIMARY_UNIT_QUANTITY'] ?></td>
+                                                    <td><?= $value['H_LENGTH'] ?></td>
+                                                    <td><?= $value['WIDTH'] ?></td>
+                                                    <td><?= $value['HEIGHT'] ?></td>
+                                                    <td><?php if($value['PRIMARY_UNIT_QUANTITY'] <= $value['RE_DEMAND_BORDER']){echo'<span class="label label-important">'.$value['RE_DEMAND_BORDER'].'</span>';
+                                                              }else if($value['PRIMARY_UNIT_QUANTITY'] <= $value['RE_DEMAND_BORDER'] +$value['RE_DEMAND_BORDER']*0.05) {echo'<span class="label label-warning">'.$value['RE_DEMAND_BORDER'].'</span>';
+                                                              }else{echo $value['RE_DEMAND_BORDER'];} ?></td>
                                                     <td>
                                                         <?php if($value['PRODUCT_TYPE'] == '1'){?>
                                                             <span class="text-success bold">مـواد مستهلكة</span>
@@ -107,19 +119,14 @@
                                                             <span class="text-info bold">مواد دائـمة</span>
                                                     <?php }?>
                                                     </td>
-                                                    <td><?= $value['RE_DEMAND_BORDER'] ?></td>
-                                                    <td><?= $value['PRIMARY_UNIT_NAME'] ?>=<?= $value['PRIMARY_UNIT_QUANTITY'] . ' || ' ?><?= $value['SECONDARY_UNIT_NAME'] ?>=<?= $value['SECONDARY_UNIT_QUANTITY'] ?></td>
-                                                    <td><?= $value['H_LENGTH'] ?></td>
-                                                    <td><?= $value['WIDTH'] ?></td>
-                                                    <td><?= $value['HEIGHT'] ?></td>
                                                     <td><?= $value['NOTES'] ?></td>
                                                     <td>
                                                         <a href='<?php echo base_url() . "product/update_product/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
-                                                        <a href="#" onclick="delete_product(<?= $value['PRODUCT_ID'] ?>,this)" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
+                                                        <a href="#" onclick="delete_product(<?= $value['PRODUCT_ID'] ?>,this);return false;" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
                                                         <?php if($value['PRODUCT_TYPE'] == 1){ ?>
-                                                            <a href='<?php echo base_url() . "product/inserted_temp_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-th-list"> تفصيل</i></a>
+                                                            <a href='<?php echo base_url() . "product/inserted_temp_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-th-list"> حركات الصنف</i></a>
                                                         <?php } else if($value['PRODUCT_TYPE'] ==2){?>    
-                                                            <a href='<?php echo base_url() . "product/inserted_static_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-th-list"> تفصيل</i></a>
+                                                            <a href='<?php echo base_url() . "product/inserted_static_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-th-list"> حركات الصنف</i></a>
                                                         <?php }?>
                                                     </td>
                                                 </tr>

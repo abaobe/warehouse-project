@@ -77,7 +77,8 @@
                                             <tr>
                                                 <th style="width:8px;" ><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
                                                 <th class="hidden-phone">رقم الطلب</th>
-                                                <th class="hidden-phone">مقدم من</th>
+                                                <th class="hidden-phone">إسم الإدارة</th>
+                                                <th class="hidden-phone">إسم الدائرة</th>
                                                 <th class="hidden-phone">نوع الأصناف</th>
                                                 <th class="hidden-phone">تاريخ الطلب</th>
                                                 <th class="hidden-phone">قائـمة المهام</th>
@@ -89,6 +90,7 @@
                                                     <td status="<?= $value['STATUS'] ?>"><input type="checkbox" class="checkboxes" value="1" /></td>
                                                     <td class="hidden-phone"><?= $value['ORDER_NUMBER'] ?></td>
                                                     <td class="hidden-phone"><?= $value['DEPARTMENT_NAME'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['MAIN_DEPARTMENT'] ?></td>
                                                     <td class="hidden-phone">
                                                     <?php if($value['PRODUCT_TYPE'] == '1'){?>
                                                         <span class="text-info">مـواد مستهلكة</span>
