@@ -15,7 +15,7 @@
         <link href="<?php echo base_url(); ?>resource/css/style.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
-<link href="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.css" type="text/css" rel="stylesheet">
+        <link href="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.css" type="text/css" rel="stylesheet">
         <link href="<?php echo base_url(); ?>resource/assets/custombox/reveal.css" type="text/css" rel="stylesheet">	
     </head>
     <!-- END HEAD -->
@@ -177,9 +177,20 @@
                                         <div class="controls">
                                             <select class="span6" id="department_id" data-placeholder="إختيـار فئة..." tabindex="1">
                                                 <option value=""></option>
-                                                <?php foreach ($departments as $value) { ?>
-                                                    <option value="<?= $value['DEPARTMENT_ID'] ?>"><?= $value['DEPARTMENT_NAME'] ?></option>
-                                                <?php } ?>
+                                                <?php
+                                                $current_main = "";
+                                                foreach ($departments as $department) {
+                                                    if ($current_main != $department['ROOT_NAME']) {
+                                                        $current_main = $department['ROOT_NAME'];
+                                                        ?>
+                                                        <option value="<?= $department['ROOT_ID'] ?>"><?= $department['ROOT_NAME'] ?></option>
+                                                        <option id="test"><?php if ($department['DOWN1_NAME'] != null) echo $department['DOWN1_NAME'] ?></option>
+                                                    <?php } else { ?>
+                                                        <option value="<?= $department['DOWN1_ID'] ?>"><?php if ($department['DOWN1_NAME'] != null) echo $department['DOWN1_NAME'] ?></option>
+                                                        <?php
+                                                    }
+                                                }
+                                                ?>
                                             </select>
                                             <input type="text" class="span6" id="section_name" placeholder="القسم" value="" />
                                         </div>

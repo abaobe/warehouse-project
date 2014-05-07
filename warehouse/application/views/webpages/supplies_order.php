@@ -144,7 +144,7 @@
                                                         <input type="text" id="notes" class="span4" data-placeholder="ملاحظات" />
                                                     </td>
                                                     <td>
-                                                        <a href="javascript:add_product(this)" product_id="<?=$value['PRODUCT_ID']?>" product_name="<?=$value['PRODUCT_NAME']?>" class="btn mini purple"><i class="icon-edit"></i> طلب</a>
+                                                        <a href="#" onclick="add_product(this);return false;" product_id="<?=$value['PRODUCT_ID']?>" product_name="<?=$value['PRODUCT_NAME']?>" class="btn mini purple"><i class="icon-edit"></i> طلب</a>
                                                     </td>
                                                 </tr>
                                             <?php } ?>
@@ -196,7 +196,10 @@
                 var unit_name=$(current).parents('tr').children().find($('td #unit_type option:selected')).text();
                 var quantity=$(current).parents('tr').children().find($('td #quantity')).val();
                 var notes=$(current).parents('tr').children().find($('td #notes')).val();
-                
+                console.log("productName:"  + product_name);
+                console.log("u_name:"  + unit_name);
+                console.log("qunty:"  + quantity);
+                console.log("notes:"  + notes);
                 var d = new Array();
                 d[0] = $(current).attr('product_id');
                 d[1] = 1;

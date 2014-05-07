@@ -132,7 +132,7 @@
                                     </table>
                                     <div class="form-actions">
                                         <div class='span6'></div>
-                                        <button type="button" class="btn btn-success" onclick="supply_order(this)">إعتماد نهائي</button>
+                                        <button type="button" class="btn btn-success" onclick="supply_order()">إعتماد نهائي</button>
                                         <button type="reset" id="reset" class="btn">إلغاء</button>
                                     </div>
                                 </div>

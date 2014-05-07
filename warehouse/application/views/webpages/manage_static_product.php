@@ -16,6 +16,7 @@
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
 
+        <link href="<?php echo base_url(); ?>resource/assets/custombox/reveal.css" type="text/css" rel="stylesheet">	
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link  href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
         <link href="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.css" type="text/css" rel="stylesheet">
@@ -71,6 +72,12 @@
                                         <a href="javascript:;" class="icon-remove"></a>
                                     </span>
                                 </div>
+                                <!-- Start Alert Message -->
+                                    <div id="status" class="alert">
+                                        <button class="close" data-dismiss="alert">×</button>
+                                        <span id="message"></span>
+                                    </div>
+                                    <!-- End Alert Message -->
                                 <div class="widget-body">
                                     <table class="table table-striped table-bordered" id="sample_1">
                                         <thead>
@@ -91,9 +98,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($product_info as $value) { ?>
+                                            <?php $i = 0;
+                                            foreach ($product_info as $value) { ?>
                                                 <tr class="odd gradeX">
-                                                    <td><input type="checkbox" class="checkboxes" value="1" /></td>
+                                                    <td><input type="checkbox" class="checkboxes" /></td>
                                                     <td class="hidden-phone"><?= $value['ADDED_DATE'] ?></td>
                                                     <td class="hidden-phone"><?= $value['COMPANY_NAME'] ?></td>
                                                     <td class="hidden-phone"><?= $value['BILLING_ID'] ?></td>
@@ -106,11 +114,19 @@
                                                     <td class="hidden-phone"><?= $value['SERIAL_NUMBER'] ?></td>
                                                     <td class="hidden-phone"><?= $value['NOTES'] ?></td>
                                                     <td class="hidden-phone">
+                                                        <?php if($value['RESERVE_STATUS'] == 'متاح'){ ?>
                                                         <a href='<?php echo base_url() . "product/update_static_product/" . $value['VOUCHER_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
                                                         <a id="delete" href="javascript:delete_inserted_product(<?= $value['VOUCHER_ID'] ?>)" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
+                                                        <a id="temporary_disburse" href="javascript:temporary_disburse(<?= $value['VOUCHER_ID'] ?>)" class="btn mini purple"><i class="icon-magnet"></i> إخراج مؤقت</a>
+                                                        <?php }else if($value['RESERVE_STATUS'] == 'محجوز'){ echo '<span class="label label-warning">محجوز</span>';?>
+                                                        <?php }else if($value['RESERVE_STATUS'] == 'تالف'){echo '<span class="label label-danger">تالف</span>';?>
+                                                        <?php }else if($value['RESERVE_STATUS'] == 'إخراج مؤقت'){echo '<span class="label label-info">إخراج مؤقت</span>';?>
+                                                        <a href='<?php echo base_url() . "product/update_static_product/" . $value['VOUCHER_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
+                                                        <?php }else if($value['RESERVE_STATUS'] == 'تم إتلافة'){echo '<span class="label btn-danger">تم إتلافة</span>';}?>
+                                                        
                                                     </td>
                                                 </tr>
-                                            <?php } ?>
+                                            <?php ++$i;} ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -126,6 +142,39 @@
             <!-- END PAGE -->
         </div>
         <!-- END CONTAINER -->
+        <!-- START MODAL FORM -->
+            <div id="myModal" class="reveal-modal large">
+                <a class="close-reveal-modal">&#215;</a>
+                <div class="widget">
+                    <form method="POST" id="add_form" onsubmit="return false;" class="form-horizontal">
+                    <div class="widget-title">
+                        <h4><i class="icon-reorder"></i>طلب لوازم</h4>
+                    </div>
+                    <div class="widget-body" id="orderInfo">
+                        <div class="control-group">
+                        <label class="control-label">الجهة المرسل إليها الصنف</label>
+                        <div class="controls">
+                            <select id="companies" class="chosen span3" placeholder="إستلمت من" tabindex="1">
+                                <option value="">إختيار</option>
+                            </select>
+                        </div>
+                        </div>
+                            <div id="reasons" class="control-group">
+                            <label class="control-label">أسباب إخراج الصنف</label>
+                            <div class="controls">
+                                <input type="text" id="way_1" class="span3" />
+                                <button id="more" class="btn btn-info"><i class="icon-plus icon-white"></i> مزيد</button>
+                            </div>
+                            <br/>
+                        </div>
+                        <div class="controls">
+                        <button id="accept" onclick="accept_disburse()" class="btn btn-success"><i class="icon-plus icon-ok"></i> إعتماد</button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END MODAL FORM -->
         <!-- BEGIN FOOTER -->
         <?php $this->load->view('includes/footer_view'); ?>
         <!-- END FOOTER -->
@@ -142,13 +191,78 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/data-tables/jquery.dataTables.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/custombox/jquery.reveal.js"></script>
         <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script src="<?php echo base_url(); ?>resource/js/jquery.confirm.js"></script>
         <script>
+            var count = 2;
+            var voucher_id;
+            var isLoaded = false;
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
             });
+
+            function temporary_disburse(voucher_id){
+                this.voucher_id = voucher_id;
+                if(isLoaded == false){
+                    $.ajax({
+                        type: "POST",
+                        url: '<?php echo base_url() . "companies/get_companies_id_name/"; ?>',
+                        dataType: "json",
+                        success: function(json) {
+                            if (json.length != 0) {
+                                var data = json.companies;
+                                for (var i in data) {
+                                    $('#companies').append('<option value='+data[i]['COMPANY_ID']+'>' + data[i]['COMPANY_NAME'] + '</option>');
+                                }
+                                isLoaded = true;
+                            }
+                        }, error: function() {
+                            $('#message').text("هناك خطأ في تخزين البيانات");
+                        }
+                    });
+                }
+                $('#myModal').reveal();
+            }
+            
+            $('#more').click(function() {
+                var new_way = '<div class="control-group"><div class="controls"><input type="text" class="span3" id="way_' + count + '"/></div></div>';
+                $('#reasons').append(new_way);
+                count++;
+            });
+            
+            function accept_disburse() {
+                var reasons = "";
+                for (var i = 1; i < count; i++) {
+                    if ($("#way_" + i).val() != null || $("#sub_" + i).val() != '')
+                        reasons += $("#way_" + i).val() + ',';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url() . "product/disburse_servicing/"; ?>',
+                    data: {
+                        voucher_id: voucher_id,
+                        reasons: reasons,
+                        company_id: $('#companies').val()
+                    },
+                    dataType: "json",
+                    success: function(json) {
+                        if (json == 1) {
+                            $('#status').removeClass('alert-error').addClass('alert alert-success');
+                            $('#message').text("تم الطلب بنجاح");
+                            $('#reset').click();
+                            vouchers = [];
+                            vouchers.length = 0;
+                        } else {
+                            $('#status').addClass('alert alert-error');
+                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        }
+                    }, error: function() {
+                        $('#message').text("هناك خطأ في تخزين البيانات");
+                    }
+                });
+            }
 
             function delete_inserted_product(voucher_id) {
                 $.confirm({

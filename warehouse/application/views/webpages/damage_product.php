@@ -83,7 +83,7 @@
                                         <div class="controls">
                                             <input type="text" id="way_1" class="span6 " />
                                             <button id="more" class="btn btn-info"><i class="icon-plus icon-white"></i> مزيد</button>
-                                            <button id="accept" onclick="accept_damage()" class="btn btn-success"><i class="icon-plus icon-ok"></i> إعتماد</button>
+                                            <button id="accept" onclick="accept_damage()" class="btn btn-success"><i class="icon-ok"></i> إعتماد</button>
                                         </div>
                                         <br/>
                                     </div>
@@ -127,9 +127,7 @@
                             <!-- END EXAMPLE TABLE widget-->
                         </div>
                     </div>
-
                     <!-- END ADVANCED TABLE widget-->
-
                     <!-- END PAGE CONTENT-->
                 </div>
                 <!-- END PAGE CONTAINER-->
