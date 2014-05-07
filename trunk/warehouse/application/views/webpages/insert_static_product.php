@@ -78,6 +78,13 @@
                                     </div>
                                     <!-- End Alert Message -->
                                     <!-- BEGIN FORM-->
+                                    <div class="well left_info">
+                                        <label class="control-label">رقم السند</label>
+                                        <div class="controls form-horizontal">
+                                            <input readonly form="anyThing" type="text" id="insert_number" class="input-small" />
+                                            <button type="button" class="btn btn-success" onclick="get_insert_number()">مستند إدخال جديد</button>
+                                        </div>
+                                    </div>
                                     <form method="POST" id="add_form" onsubmit="return false;" class="form-horizontal">
                                         <div class="control-group">
                                             <label class="control-label">إسم الصنف</label>
@@ -215,9 +222,11 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script>
+            var insert_number;
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
+                get_insert_number();
             });
 
             $('.date-picker').datepicker({
@@ -284,6 +293,20 @@
                         }
                     });
                 }
+            }
+            
+            function get_insert_number() {
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url() . "product/get_insert_number/"; ?>',
+                    dataType: "json",
+                    success: function(json) {
+                        $('#insert_number').val(json);
+                        insert_number = json;
+                    }, error: function() {
+                        $('#message').text("خطأ في جلب رقم السند");
+                    }
+                });
             }
         </script>
         <!-- END JAVASCRIPTS -->   

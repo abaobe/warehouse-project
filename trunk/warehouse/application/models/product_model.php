@@ -415,6 +415,24 @@ class Product_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
+    
+    function disburse_temp_supplies($data) {
+        $params = array(
+            array('name' => ':order_supplies_id', 'value' => &$data['order_supplies_id']),
+            array('name' => ':quantity_disbursed', 'value' => &$data['quantity_disbursed']),
+            array('name' => ':unit_type', 'value' => &$data['unit_type']),
+            array('name' => ':notes', 'value' => &$data['notes']),
+            array('name' => ':res', 'value' => &$result)
+        );
+
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := product_actions.insert_temp_disburse_info(:order_supplies_id,:quantity_disbursed, :unit_type, :notes); end;");
+        foreach ($params as $variable)
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
+        oci_execute($stmt);
+        return $result;
+    }
+    
 
 //    function get_order_status($order_number) {
 //        $conn = $this->db->conn_id;
@@ -502,6 +520,24 @@ class Product_model extends CI_Model {
         $params[1] = array("name" => ":prodType", "value" => &$data['prodType']);
         return $this->DBObject->readCursor("product_actions.get_ProductsBy_CatID(:category_id,:prodType)", $params);
     }
+    
+    function disburse_servicing($data) {
+        $params = array(
+            array("name" => ":voucher_id", "value" => &$data['voucher_id']),
+            array("name" => ":reasons", "value" => &$data['reasons']),
+            array("name" => ":company_id", "value" => &$data['company_id']),
+            array('name' => ':res', 'value' => &$result)
+        );
+        
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := product_actions.disburse_servicing(:voucher_id,:reasons,:company_id); end;");
+        foreach ($params as $variable) {
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
+        }
+        oci_execute($stmt);
+        return $result;
+    }
+    
     
     function get_temp_products(){
         return $this->DBObject->readCursor("product_actions.get_temp_products", null);

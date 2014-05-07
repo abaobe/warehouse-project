@@ -132,7 +132,7 @@
                                     </table>
                                     <div class="form-actions">
                                         <div class='span6'></div>
-                                        <button type="button" class="btn btn-success" onclick="supply_order(this)">إعتماد نهائي</button>
+                                        <button type="button" class="btn btn-success" onclick="supply_order()">إعتماد نهائي</button>
                                         <button type="reset" id="reset" class="btn">إلغاء</button>
                                     </div>
                                 </div>
@@ -251,6 +251,30 @@
                     success: function(json) {
                         if (json) {
                             $("#inserted").html(json);
+                        } else {
+                            $('#status').addClass('alert alert-error');
+                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        }
+                    }, error: function() {
+                        $('#message').text("هناك خطأ في تخزين البيانات");
+                    }
+                });
+            }
+            
+            function supply_order() {
+                $.ajax({
+                    type: "POST",
+                    url: '<?php echo base_url() . "product/disburse_static_supplies/"; ?>',
+                    data: {disbursed: JSON.stringify(info)
+                    },
+                    dataType: "json",
+                    success: function(json) {
+                        if (json == 1) {
+                            $('#status').removeClass('alert-error').addClass('alert alert-success');
+                            $('#message').text('تـم الصرف بنجاح');
+                            info = [];
+                            info.length = 0;
+                            index = 0;
                         } else {
                             $('#status').addClass('alert alert-error');
                             $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");

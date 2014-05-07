@@ -13,9 +13,14 @@ class Companies extends CI_Controller {
     public function index() {
         
     }
-
+    
     public function add_company() {
         $this->load->view('webpages/add_company');
+    }
+    
+    public function get_companies_id_name() {
+        $result['companies'] = $this->company_model->get_companies_id_name();
+        echo json_encode($result);
     }
 
     public function do_add_company() {

@@ -391,6 +391,14 @@ class Product extends CI_Controller {
 
         echo json_encode($result);
     }
+    
+    function disburse_servicing() {
+        $data['voucher_id'] = $this->input->post('voucher_id');
+        $data['reasons'] = $this->input->post('reasons');
+        $data['company_id'] = $this->input->post('company_id');
+        $result = $this->product_model->disburse_servicing($data);
+        echo json_encode($result);
+    }
 
 }
 
