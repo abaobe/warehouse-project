@@ -82,7 +82,7 @@
                                                 <select id="department_id" name="category_id" class="span4 chosen" data-placeholder="إختيـار فئة..." tabindex="1">
                                                     <option value=""></option>
                                                     <?php foreach ($departments as $value) { ?>
-                                                        <option value="<?= $value['DEPARTMENT_ID'] ?>"><?= $value['DEPARTMENT_NAME'] ?></option>
+                                                        <option value="<?= $value['ROOT_ID'] ?>"><?= $value['ROOT_NAME'] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
