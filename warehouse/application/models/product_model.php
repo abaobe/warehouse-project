@@ -45,9 +45,27 @@ class Product_model extends CI_Model {
     function get_all_products() {
         return $this->DBObject->readCursor("product_actions.get_all_products", null);
     }
+    
+    function get_all_products_1($num, $offset,$search) {
+        // $this->db->select('id, name');
+        $params[0] = array("name" => ":num_per", "value" => &$num);
+        $params[1] = array("name" => ":offset", "value" => &$offset);
+        $params[2] = array("name" => ":search", "value" => &$search);
+        return $this->DBObject->readCursor("product_actions.get_all_products_1(:num_per,:offset,:search)", $params);
+
+    }
 
     function get_static_products() {
         return $this->DBObject->readCursor("product_actions.get_static_products", null);
+    }
+    
+    function get_static_products_1($num, $offset,$search) {
+        // $this->db->select('id, name');
+        $params[0] = array("name" => ":num_per", "value" => &$num);
+        $params[1] = array("name" => ":offset", "value" => &$offset);
+        $params[2] = array("name" => ":search", "value" => &$search);
+        return $this->DBObject->readCursor("product_actions.get_static_products_1(:num_per,:offset,:search)", $params);
+
     }
 
     function get_inserted_static_prod($product_id, $columns) {
@@ -355,6 +373,72 @@ class Product_model extends CI_Model {
     function get_ordered_supplies() {
         return $this->DBObject->readCursor("product_actions.get_all_ordered_supplies", null);
     }
+    
+    function get_order_supplies_1($num, $offset,$search) {
+        // $this->db->select('id, name');
+        $params[0] = array("name" => ":num_per", "value" => &$num);
+        $params[1] = array("name" => ":offset", "value" => &$offset);
+        $params[2] = array("name" => ":search", "value" => &$search);
+        return $this->DBObject->readCursor("product_actions.get_all_ordered_supplies_1(:num_per,:offset,:search)", $params);
+
+    }
+    
+    function get_count_ordered_supplies($search) {
+        // $this->db->select('id, name');
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.get_count_ordered_supplies(:search); END;");
+        oci_bind_by_name($stmt, ':search', $search);
+        oci_bind_by_name($stmt, ':v_Return', $result, SQL_NUMERIC);
+
+        if (!oci_execute($stmt)) {
+            return oci_error($stmt);
+        }
+        return $result;
+
+    }
+    
+    function get_count_products($search) {
+        // $this->db->select('id, name');
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.get_count_products(:search); END;");
+        oci_bind_by_name($stmt, ':search', $search);
+        oci_bind_by_name($stmt, ':v_Return', $result, SQL_NUMERIC);
+
+        if (!oci_execute($stmt)) {
+            return oci_error($stmt);
+        }
+        return $result;
+
+    }
+    
+    function get_count_static_products($search) {
+        // $this->db->select('id, name');
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.get_count_static_products(:search); END;");
+        oci_bind_by_name($stmt, ':search', $search);
+        oci_bind_by_name($stmt, ':v_Return', $result, SQL_NUMERIC);
+
+        if (!oci_execute($stmt)) {
+            return oci_error($stmt);
+        }
+        return $result;
+
+    }
+    
+    function get_count_department_borrowing($department_id,$search) {
+        // $this->db->select('id, name');
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.get_count_department_borrowing(:department_id,:search); END;");
+        oci_bind_by_name($stmt, ':search', $search);
+        oci_bind_by_name($stmt, ':department_id', $department_id);
+        oci_bind_by_name($stmt, ':v_Return', $result, SQL_NUMERIC);
+
+        if (!oci_execute($stmt)) {
+            return oci_error($stmt);
+        }
+        return $result;
+
+    }
 
     function get_ordered_supplies_byNumber($order_number) {
         $params[0] = array("name" => ":order_number", "value" => &$order_number);
@@ -452,6 +536,17 @@ class Product_model extends CI_Model {
     function department_borrowing($data) {
         $params[0] = array("name" => ":department_id", "value" => &$data['department_id']);
         return $this->DBObject->readCursor("product_actions.department_borrowing(:department_id)", $params);
+    }
+    
+    
+    function department_borrowing_1($department_id,$num, $offset,$search) {
+        // $this->db->select('id, name');
+        $params[0] = array("name" => ":num_per", "value" => &$num);
+        $params[1] = array("name" => ":offset", "value" => &$offset);
+        $params[2] = array("name" => ":search", "value" => &$search);
+        $params[4] = array("name" => ":department_id", "value" => &$department_id);
+        return $this->DBObject->readCursor("product_actions.department_borrowing_1(:department_id,:num_per,:offset,:search)", $params);
+
     }
 
     function get_products_id_name($product_type) {

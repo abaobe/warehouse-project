@@ -72,10 +72,24 @@
                                     </span>
                                 </div>
                                 <div class="widget-body">
-                                    <table class="table table-striped table-bordered" id="sample_1">
+                                    <div id="sample_1_length_" class="dataTables_length">
+                                            <span class="span9">
+                                                <select name="sample_1_length_" id="per_page" size="1" aria-controls="sample_1">
+                                                    <option selected value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                </select>
+                                                عدد الصفوف في الصفحة
+                                            </span>
+                                            <span> البحث عن: 
+                                                <input type="text" id="search_" aria-controls="sample_1"></input>
+                                            </span>
+                                    </div>
+                                    <table class="table table-striped table-bordered" id="sample">
                                         <thead>
                                             <tr>
-                                                <th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
+                                                <th style="width:8px;">الرقم</th>
                                                 <th class="hidden-phone">رقم الصنف</th>
                                                 <th class="hidden-phone">إسم الصنف</th>
                                                 <th class="hidden-phone">الوحدة</th>
@@ -88,27 +102,7 @@
                                                 <th class="hidden-phone">قائـمة المهام</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <?php foreach ($products as $value) { ?>
-                                                <tr class="odd gradeX">
-                                                    <td><input type="checkbox" class="checkboxes" value="1" /></td>
-                                                    <td class="hidden-phone"><?= $value['PRODUCT_NUMBER'] ?></td>
-                                                    <td name="pname" class="hidden-phone"><?= $value['PRODUCT_NAME'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['PRIMARY_UNIT_NAME'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['PRIMARY_UNIT_QUANTITY'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['H_LENGTH'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['WIDTH'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['HEIGHT'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['RE_DEMAND_BORDER'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['NOTES'] ?></td>
-                                                    <td class="hidden-phone">
-                                                        <a href='<?php echo base_url() . "product/update_product/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
-                                                        <a id="delete" href="javascript:delete_product(<?= $value['PRODUCT_ID'] ?>)" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
-                                                        <a href='<?php echo base_url() . "product/inserted_static_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"> حركات الصنف</a>
-                                                    </td>
-                                                </tr>
-                                            <?php } ?>
-                                        </tbody>
+                                        <tbody></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -147,6 +141,48 @@
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
+                $('#per_page').val('<?php echo $this->session->userdata('per_page') ?>');
+                $('#search_').val('<?php echo $this->session->userdata('search') ?>');
+
+                tableActions();
+
+                $('table').after('<?php echo $paging; ?>');
+
+                $('#search_').keypress(function() {
+                    $.ajax({
+                        type: "POST",
+                        url: '<?php echo base_url() . "product/pagein_static_products/"; ?>',
+                        data: {
+                            per_page: $('#per_page').val(),
+                            search: $('#search_').val()
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            $('#pagein_div').remove();
+                            $('table').after(data);
+                        }
+                    });
+                    tableActions();
+                });
+
+                $('#per_page').change(function() {
+                    //alert('<?php //echo $this->uri->segments[3]; ?>');
+                    $.ajax({
+                        type: "POST",
+                        url: '<?php echo base_url() . "product/pagein_static_products/"; ?>',
+                        data: {
+                            per_page: $('#per_page').val(),
+                            search: $('#search_').val()
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            $('#pagein_div').remove();
+                            $('table').after(data);
+                        }
+                    });
+                    tableActions();
+
+                });
             });
 
             function delete_product(product_id) {
@@ -166,6 +202,114 @@
                     }
                 });
             }
+            
+            function initTable() {
+                //var oTable = $('#sample_1').dataTable();
+                return $("#sample").dataTable({
+                    //"bServerSide": true,
+                    "bDestroy": true,
+                    "bStateSave": true,
+                    "aaSorting": [[1, "asc"]],
+                    "bProcessing": false,
+                    "bServerSide": true,
+                    "sAjaxSource": "<?php echo base_url() . "product/set_data_static_products/"; ?>",
+                    "bJQueryUI": true,
+                    "bAutoWidth": false,
+                    "bFilter": false,
+                    "bLengthChange": false,
+                    "bPaginate": false,
+                    "bSort": true,
+                    "iDisplayLength": 10,
+                    "bInfo": true,
+                    //"sPaginationType": "full_numbers",
+                    "fnServerParams": function(aoData) {
+                        aoData.push({"name": "search", "value": $('#search_').val()},
+                        {"name": "offset", "value": <?php echo ($this->uri->segment(3)) ? $this->uri->segment(3) : 0 ?>},
+                        {"name": "per_page", "value": $('#per_page').val()});
+                    },
+                    "fnServerData": function(sSource, aoData, fnCallback, oSettings) {
+                        oSettings.jqXHR = $.ajax({
+                            "dataType": 'json',
+                            "type": "POST",
+                            "url": sSource,
+                            "data": aoData,
+                            "success": fnCallback
+                        });
+                    },
+                    //"sDom": '<"top"i>rt<"bottom"flp><"clear">',
+                    "aoColumnDefs": [{
+                            "mData": "RNUM"
+                            , 'bSortable': false
+                            , "aTargets": [0]
+                            , "sClass": "hidden-phone"
+                        }, {
+                            "aTargets": [1]
+                            , "mData": "PRODUCT_NUMBER"
+                            , "sClass": "hidden-phone"
+                        }, {
+                            "aTargets": [2]
+                            , "mData": "PRODUCT_NAME"
+                            , "sClass": "hidden-phone"
+                        }, {
+                            "aTargets": [3]
+                            , "mData": "PRIMARY_UNIT_NAME"
+                            , "sClass": "hidden-phone"
+                        }, {
+                            "aTargets": [4]
+                            , "mData": "PRIMARY_UNIT_QUANTITY"
+                            , "sClass": "hidden-phone"
+                        }, {
+                            "aTargets": [5]
+                            , "mData": "H_LENGTH"
+                            , "sClass": "hidden-phone"
+                        }, {
+                            "aTargets": [6]
+                            , "mData": "WIDTH"
+                            , "sClass": "hidden-phone"
+                        }, {
+                            "aTargets": [7]
+                            , "mData": "HEIGHT"
+                            , "sClass": "hidden-phone"
+                        },{
+                            "aTargets": [8]
+                            ,"mData": "RE_DEMAND_BORDER"
+                            , "fnCreatedCell": function(nTd, sData, oData, iRow, iCol) {
+                                if(oData['PRIMARY_UNIT_QUANTITY'] <= oData['RE_DEMAND_BORDER']){
+                                    $(nTd).append("<span class='label label-important' > "+oData['RE_DEMAND_BORDER']+" </span>");
+                                }else if(oData['PRIMARY_UNIT_QUANTITY'] <= (oData['RE_DEMAND_BORDER'] + oData['RE_DEMAND_BORDER']*0.05)) {
+                                    $(nTd).append("<span class='label label-warning'>"+oData['RE_DEMAND_BORDER']+"</span>");
+                                }else{
+                                    $(nTd).append(oData['RE_DEMAND_BORDER']);
+                                }
+                            }
+                            , "mRender": function(url, type, full) {
+                                return  null;
+                            }
+                        }, {
+                            "aTargets": [9]
+                            , "mData": "NOTES"
+                            , "sClass": "hidden-phone"
+                        }, {
+                            "aTargets": [10]
+                            , "mData": "PRODUCT_ID"
+                            , "fnCreatedCell": function(nTd, sData, oData, iRow, iCol) {
+                                $(nTd).append("<a href='<?php echo base_url() . "product/update_product/" ?>"+oData['PRODUCT_ID']+" ' class='btn btn-primary'> <i class='icon-pencil icon-white'></i> تعديل</a>");
+                                $(nTd).append("<span>     </span>");
+                                $(nTd).append("<a id='delete' href='javascript:delete_product("+oData['PRODUCT_ID']+")' class='btn btn-danger'><i class='icon-trash white'></i> حـذف</a>");
+                                $(nTd).append("<span>     </span>");
+                                $(nTd).append("<a href='<?php echo base_url() . "product/inserted_static_prod/"?>"+oData['PRODUCT_ID']+"' class='btn mini purple'><i class='icon-th-list'> حركات الصنف</i></a>");
+                            }, "mRender": function(url, type, full) {
+                                return  null;
+                            }
+                        }]
+                });
+            }
+
+            function tableActions() {
+                var oTable = initTable();
+            }
+            
+            
         </script>
     </body>
     <!-- END BODY -->
