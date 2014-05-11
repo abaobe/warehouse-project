@@ -65,7 +65,7 @@
                             <!-- BEGIN EXAMPLE TABLE widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>جدول يحتوي على الأصناف المعارة</h4>
+                                    <h4><i class="icon-reorder"></i>ط¬ط¯ظˆظ„ ظٹط­طھظˆظٹ ط¹ظ„ظ‰ ط§ظ„ط£طµظ†ط§ظپ ط§ظ„ظ…ط¹ط§ط±ط©</h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -73,41 +73,48 @@
                                 </div>
                                 <!-- Start Alert Message -->
                                 <div id="status" class="alert">
-                                    <button class="close" data-dismiss="alert">×</button>
+                                    <button class="close" data-dismiss="alert">أ—</button>
                                     <span id="message"></span>
                                 </div>
                                 <!-- End Alert Message -->
                                 <div class="widget-body">
-                                    <div id="sample_1_length_" class="dataTables_length">
-                                            <span class="span9">
-                                                <select name="sample_1_length_" id="per_page" size="1" aria-controls="sample_1">
-                                                    <option selected value="10">10</option>
-                                                    <option value="20">20</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
-                                                </select>
-                                                عدد الصفوف في الصفحة
-                                            </span>
-                                            <span> البحث عن: 
-                                                <input type="text" id="search_" aria-controls="sample_1"></input>
-                                            </span>
-                                    </div>
-                                    <table class="table table-bordered table-hover" id="sample">
+                                    <table class="table table-bordered table-hover" id="sample_1">
                                         <thead>
                                             <tr>
                                                 <th style="width:8px;" ><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
-                                                <th class="hidden-phone">إسم الصنف</th>
-                                                <th class="hidden-phone">الرقم التسلسلي</th>
-                                                <th class="hidden-phone">الحالة عند الإستعارة</th>
-                                                <th class="hidden-phone">تاريخ الإستعارة</th>
-                                                <th class="hidden-phone">تاريخ الإرجاع</th>
-                                                <th class="hidden-phone">إسم الموظف</th>
-                                                <th class="hidden-phone">رقم الغرفة</th>
-                                                <th class="hidden-phone">ملاحظات</th>
-                                                <th class="hidden-phone">قائـمة المهام</th>
+                                                <th class="hidden-phone">ط¥ط³ظ… ط§ظ„طµظ†ظپ</th>
+                                                <th class="hidden-phone">ط§ظ„ط±ظ‚ظ… ط§ظ„طھط³ظ„ط³ظ„ظٹ</th>
+                                                <th class="hidden-phone">ط§ظ„ط­ط§ظ„ط© ط¹ظ†ط¯ ط§ظ„ط¥ط³طھط¹ط§ط±ط©</th>
+                                                <th class="hidden-phone">طھط§ط±ظٹط® ط§ظ„ط¥ط³طھط¹ط§ط±ط©</th>
+                                                <th class="hidden-phone">طھط§ط±ظٹط® ط§ظ„ط¥ط±ط¬ط§ط¹</th>
+                                                <th class="hidden-phone">ط¥ط³ظ… ط§ظ„ظ…ظˆط¸ظپ</th>
+                                                <th class="hidden-phone">ط±ظ‚ظ… ط§ظ„ط؛ط±ظپط©</th>
+                                                <th class="hidden-phone">ظ…ظ„ط§ط­ط¸ط§طھ</th>
+                                                <th class="hidden-phone">ظ‚ط§ط¦ظ€ظ…ط© ط§ظ„ظ…ظ‡ط§ظ…</th>
                                             </tr>
                                         </thead>
-                                        <tbody></tbody>
+                                        <tbody>
+                                            <?php foreach ($borrowing as $value) { ?>
+                                                <tr class="odd gradeX">
+                                                    <td><input type="checkbox" class="checkboxes" value="1" /></td>
+                                                    <td class="hidden-phone"><?= $value['PRODUCT_NAME'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['SERIAL_NUMBER'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['PRODUCT_STATUS'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['ADDED_DATE'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['RETURN_DATE'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['EMPLOYEE_NAME'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['ROOM_NUMBER'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['NOTES'] ?></td>
+                                                    <td class="hidden-phone">
+                                                        <?php if ($value['ORDER_STATUS'] == 'active') { ?>
+                                                            <button class="btn mini purple" onclick="return_borrow(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-share-alt"></i> ط¥ط±ط¬ط§ط¹ ط§ظ„طµظ†ظپ</button>
+                                                        <?php } else if ($value['ORDER_STATUS'] == 'inactive') { ?>
+                                                            <span class="label label-warning"><b>ط¨ط¥ظ†طھط¸ظ€ط§ط± طھط£ظƒظٹط¯ ط§ظ„ظ…ط³ط¤ظˆظ„</b></span>
+                                                        <?php } ?>
+                                                    </td>
+                                                </tr>
+                                            <?php } ?>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -142,59 +149,16 @@
         <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script src="<?php echo base_url(); ?>resource/js/jquery.confirm.js"></script>
         <script>
+            var order_status;
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
-                
-                $('#per_page').val('<?php echo $this->session->userdata('per_page') ?>');
-                $('#search_').val('<?php echo $this->session->userdata('search') ?>');
-
-                tableActions();
-
-                $('table').after('<?php echo $paging; ?>');
-
-                $('#search_').keypress(function() {
-                    $.ajax({
-                        type: "POST",
-                        url: '<?php echo base_url() . "product/pagein_department_borrowing/"; ?>',
-                        data: {
-                            per_page: $('#per_page').val(),
-                            search: $('#search_').val()
-                        },
-                        dataType: "json",
-                        success: function(data) {
-                            $('#pagein_div').remove();
-                            $('table').after(data);
-                        }
-                    });
-                    tableActions();
-                });
-
-                $('#per_page').change(function() {
-                    //alert('<?php //echo $this->uri->segments[3]; ?>');
-                    $.ajax({
-                        type: "POST",
-                        url: '<?php echo base_url() . "product/pagein_department_borrowing/"; ?>',
-                        data: {
-                            per_page: $('#per_page').val(),
-                            search: $('#search_').val()
-                        },
-                        dataType: "json",
-                        success: function(data) {
-                            $('#pagein_div').remove();
-                            $('table').after(data);
-                        }
-                    });
-                    tableActions();
-
-                });
-           
             });
 
             function return_borrow(current) {
                 var voucher_id = $(current).attr('voucher_id');
                 $.confirm({
-                    text: "<h4>هل تريد إرجاع هذا الصنف ؟</h4>",
+                    text: "<h4>ظ‡ظ„ طھط±ظٹط¯ ط¥ط±ط¬ط§ط¹ ظ‡ط°ط§ ط§ظ„طµظ†ظپ طں</h4>",
                     confirm: function() {
                     $.ajax({type: "POST",
                         url: '<?php echo base_url() . "product/return_borrowing/"; ?>',
@@ -203,121 +167,19 @@
                         success: function(json) {
                             if (json == 1) {
                                 $('#status').removeClass('alert-error').addClass('alert alert-success');
-                                $('#message').html('<b>تم الطلب بنجاح :  يجب عليك إرجاع هذا الصنف إلى أمين المخزن </b>');
-                                $(current).parent().empty().html('<span class="label label-warning"><b>بإنتظـار تأكيد المسؤول</b></span>');
+                                $('#message').html('<b>طھظ… ط§ظ„ط·ظ„ط¨ ط¨ظ†ط¬ط§ط­ :  ظٹط¬ط¨ ط¹ظ„ظٹظƒ ط¥ط±ط¬ط§ط¹ ظ‡ط°ط§ ط§ظ„طµظ†ظپ ط¥ظ„ظ‰ ط£ظ…ظٹظ† ط§ظ„ظ…ط®ط²ظ† </b>');
+                                $(current).parent().empty().html('<span class="label label-warning"><b>ط¨ط¥ظ†طھط¸ظ€ط§ط± طھط£ظƒظٹط¯ ط§ظ„ظ…ط³ط¤ظˆظ„</b></span>');
                             } else {
                                 $('#status').addClass('alert alert-error');
-                                $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                                $('#message').removeClass('alert-success').text("ظٹط¬ط¨ ط¹ظ„ظٹظƒ ط§ظ„طھط£ظƒط¯ ظ…ظ† ط§ظ„ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ط¯ط®ظ„ط©");
                             }
                         }, error: function() {
-                            $('#message').text("هناك خطأ في تخزين البيانات");
+                            $('#message').text("ظ‡ظ†ط§ظƒ ط®ط·ط£ ظپظٹ طھط®ط²ظٹظ† ط§ظ„ط¨ظٹط§ظ†ط§طھ");
                         }
                     });
                     }
                 });
             }
-            
-            function initTable() {
-                //var oTable = $('#sample_1').dataTable();
-                return $("#sample").dataTable({
-                    //"bServerSide": true,
-                    "bDestroy": true,
-                    "bStateSave": true,
-                    "aaSorting": [[1, "asc"]],
-                    "bProcessing": false,
-                    "bServerSide": true,
-                    "sAjaxSource": "<?php echo base_url() . "product/set_data_department_borrowing/"; ?>",
-                    "bJQueryUI": true,
-                    "bAutoWidth": false,
-                    "bFilter": false,
-                    "bLengthChange": false,
-                    "bPaginate": false,
-                    "bSort": true,
-                    "iDisplayLength": 10,
-                    "bInfo": true,
-                    //"sPaginationType": "full_numbers",
-                    "fnServerParams": function(aoData) {
-                        aoData.push({"name": "search", "value": $('#search_').val()},
-                        {"name": "offset", "value": <?php echo ($this->uri->segment(3)) ? $this->uri->segment(3) : 0 ?>},
-                        {"name": "per_page", "value": $('#per_page').val()});
-                    },
-                    "fnServerData": function(sSource, aoData, fnCallback, oSettings) {
-                        oSettings.jqXHR = $.ajax({
-                            "dataType": 'json',
-                            "type": "POST",
-                            "url": sSource,
-                            "data": aoData,
-                            "success": fnCallback
-                        });
-                    },
-                    //"sDom": '<"top"i>rt<"bottom"flp><"clear">',
-                    "aoColumnDefs": [{
-                            "mData": "RNUM"
-                            , 'bSortable': false
-                            , "aTargets": [0]
-                            , "fnCreatedCell": function(nTd, sData, oData, iRow, iCol) {
-                                if (oData['ORDER_STATUS'] == "active") {
-                                   $(nTd).append("<span class='label'>"+oData['RNUM']+"</span>");
-                                } else if (oData['ORDER_STATUS'] == "inactive") {
-                                    $(nTd).append("<span class='label label-warning'>"+oData['RNUM']+"</span>");
-                                }
-                            }
-                            , "mRender": function(url, type, full) {
-                                return  null;
-                            }
-                        }, {
-                            "aTargets": [1]
-                            , "mData": "PRODUCT_NAME"
-                            , "sClass": "hidden-phone"
-                        }, {
-                            "aTargets": [2]
-                            , "mData": "SERIAL_NUMBER"
-                            , "sClass": "hidden-phone"
-                        }, {
-                            "aTargets": [3]
-                            , "mData": "PRODUCT_STATUS"
-                            , "sClass": "hidden-phone"
-                        }, {
-                            "aTargets": [4]
-                            , "mData": "ADDED_DATE"
-                            , "sClass": "hidden-phone"
-                        }, {
-                            "aTargets": [5]
-                            , "mData": "RETURN_DATE"
-                            , "sClass": "hidden-phone"
-                        }, {
-                            "aTargets": [6]
-                            , "mData": "EMPLOYEE_NAME"
-                            , "sClass": "hidden-phone"
-                        }, {
-                            "aTargets": [7]
-                            , "mData": "ROOM_NUMBER"
-                            , "sClass": "hidden-phone"
-                        },{
-                            "aTargets": [8]
-                            ,"mData": "NOTES"
-                            , "sClass": "hidden-phone"
-                        }, {
-                            "aTargets": [9]
-                            , "mData": "ORDER_STATUS"
-                            , "sClass": "hidden-phone"
-                            , "fnCreatedCell": function(nTd, sData, oData, iRow, iCol) {
-                                if (oData['ORDER_STATUS'] == "active") {
-                                    $(nTd).append("<button class='btn mini purple' onclick='return_borrow(this)' voucher_id='"+oData['VOUCHER_ID']+"'><i class='icon-share-alt'></i> إرجاع الصنف</button>");
-                                } else if (oData['ORDER_STATUS'] == "inactive") {
-                                    $(nTd).append("<span class='label label-warning'><b>بإنتظـار تأكيد المسؤول</b></span>");
-                                }
-                            }, "mRender": function(url, type, full) {
-                                return  null;
-                            }
-                        }]
-                });
-            }
-
-            function tableActions() {
-                var oTable = initTable();
-            }
-            
         </script>
     </body>
     <!-- END BODY -->

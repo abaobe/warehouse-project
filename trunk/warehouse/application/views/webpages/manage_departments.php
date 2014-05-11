@@ -17,11 +17,9 @@
         <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
 
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
-        <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+        <link  href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
         <link href="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.css" type="text/css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>resource/assets/bootstrap-daterangepicker/daterangepicker.css" />
-
-        <link href="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.css" rel="stylesheet" type="text/css"/>
+        <link href="<?php echo base_url(); ?>resource/assets/custombox/reveal.css" type="text/css" rel="stylesheet">	
     </head>
     <!-- END HEAD -->
     <!-- BEGIN BODY -->
@@ -68,50 +66,57 @@
                             <!-- BEGIN EXAMPLE TABLE widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>جــرد اللوزام في المستودعات</h4>
+                                    <h4><i class="icon-reorder"></i>جدول يحتوي على جميع الأصناف المخزنة</h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
                                     </span>
                                 </div>
                                 <div class="widget-body">
-                                    <div class="form-horizontal">
-                                        <div class="control-group">
-                                            <label class="control-label">الجهـة المطلوبة</label>
-                                            <div class="controls">
-                                                <select id="department_id" name="category_id" class="span4 chosen" data-placeholder="إختيـار فئة..." tabindex="1">
-                                                    <option value=""></option>
-                                                    <?php foreach ($departments as $value) { ?>
-                                                        <option value="<?= $value['DEPARTMENT_ID'] ?>"><?= $value['DEPARTMENT_NAME'] ?></option>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <label class="control-label">الـتاريخ</label>
-                                            <div class="controls">
-                                                <div id="form-date-range" class="btn span4">
-                                                    <i class="icon-calendar"></i>
-                                                    &nbsp;<span id="date_range">asd</span>
-                                                    <b class="caret"></b>
-                                                </div>&nbsp;
-                                                <button id="refresh" onclick="get_department_inventory()" class="btn btn-primary">تحديث الجدول </button>
-                                            </div>
-                                        </div>
+                                    <!-- Start Alert Message -->
+                                    <div id="status" class="alert">
+                                        <button class="close" data-dismiss="alert">×</button>
+                                        <span id="message"></span>
                                     </div>
+                                    <!-- End Alert Message -->
                                     <table class="table table-striped table-bordered" id="sample_1">
                                         <thead>
                                             <tr>
                                                 <th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
-                                                <th class="hidden-phone">إسم الصنف</th>
-                                                <th class="hidden-phone">الكمية الموجودة</th>
-                                                <th class="hidden-phone">الحالة</th>
-                                                <th class="hidden-phone">تاريخ الإستعارة</th>
+                                                <th class="hidden-phone">إسم الإدارة</th>
+                                                <th class="hidden-phone">إسم الدائرة</th>
+                                                <th class="hidden-phone">مدير الدائرة</th>
+                                                <th class="hidden-phone">العنوان</th>
+                                                <th class="hidden-phone">رقم الهاتف</th>
+                                                <th class="hidden-phone">الهاتف المحمول</th>
+                                                <th class="hidden-phone">رقم الفاكس</th>
                                                 <th class="hidden-phone">ملاحظات</th>
+                                                <th class="hidden-phone">قائـمة المهام</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
+                                            <?php foreach ($departments as $value) { ?>
+                                                <tr class="odd gradeX">
+                                                    <td><input type="checkbox" class="checkboxes" value="1" /></td>
+                                                    <td><?= $value['ROOT_NAME'] ?></td>
+                                                    <td><?= $value['DOWN1_NAME'] ?></td>
+                                                    <td>
+                                                        <a href="#" onclick="show_user(<?= $value['USER_ID']?>);" data-reveal-id="myModal"><?= $value['FIRST_NAME'].' '.$value['MIDDLE_NAME'].' '.$value['LAST_NAME'] ?></a>
+                                                    </td>
+                                                    <td>
+                                                        <?php if($value['DOWN1_ADDRESS'] != NULL) echo $value['DOWN1_ADDRESS'];?>
+                                                        <?php if($value['ROOT_ADDRESS'] != NULL) echo $value['ROOT_ADDRESS'];?>
+                                                    </td>
+                                                    <td><?= $value['MOBILE'] ?></td>
+                                                    <td><?= $value['PHONE'] ?></td>
+                                                    <td><?= $value['FAX'] ?></td>
+                                                    <td><?= $value['NOTES'] ?></td>
+                                                    <td>
+                                                        <a href='<?php echo base_url() . "departments/update_department/" . $value['DOWN1_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i>  تعديل</a>
+                                                        <a href="#" onclick="delete_department(<?= $value['DOWN1_ID'] ?>,this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
+                                                    </td>
+                                                </tr>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -120,6 +125,12 @@
                         </div>
                     </div>
                     <!-- END ADVANCED TABLE widget-->
+                    <!-- START POPUP PAGE -->
+                    <div id="myModal" class="reveal-modal large">
+                        <div id="modal"><h4>لم يتم إيجاد الصفحة التي قمت بطلبها</h4></div>
+                        <a class="close-reveal-modal">&#215;</a>
+                    </div>
+                    <!-- END POPUP PAGE -->
                     <!-- END PAGE CONTENT-->
                 </div>
                 <!-- END PAGE CONTAINER-->
@@ -143,34 +154,36 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/data-tables/jquery.dataTables.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.js"></script>
-        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
         <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
-        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/bootstrap-daterangepicker/date.js"></script>
-        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
-
+        <script src="<?php echo base_url(); ?>resource/js/jquery.confirm.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/custombox/jquery.reveal.js"></script>
         <script>
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
-                var oTable = $('#sample_1').dataTable();
             });
-
-            function get_department_inventory() {
-                var date_range = (($('#form-date-range span').text()).replace(/\s/g, '').split('-'));
-                $.ajax({
-                    type: "POST",
-                    url: '<?php echo base_url() . "departments/get_department_inventory/"; ?>',
-                    data: {
-                        department_id: $('#department_id').val(),
-                        start_date: date_range[0],
-                        end_date: date_range[1]
-                    },
-                    dataType: "json",
-                    success: function(json) {
-                        /* after retrun json*/
-                    },
-                     error: function() {
-                     alert("failed!");
+            
+            function delete_department(department_id,current) {
+                $.confirm({
+                    text: "<h4>هل أنت متأكد من حذف هذا المستخدم ؟</h4>",
+                    confirm: function() {
+                        $.ajax({type: "POST",
+                            url: '<?php echo base_url() . "departments/do_delete_department/"; ?>',
+                            data: {department_id: department_id},
+                            dataType: "json",
+                            success: function(json) {
+                                if(json == 1){
+                                    $(current).parents('tr').remove();
+                                    $('#status').removeClass('alert-error').addClass('alert alert-success');
+                                    $('#message').text("تم حذف الدائرة بنجاح");
+                                }else if(json == 0){
+                                    $('#status').addClass('alert alert-error');
+                                    $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");  
+                                }
+                            }, error: function() {
+                                $('#message').text("هناك خطأ في تخزين البيانات");
+                            }
+                        });
                     }
                 });
             }

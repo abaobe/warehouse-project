@@ -18,6 +18,23 @@ class Departments extends CI_Controller {
         $result['departments'] = $this->department_model->get_departments_id_name();
         $this->load->view('webpages/inventory_supplies', $result);
     }
+    
+    public function manage_departments() {
+        $result['departments'] = $this->department_model->get_all_departments();
+        $this->load->view('webpages/manage_departments', $result);
+    }
+    
+    public function update_department($department_id) {
+        $result['department_info'] = $this->department_model->get_department_ById($department_id);
+        $result['departments'] = $this->department_model->get_departments_id_name();
+        $this->load->view('webpages/update_department', $result);
+    }
+    
+    public function do_delete_department() {
+        $data['department_id'] = $this->input->post('department_id');
+        $result = $this->department_model->delete_department($data);
+        echo json_encode($result);
+    }
 
     public function get_department_inventory() {
         $data['department_id'] = $this->input->post('department_id');
@@ -44,7 +61,20 @@ class Departments extends CI_Controller {
         $result = $this->department_model->add_department($data);
         echo json_encode($result);
     }
-
+    
+    public function do_update_department() {
+        $data['department_id'] = $this->input->post('department_id');
+        $data['department_name'] = $this->input->post('department_name');
+        $data['address'] = $this->input->post('address');
+        $data['phone'] = $this->input->post('phone');
+        $data['notes'] = $this->input->post('notes');
+        $data['mobile'] = $this->input->post('mobile');
+        $data['fax'] = $this->input->post('fax');
+        $data['parent_id'] = $this->input->post('parent_id');
+        
+        $result = $this->department_model->update_department($data);
+        echo json_encode($result);
+    }
 }
 
-/* End of file product.php */
+/* End of file departments.php */

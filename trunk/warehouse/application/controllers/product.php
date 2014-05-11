@@ -22,46 +22,18 @@ class Product extends CI_Controller {
     }
 
     public function add_product() {
+        $result['next_product_number'] = $this->product_model->next_product_number();
         $result['categories'] = $this->category_model->get_categories_id_name();
         $this->load->view('webpages/add_new_product', $result);
     }
 
     public function show_all_products() {
-        $place = 'all_products';
-        if ($this->session->userdata('place') == $place) {
-            ($this->session->userdata('per_page')) ? $this->session->userdata('per_page') : $this->session->set_userdata('per_page', 10);
-            ($this->session->userdata('search')) ? $this->session->userdata('search') : $this->session->set_userdata('search', '');
-        } else {
-            $this->session->set_userdata('place', $place);
-            $this->session->set_userdata('per_page', 10);
-            $this->session->set_userdata('search', '');
-        }
-
-        $result['paging'] = $this->pagination_("product/show_all_products/"
-                , $this->product_model->get_count_products($this->session->userdata('search')) + 1
-                , $this->session->userdata('per_page'), 1);
-
-
-        //$result['products'] = $this->product_model->get_all_products();
+        $result['products'] = $this->product_model->get_all_products();
         $this->load->view('webpages/show_all_products', $result);
     }
 
     public function show_static_products() {
-        $place = 'static_product';
-        if ($this->session->userdata('place') == $place) {
-            ($this->session->userdata('per_page')) ? $this->session->userdata('per_page') : $this->session->set_userdata('per_page', 10);
-            ($this->session->userdata('search')) ? $this->session->userdata('search') : $this->session->set_userdata('search', '');
-        } else {
-            $this->session->set_userdata('place', $place);
-            $this->session->set_userdata('per_page', 10);
-            $this->session->set_userdata('search', '');
-        }
-
-        $result['paging'] = $this->pagination_("product/show_static_products/"
-                , $this->product_model->get_count_static_products($this->session->userdata('search')) + 1
-                , $this->session->userdata('per_page'), 1);
-
-        //$result['products'] = $this->product_model->get_static_products();
+        $result['products'] = $this->product_model->get_static_products();
         $this->load->view('webpages/show_static_products', $result);
     }
 
@@ -243,6 +215,7 @@ class Product extends CI_Controller {
         $data['supply_type'] = $this->input->post('supply_type');
         $data['expire_date'] = $this->input->post('expire_date');
         $data['serial_number'] = $this->input->post('serial_number');
+        $data['insert_number'] = $this->input->post('insert_number');
         $result = $this->product_model->insert_static_product($data);
 
         echo json_encode($result);
@@ -295,19 +268,7 @@ class Product extends CI_Controller {
 //    }
 
     public function show_ordered_supplies() {
-        $place = 'ordered_supplies';
-        if ($this->session->userdata('place') == $place) {
-            ($this->session->userdata('per_page')) ? $this->session->userdata('per_page') : $this->session->set_userdata('per_page', 10);
-            ($this->session->userdata('search')) ? $this->session->userdata('search') : $this->session->set_userdata('search', '');
-        } else {
-            $this->session->set_userdata('place', $place);
-            $this->session->set_userdata('per_page', 10);
-            $this->session->set_userdata('search', '');
-        }
-
-        $result['paging'] = $this->pagination_("product/show_ordered_supplies/"
-                , $this->product_model->get_count_ordered_supplies($this->session->userdata('search')) + 1
-                , $this->session->userdata('per_page'), 1);
+        $result['orders'] = $this->product_model->get_ordered_supplies();
         $this->load->view('webpages/show_ordered_supplies', $result);
     }
 
@@ -352,23 +313,8 @@ class Product extends CI_Controller {
     }
 
     public function department_borrowing() {
-        $department_id = 1; // this value will gives from session.
-        
-        $place = 'department_borrowing';
-        if ($this->session->userdata('place') == $place) {
-            ($this->session->userdata('per_page')) ? $this->session->userdata('per_page') : $this->session->set_userdata('per_page', 10);
-            ($this->session->userdata('search')) ? $this->session->userdata('search') : $this->session->set_userdata('search', '');
-        } else {
-            $this->session->set_userdata('place', $place);
-            $this->session->set_userdata('per_page', 10);
-            $this->session->set_userdata('search', '');
-        }
-
-        $result['paging'] = $this->pagination_("product/department_borrowing/"
-                , $this->product_model->get_count_department_borrowing($department_id,$this->session->userdata('search')) + 1
-                , $this->session->userdata('per_page'), 1);
-        
-        //$result['borrowing'] = $this->product_model->department_borrowing($data);
+        $data['department_id'] = 2; // this value will gives from session.
+        $result['borrowing'] = $this->product_model->department_borrowing($data);
         $this->load->view('webpages/department_borrowing', $result);
     }
 
@@ -454,170 +400,6 @@ class Product extends CI_Controller {
         $data['company_id'] = $this->input->post('company_id');
         $result = $this->product_model->disburse_servicing($data);
         echo json_encode($result);
-    }
-
-    function pagination_($base_url, $total_rows, $per_page, $type) {
-        $config['base_url'] = base_url() . $base_url;
-        //$config['uri_segment'] = 3;
-        $config['total_rows'] = $total_rows;
-        $config['per_page'] = $per_page;
-        $config['full_tag_open'] = '<div id="pagein_div" class="dataTables_paginate paging_bootstrap pagination"><ul id="pagein_">';
-        $config['full_tag_close'] = '</ul></div>';
-        $config['prev_link'] = '→ السابق';
-        $config['prev_tag_open'] = '<li class="prev">';
-        $config['prev_tag_close'] = '</li>';
-        $config['next_link'] = 'التالي ←';
-        $config['next_tag_open'] = '<li class="next">';
-        $config['next_tag_close'] = '</li>';
-        $config['cur_tag_open'] = '<li class="active"><a href="#">';
-        $config['cur_tag_close'] = '</a></li>';
-        $config['num_tag_open'] = '<li>';
-        $config['num_tag_close'] = '</li>';
-        $config['first_link'] = FALSE;
-        $config['last_link'] = FALSE;
-//        $config['first_tage_open']='<li class="first">';
-//        $config['first_tage_close']=' </li>';
-//        $config['last_tage_open']='<li class="last">';
-//        $config['last_tage_close']=' </li>';
-//        $config['first_link'] = 'الاولى';
-//        $config['last_link'] = 'الاخيرة';
-        $this->pagination->initialize($config);
-        if ($type == 1) {
-            return $this->pagination->create_links();
-        } else {
-            echo json_encode($this->pagination->create_links());
-        }
-    }
-
-    function pagein_ordered_supplies() {
-        $this->session->set_userdata('per_page', $this->input->post('per_page'));
-        $this->session->set_userdata('search', $this->input->post('search'));
-        $this->pagination_("product/show_ordered_supplies/"
-                , $this->product_model->get_count_ordered_supplies($this->input->post('search')) + 1
-                , $this->input->post('per_page'), 2);
-    }
-
-    function pagein_all_products() {
-        $this->session->set_userdata('per_page', $this->input->post('per_page'));
-        $this->session->set_userdata('search', $this->input->post('search'));
-        $this->pagination_("product/show_all_products/"
-                , $this->product_model->get_count_products($this->input->post('search')) + 1
-                , $this->input->post('per_page'), 2);
-    }
-    
-    function pagein_static_products() {
-        $this->session->set_userdata('per_page', $this->input->post('per_page'));
-        $this->session->set_userdata('search', $this->input->post('search'));
-        $this->pagination_("product/show_static_products/"
-                , $this->product_model->get_count_static_products($this->input->post('search')) + 1
-                , $this->input->post('per_page'), 2);
-    }
-
-    function pagein_department_borrowing() {
-        $department_id=1; //from session
-        $this->session->set_userdata('per_page', $this->input->post('per_page'));
-        $this->session->set_userdata('search', $this->input->post('search'));
-        $this->pagination_("product/department_borrowing/"
-                , $this->product_model->get_count_department_borrowing($department_id,$this->input->post('search')) + 1
-                , $this->input->post('per_page'), 2);
-    }
-    
-    public function set_data_ordered_supplies() {
-        $res = $this->product_model->get_order_supplies_1($this->input->post('per_page'), $this->input->post('offset'), $this->input->post('search'));
-        $total_records = $this->product_model->get_count_ordered_supplies($this->input->post('search'));
-
-        $aColumns = array('RNUM', 'STATUS', 'ORDER_NUMBER', 'DEPARTMENT_NAME', 'MAIN_DEPARTMENT', 'PRODUCT_TYPE', 'ADDED_DATE', 'TASKS');
-        $output = array(
-            "sEcho" => 10,
-            "iTotalRecords" => $total_records,
-            "iTotalDisplayRecords" => $total_records,
-            "aaData" => array()
-        );
-
-        foreach ($res as $aRow) {
-            $row = array();
-            for ($i = 0; $i < count($aColumns); $i++) {
-                if ($aColumns[$i] == 'TASKS') {
-                    $row['TASKS'] = $aRow[$aColumns[2]];
-                } else if ($aColumns[$i] != ' ') {
-                    /* General output */
-                    $row[$aColumns[$i]] = $aRow[$aColumns[$i]];
-                }
-            }
-            $output['aaData'][] = $row;
-        }
-        //$this->uri->segment(3,0);
-        echo json_encode($output);
-    }
-
-    public function set_data_all_products() {
-        $res = $this->product_model->get_all_products_1($this->input->post('per_page'), $this->input->post('offset'), $this->input->post('search'));
-        $total_records = $this->product_model->get_count_products($this->input->post('search'));
-
-        $aColumns = array('QUANTITY_STATUS', 'PRODUCT_NUMBER', 'PRODUCT_NAME', 'PRIMARY_UNIT_NAME', 'PRIMARY_UNIT_QUANTITY', 'H_LENGTH', 'WIDTH', 'HEIGHT', 'RE_DEMAND_BORDER', 'PRODUCT_TYPE', 'NOTES', 'PRODUCT_ID');
-        $output = array(
-            "sEcho" => 10,
-            "iTotalRecords" => $total_records,
-            "iTotalDisplayRecords" => $total_records,
-            "aaData" => array()
-        );
-
-        foreach ($res as $aRow) {
-            $row = array();
-            for ($i = 0; $i < count($aColumns); $i++) {
-                /* General output */
-                $row[$aColumns[$i]] = $aRow[$aColumns[$i]];
-            }
-            $output['aaData'][] = $row;
-        }
-        echo json_encode($output);
-    }
-
-    public function set_data_static_products() {
-        $res = $this->product_model->get_static_products_1($this->input->post('per_page'), $this->input->post('offset'), $this->input->post('search'));
-        $total_records = $this->product_model->get_count_static_products($this->input->post('search'));
-
-        $aColumns = array('RNUM', 'PRODUCT_NUMBER', 'PRODUCT_NAME', 'PRIMARY_UNIT_NAME', 'PRIMARY_UNIT_QUANTITY', 'H_LENGTH', 'WIDTH', 'HEIGHT', 'RE_DEMAND_BORDER', 'NOTES', 'PRODUCT_ID');
-        $output = array(
-            "sEcho" => 10,
-            "iTotalRecords" => $total_records,
-            "iTotalDisplayRecords" => $total_records,
-            "aaData" => array()
-        );
-
-        foreach ($res as $aRow) {
-            $row = array();
-            for ($i = 0; $i < count($aColumns); $i++) {
-                /* General output */
-                $row[$aColumns[$i]] = $aRow[$aColumns[$i]];
-            }
-            $output['aaData'][] = $row;
-        }
-        echo json_encode($output);
-    }
-
-    public function set_data_department_borrowing() {
-        $department_id=1; //from session
-        $res = $this->product_model->department_borrowing_1($department_id,$this->input->post('per_page'), $this->input->post('offset'), $this->input->post('search'));
-        $total_records = $this->product_model->get_count_department_borrowing($department_id,$this->input->post('search'));
-
-        $aColumns = array('RNUM', 'PRODUCT_NAME', 'SERIAL_NUMBER', 'PRODUCT_STATUS', 'ADDED_DATE', 'RETURN_DATE', 'EMPLOYEE_NAME', 'ROOM_NUMBER', 'NOTES', 'ORDER_STATUS', 'VOUCHER_ID');
-        $output = array(
-            "sEcho" => 10,
-            "iTotalRecords" => $total_records,
-            "iTotalDisplayRecords" => $total_records,
-            "aaData" => array()
-        );
-
-        foreach ($res as $aRow) {
-            $row = array();
-            for ($i = 0; $i < count($aColumns); $i++) {
-                /* General output */
-                $row[$aColumns[$i]] = $aRow[$aColumns[$i]];
-            }
-            $output['aaData'][] = $row;
-        }
-        echo json_encode($output);
     }
 
 }
