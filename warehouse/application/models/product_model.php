@@ -45,27 +45,9 @@ class Product_model extends CI_Model {
     function get_all_products() {
         return $this->DBObject->readCursor("product_actions.get_all_products", null);
     }
-    
-    function get_all_products_1($num, $offset,$search) {
-        // $this->db->select('id, name');
-        $params[0] = array("name" => ":num_per", "value" => &$num);
-        $params[1] = array("name" => ":offset", "value" => &$offset);
-        $params[2] = array("name" => ":search", "value" => &$search);
-        return $this->DBObject->readCursor("product_actions.get_all_products_1(:num_per,:offset,:search)", $params);
-
-    }
 
     function get_static_products() {
         return $this->DBObject->readCursor("product_actions.get_static_products", null);
-    }
-    
-    function get_static_products_1($num, $offset,$search) {
-        // $this->db->select('id, name');
-        $params[0] = array("name" => ":num_per", "value" => &$num);
-        $params[1] = array("name" => ":offset", "value" => &$offset);
-        $params[2] = array("name" => ":search", "value" => &$search);
-        return $this->DBObject->readCursor("product_actions.get_static_products_1(:num_per,:offset,:search)", $params);
-
     }
 
     function get_inserted_static_prod($product_id, $columns) {
@@ -284,10 +266,11 @@ class Product_model extends CI_Model {
                 array('name' => ':supply_type', 'value' => &$product_info['supply_type']),
                 array('name' => ':expire_date', 'value' => &$product_info['expire_date']),
                 array('name' => ':serial_number', 'value' => &$product_info['serial_number']),
+                array('name' => ':insert_number', 'value' => &$product_info['insert_number']),
                 array('name' => ':res', 'value' => &$result)
             );
             $conn = $this->db->conn_id;
-            $stmt = oci_parse($conn, "begin :res := product_actions.insert_static_product(:product_id,:received_from,:billing_id,:notes,:receiver_id,:quantity,:unit_type,:unit_price,:currency_type,:product_status,:product_nature,:supply_type,:expire_date,:serial_number); end;");
+            $stmt = oci_parse($conn, "begin :res := product_actions.insert_static_product(:product_id,:received_from,:billing_id,:notes,:receiver_id,:quantity,:unit_type,:unit_price,:currency_type,:product_status,:product_nature,:supply_type,:expire_date,:serial_number,:insert_number); end;");
 
             foreach ($params as $variable)
                 oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
@@ -373,72 +356,6 @@ class Product_model extends CI_Model {
     function get_ordered_supplies() {
         return $this->DBObject->readCursor("product_actions.get_all_ordered_supplies", null);
     }
-    
-    function get_order_supplies_1($num, $offset,$search) {
-        // $this->db->select('id, name');
-        $params[0] = array("name" => ":num_per", "value" => &$num);
-        $params[1] = array("name" => ":offset", "value" => &$offset);
-        $params[2] = array("name" => ":search", "value" => &$search);
-        return $this->DBObject->readCursor("product_actions.get_all_ordered_supplies_1(:num_per,:offset,:search)", $params);
-
-    }
-    
-    function get_count_ordered_supplies($search) {
-        // $this->db->select('id, name');
-        $conn = $this->db->conn_id;
-        $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.get_count_ordered_supplies(:search); END;");
-        oci_bind_by_name($stmt, ':search', $search);
-        oci_bind_by_name($stmt, ':v_Return', $result, SQL_NUMERIC);
-
-        if (!oci_execute($stmt)) {
-            return oci_error($stmt);
-        }
-        return $result;
-
-    }
-    
-    function get_count_products($search) {
-        // $this->db->select('id, name');
-        $conn = $this->db->conn_id;
-        $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.get_count_products(:search); END;");
-        oci_bind_by_name($stmt, ':search', $search);
-        oci_bind_by_name($stmt, ':v_Return', $result, SQL_NUMERIC);
-
-        if (!oci_execute($stmt)) {
-            return oci_error($stmt);
-        }
-        return $result;
-
-    }
-    
-    function get_count_static_products($search) {
-        // $this->db->select('id, name');
-        $conn = $this->db->conn_id;
-        $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.get_count_static_products(:search); END;");
-        oci_bind_by_name($stmt, ':search', $search);
-        oci_bind_by_name($stmt, ':v_Return', $result, SQL_NUMERIC);
-
-        if (!oci_execute($stmt)) {
-            return oci_error($stmt);
-        }
-        return $result;
-
-    }
-    
-    function get_count_department_borrowing($department_id,$search) {
-        // $this->db->select('id, name');
-        $conn = $this->db->conn_id;
-        $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.get_count_department_borrowing(:department_id,:search); END;");
-        oci_bind_by_name($stmt, ':search', $search);
-        oci_bind_by_name($stmt, ':department_id', $department_id);
-        oci_bind_by_name($stmt, ':v_Return', $result, SQL_NUMERIC);
-
-        if (!oci_execute($stmt)) {
-            return oci_error($stmt);
-        }
-        return $result;
-
-    }
 
     function get_ordered_supplies_byNumber($order_number) {
         $params[0] = array("name" => ":order_number", "value" => &$order_number);
@@ -455,7 +372,18 @@ class Product_model extends CI_Model {
         }
         return $result;
     }
-    
+
+    function next_product_number() {
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.NEXT_PRODUCT_NUMBER(); END;");
+        oci_bind_by_name($stmt, ':v_Return', $result, SQLT_STR);
+
+        if (!oci_execute($stmt)) {
+            return oci_error($stmt);
+        }
+        return $result;
+    }
+
     function get_insert_number() {
         $conn = $this->db->conn_id;
         $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.NEXT_INSERT_NUMBER(); END;");
@@ -499,7 +427,7 @@ class Product_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
-    
+
     function disburse_temp_supplies($data) {
         $params = array(
             array('name' => ':order_supplies_id', 'value' => &$data['order_supplies_id']),
@@ -516,7 +444,6 @@ class Product_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
-    
 
 //    function get_order_status($order_number) {
 //        $conn = $this->db->conn_id;
@@ -537,17 +464,6 @@ class Product_model extends CI_Model {
         $params[0] = array("name" => ":department_id", "value" => &$data['department_id']);
         return $this->DBObject->readCursor("product_actions.department_borrowing(:department_id)", $params);
     }
-    
-    
-    function department_borrowing_1($department_id,$num, $offset,$search) {
-        // $this->db->select('id, name');
-        $params[0] = array("name" => ":num_per", "value" => &$num);
-        $params[1] = array("name" => ":offset", "value" => &$offset);
-        $params[2] = array("name" => ":search", "value" => &$search);
-        $params[4] = array("name" => ":department_id", "value" => &$department_id);
-        return $this->DBObject->readCursor("product_actions.department_borrowing_1(:department_id,:num_per,:offset,:search)", $params);
-
-    }
 
     function get_products_id_name($product_type) {
         $params[0] = array("name" => ":product_type", "value" => &$product_type);
@@ -558,13 +474,13 @@ class Product_model extends CI_Model {
         $params[0] = array("name" => ":voucher_id", "value" => &$voucher_id);
         return $this->DBObject->readCursor("product_actions.get_borrowing_byID(:voucher_id)", $params);
     }
-    
+
     function return_borrowing($info) {
         $params = array(
             array('name' => ':voucher_id', 'value' => &$info['voucher_id']),
             array('name' => ':res', 'value' => &$result)
         );
-        
+
         $conn = $this->db->conn_id;
         $stmt = oci_parse($conn, "begin :res := product_actions.return_borrowing(:voucher_id); end;");
         foreach ($params as $variable) {
@@ -573,18 +489,18 @@ class Product_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
-    
+
     function get_returned_products() {
         return $this->DBObject->readCursor("product_actions.get_returned_products", NULL);
     }
-    
+
     function changeProDStatus($data) {
         $params = array(
             array('name' => ':product_status', 'value' => &$data['product_status']),
             array('name' => ':voucher_id', 'value' => &$data['voucher_id']),
             array('name' => ':res', 'value' => &$result)
         );
-        
+
         $conn = $this->db->conn_id;
         $stmt = oci_parse($conn, "begin :res := product_actions.changeProdStatus(:product_status,:voucher_id); end;");
         foreach ($params as $variable) {
@@ -593,14 +509,14 @@ class Product_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
-    
+
     function extend_date($data) {
         $params = array(
             array('name' => ':new_return_date', 'value' => &$data['new_return_date']),
             array('name' => ':voucher_id', 'value' => &$data['voucher_id']),
             array('name' => ':res', 'value' => &$result)
         );
-        
+
         $conn = $this->db->conn_id;
         $stmt = oci_parse($conn, "begin :res := product_actions.extend_date(:new_return_date,:voucher_id); end;");
         foreach ($params as $variable) {
@@ -615,7 +531,7 @@ class Product_model extends CI_Model {
         $params[1] = array("name" => ":prodType", "value" => &$data['prodType']);
         return $this->DBObject->readCursor("product_actions.get_ProductsBy_CatID(:category_id,:prodType)", $params);
     }
-    
+
     function disburse_servicing($data) {
         $params = array(
             array("name" => ":voucher_id", "value" => &$data['voucher_id']),
@@ -623,7 +539,7 @@ class Product_model extends CI_Model {
             array("name" => ":company_id", "value" => &$data['company_id']),
             array('name' => ':res', 'value' => &$result)
         );
-        
+
         $conn = $this->db->conn_id;
         $stmt = oci_parse($conn, "begin :res := product_actions.disburse_servicing(:voucher_id,:reasons,:company_id); end;");
         foreach ($params as $variable) {
@@ -632,13 +548,12 @@ class Product_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
-    
-    
-    function get_temp_products(){
+
+    function get_temp_products() {
         return $this->DBObject->readCursor("product_actions.get_temp_products", null);
     }
-    
-    function get_products_for_damage(){
+
+    function get_products_for_damage() {
         return $this->DBObject->readCursor("product_actions.get_products_for_damage", null);
     }
 
@@ -657,6 +572,7 @@ class Product_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
+
 }
 
 /* End of file product_model.php */

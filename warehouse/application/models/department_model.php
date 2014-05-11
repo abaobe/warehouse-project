@@ -11,6 +11,15 @@ class Department_model extends CI_Model {
     function get_departments_id_name() {
         return $this->DBObject->readCursor("department_actions.get_depatments_id_name", null);
     }
+    
+    function get_all_departments() {
+        return $this->DBObject->readCursor("department_actions.get_all_departments", null);
+    }
+    
+    function get_department_ById($department_id) {
+        $params[0] = array('name' => ':department_id', 'value' => &$department_id);
+        return $this->DBObject->readCursor("department_actions.get_department_ById(:department_id)", $params);
+    }
 
     function get_department_inventory($data) {
         $params = array(array('name' => ':departmentID', 'value' => &$data['department_id']),
@@ -31,6 +40,42 @@ class Department_model extends CI_Model {
         $conn = $this->db->conn_id;
         $stmt = oci_parse($conn, "begin :res := department_actions.add_department(:department_name,:address,:phone,:mobile,:fax,:parent_id,:notes); end;");
 
+        foreach ($params as $variable) {
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
+        }
+
+        oci_execute($stmt);
+        return $result;
+    }
+    
+    function update_department($data) {
+        $params = array(array('name' => ':department_id', 'value' => &$data['department_id']),
+            array('name' => ':department_name', 'value' => &$data['department_name']),
+            array('name' => ':address', 'value' => &$data['address']),
+            array('name' => ':phone', 'value' => &$data['phone']),
+            array('name' => ':mobile', 'value' => &$data['mobile']),
+            array('name' => ':fax', 'value' => &$data['fax']),
+            array('name' => ':parent_id', 'value' => &$data['parent_id']),
+            array('name' => ':notes', 'value' => &$data['notes']),
+            array('name' => ':res', 'value' => &$result));
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := department_actions.update_department(:department_id,:department_name,:address,:phone,:mobile,:fax,:parent_id,:notes); end;");
+
+        foreach ($params as $variable) {
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
+        }
+
+        oci_execute($stmt);
+        return $result;
+    }
+    
+    function delete_department($department_info) {
+        $params = array(
+            array('name' => ':department_id', 'value' => $department_info['department_id']),
+            array('name' => ':res', 'value' => &$result)
+        );
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := department_actions.delete_department(:department_id); end;");
         foreach ($params as $variable) {
             oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
         }

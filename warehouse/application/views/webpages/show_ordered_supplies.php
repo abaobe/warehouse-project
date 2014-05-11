@@ -72,24 +72,10 @@
                                     </span>
                                 </div>
                                 <div class="widget-body">
-                                    <div id="sample_1_length_" class="dataTables_length">
-                                        <span class="span9">
-                                            <select name="sample_1_length_" id="per_page" size="1" aria-controls="sample_1">
-                                                <option selected value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                            </select>
-                                            عدد الصفوف في الصفحة
-                                        </span>
-                                        <span> البحث عن: 
-                                            <input type="text" id="search_" aria-controls="sample_1"></input>
-                                        </span>
-                                    </div>
-                                    <table class="table table-bordered table-hover" id="sample">
+                                    <table class="table table-bordered table-hover" id="sample_1">
                                         <thead>
                                             <tr>
-                                                <th style="width:8px;" >الرقم</th>
+                                                <th style="width:8px;" ><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
                                                 <th class="hidden-phone">رقم الطلب</th>
                                                 <th class="hidden-phone">إسم الإدارة</th>
                                                 <th class="hidden-phone">إسم الدائرة</th>
@@ -98,8 +84,7 @@
                                                 <th class="hidden-phone">قائـمة المهام</th>
                                             </tr>
                                         </thead>
-                                        <tbody></tbody>
-<!--                                        <tbody>
+                                        <tbody>
                                             <?php foreach ($orders as $value) { ?>
                                                 <tr class="odd gradeX">
                                                     <td status="<?= $value['STATUS'] ?>"><input type="checkbox" class="checkboxes" value="1" /></td>
@@ -121,10 +106,9 @@
                                                     </td>
                                                 </tr>
                                             <?php } ?>
-                                        </tbody>-->
+                                        </tbody>
                                     </table>
                                 </div>
-                                
                             </div>
                             <!-- END EXAMPLE TABLE widget-->
                         </div>
@@ -160,52 +144,18 @@
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
+                var oTable = $('#sample_1').dataTable();
                 
-                
-                
-                //alert(<?php //echo $this->session->userdata('per_page') ?>);
-                
-                $('#per_page').val('<?php echo $this->session->userdata('per_page')?>');
-                $('#search_').val('<?php echo $this->session->userdata('search')?>');
-                
-                tableActions();
-                
-                $('table').after('<?php echo $paging; ?>');
-                
-                $('#search_').keypress(function (){
-                    $.ajax({
-                        type: "POST",
-                        url: '<?php echo base_url() . "product/pagein_ordered_supplies/"; ?>',
-                        data: {
-                            per_page: $('#per_page').val(),
-                            search: $('#search_').val()
-                        },
-                        dataType: "json",
-                        success: function(data) {
-                            $('#pagein_div').remove();
-                            $('table').after(data);
-                        }
-                    });
-                   tableActions();
-                });
-                
-                $('#per_page').change(function (){
-                    //alert('<?php //echo $this->uri->segments[3];?>');
-                    $.ajax({
-                        type: "POST",
-                        url: '<?php echo base_url() . "product/pagein_ordered_supplies/"; ?>',
-                        data: {
-                            per_page: $('#per_page').val(),
-                            search: $('#search_').val()
-                        },
-                        dataType: "json",
-                        success: function(data) {
-                            $('#pagein_div').remove();
-                            $('table').after(data);
-                        }
-                    });
-                   tableActions(); 
-                    
+                //this function should put after each paging
+                $("tr td[status]").each(function() {
+                    var status = $(this).attr('status');
+                    if (status == "refuse") {
+                        $(this).addClass('label-important');
+                    } else if (status == "accept") {
+                        $(this).addClass('label-success');
+                    } else if (status == "some") {
+                        $(this).addClass('label-info');
+                    }
                 });
             });
             
@@ -219,13 +169,13 @@
                 }
             }
 
-            function refuse_order(current) {
+            function refuse_order(order_number, current) {
                 $.confirm({
-                    text: "<h4>هل أنت متأكد من رفض هذا الطلب("+$(current).attr('order_number')+") ؟</h4>",
+                    text: "<h4>هل أنت متأكد من رفض هذا الطلب ؟</h4>",
                     confirm: function() {
                         $.ajax({type: "POST",
                             url: '<?php echo base_url() . "product/do_refuse_order/"; ?>',
-                            data: {order_number: $(current).attr('order_number')},
+                            data: {order_number: order_number},
                             dataType: "json",
                             success: function(json) {
                                 var column = $(current).parents('tr').children('td[status]');
@@ -235,128 +185,6 @@
                     }
                 });
             }
-            
-             function initTable(){
-    //var oTable = $('#sample_1').dataTable();
-      return $("#sample").dataTable({
-          //"bServerSide": true,
-        "bDestroy":true,
-        "bStateSave": true,
-        "aaSorting": [[1, "asc"]], 
-        "bProcessing": false,
-        "bServerSide": true,
-        "sAjaxSource": "<?php echo base_url() . "product/set_data_ordered_supplies/"; ?>",
-        "bJQueryUI": true,
-        "bAutoWidth": false,
-        "bFilter":false,
-        "bLengthChange": false,
-        "bPaginate": false,
-        "bSort": true,
-        "iDisplayLength": 10,
-        "bInfo": true,
-        //"sPaginationType": "full_numbers",
-          "fnDrawCallback": function( oSettings ) {
-            //alert( 'DataTables has redrawn the table' );
-           },
-           "fnServerParams": function ( aoData ) {
-                aoData.push( { "name": "search", "value": $('#search_').val() },
-                        { "name": "offset", "value": <?php echo ($this->uri->segment(3)) ? $this->uri->segment(3) : 0?> },
-                        { "name": "per_page", "value":  $('#per_page').val() });
-            },
-//          "fnInfoCallback": function( oSettings, iStart, iEnd, iMax, iTotal, sPre ) {
-//                //$(oTable).empty();
-//                return iStart +" to "+ iEnd;
-//          },
-          "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
-                oSettings.jqXHR = $.ajax( {
-                "dataType": 'json',
-                "type": "POST",
-                "url": sSource,
-                "data": aoData,
-                "success": fnCallback
-                } );
-          },
-          //"sDom": '<"top"i>rt<"bottom"flp><"clear">',
-          "aoColumnDefs":[{
-                "mData":"RNUM"
-              , 'bSortable': false
-              , "aTargets": [ 0 ]
-              , "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                  if (oData['STATUS'] == "refuse") {
-                       $(nTd).attr('status', oData['STATUS']);
-                       $(nTd).append("<span class='label label-important'>"+oData['RNUM']+"</span>");
-                    } else if (oData['STATUS'] == "accept") {
-                        $(nTd).attr('status', oData['STATUS']);
-                        $(nTd).append("<span class='label label-success'>"+oData['RNUM']+"</span>");
-                    } else if (oData['STATUS'] == "some") {
-                        $(nTd).attr('status', oData['STATUS']);
-                        $(nTd).append("<span class='label label-info'>"+oData['RNUM']+"</span>");
-                    }else{
-                        $(nTd).attr('status', oData['STATUS']);
-                        $(nTd).append("<span class='label'>"+oData['RNUM']+"</span>");
-                    }
-                  //$(nTd).attr('status', oData['STATUS']).addClass('label-important');
-              }, "mRender": function ( url, type, full )  {
-                  return  null;
-              }
-          },{
-                "aTargets": [ 1 ]
-              ,  "mData":"ORDER_NUMBER"
-              , "sClass": "hidden-phone"
-            },{
-                "aTargets": [ 2 ]
-              ,  "mData":"DEPARTMENT_NAME"
-              , "sClass": "hidden-phone"
-            },{
-                "aTargets": [ 3 ]
-              ,  "mData":"MAIN_DEPARTMENT"
-              , "sClass": "hidden-phone"
-            },{
-                "aTargets": [ 4 ]
-              ,  "mData":"PRODUCT_TYPE"
-              , "sClass": "hidden-phone"
-              , "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                  if(oData['PRODUCT_TYPE'] == '1'){
-                      $(nTd).empty();
-                      $(nTd).append("<span class='text-info'>مـواد مستهلكة</span>");
-                  }else if(oData['PRODUCT_TYPE'] == '2'){
-                      $(nTd).empty();
-                      $(nTd).append("<span class='text-info'>مواد دائـمة</span>");
-                  }
-              }
-            },{
-                "aTargets": [ 5 ]
-              ,  "mData":"ADDED_DATE"
-              , "sClass": "hidden-phone"
-            },{
-                "aTargets": [ 6 ]
-              , "mData": "TASKS"  
-              , "sClass": "hidden-phone"
-              , "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                  $(nTd).append("<a href='#' onclick='redirect(this);return false;' order_number='"+oData['TASKS']+"' product_type='"+oData['PRODUCT_TYPE']+"' class='btn mini purple'>صرف لوازم</a>");
-                  $(nTd).append("<span>     </span>");
-                  $(nTd).append("<a href='#' class='btn mini purple'><i class='icon-edit'></i> عرض</a>");
-                  $(nTd).append("<span>     </span>");
-                  $(nTd).append("<button id='refuse' class='btn mini purple' onclick='refuse_order(this)' order_number='"+oData['TASKS']+"'><i class='icon-edit'></i> رفـض</button>");
-              }, "mRender": function ( url, type, full )  {
-                  return  null;
-              }
-          }]
-        });
-        //$(oTable).parent().parent().fadeOut("slow", function () {
-            //data_table(data_source);
-        //});
-
-        //$('#sample_1').dataTable().fnDestroy();
-        //$("#data_").empty();
-        //jQuery.uniform.update(jQuery("#sample_1"));
-    }
-    
-    function tableActions (){
-        var oTable = initTable();
-       
-        //oTable.fnDraw();
-    }
 
         </script>
     </body>
