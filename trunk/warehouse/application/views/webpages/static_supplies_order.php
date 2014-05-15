@@ -295,6 +295,7 @@
                 d[7] = $('#employee_number').val();
                 d[8] = $('#section_name').val();
                 d[9] = $('#room_number').val();
+                d[10] = '<?php $this->auth->getUser_Id(); ?>';
                 data[index] = d;
 
                 var product = jQuery('<tr id=' + index + '><td>' + [++index] + '</td><td class="text-info"><b>' + product_name

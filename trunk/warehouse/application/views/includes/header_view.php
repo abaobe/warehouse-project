@@ -3,7 +3,7 @@
     <div class="navbar-inner">
         <div class="container-fluid">
             <!-- BEGIN LOGO -->
-            <a class="brand" href="index.html">
+            <a class="brand" href="">
                 <img src="<?php echo base_url(); ?>resource/img/logo.png" alt="Admin Lab" />
             </a>
             <!-- END LOGO -->
@@ -90,58 +90,18 @@
                     </li>
                     <!-- END INBOX DROPDOWN -->
                     <!-- BEGIN NOTIFICATION DROPDOWN -->
-                    <li class="dropdown" id="header_notification_bar">
+                    <li class="dropdown" onclick="showNotifications()" id="header_notification_bar">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-
                             <i class="icon-bell-alt"></i>
-                            <span class="badge badge-warning">7</span>
+                            <span id="noteNum" class="badge badge-warning"></span>
                         </a>
-                        <ul class="dropdown-menu extended notification">
+                        <ul id="notification" class="dropdown-menu extended inbox">
                             <li>
-                                <p>You have 7 new notifications</p>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span class="label label-important"><i class="icon-bolt"></i></span>
-                                    Server #3 overloaded.
-                                    <span class="small italic">34 mins</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span class="label label-warning"><i class="icon-bell"></i></span>
-                                    Server #10 not respoding.
-                                    <span class="small italic">1 Hours</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span class="label label-important"><i class="icon-bolt"></i></span>
-                                    Database overloaded 24%.
-                                    <span class="small italic">4 hrs</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span class="label label-success"><i class="icon-plus"></i></span>
-                                    New user registered.
-                                    <span class="small italic">Just now</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span class="label label-info"><i class="icon-bullhorn"></i></span>
-                                    Application error.
-                                    <span class="small italic">10 mins</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">See all notifications</a>
+                                <p id="notificationNumber"></p>
                             </li>
                         </ul>
                     </li>
                     <!-- END NOTIFICATION DROPDOWN -->
-
                 </ul>
             </div>
             <!-- END  NOTIFICATION -->
@@ -163,16 +123,22 @@
                     <!-- BEGIN USER LOGIN DROPDOWN -->
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="<?php echo base_url(); ?>resource/img/avatar1_small.jpg" alt="">
-                            <span class="username">مـحمد محمـد</span>
+                            <?php if (file_exists('./uploads/thumbs/' . $this->session->userdata('user_picture'))) { ?>
+                                <img width="32px" src='<?= base_url() . 'uploads/thumbs/' . $this->session->userdata('user_picture') ?>'>
+                            <?php } else { ?>
+                                <img width="32px" src="<?php echo base_url(); ?>uploads/thumbs/avatar.png">
+                            <?php } ?>
+                            <span class="username"><?= $this->session->userdata('full_name') ?></span>
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="#"><i class="icon-user"></i> الصـفحة الشـخصية</a></li>
+                            <li class="divider"></li>
                             <li><a href="#"><i class="icon-tasks"></i> المـهام</a></li>
+                            <li class="divider"></li>
                             <li><a href="#"><i class="icon-calendar"></i> جـدولة</a></li>
                             <li class="divider"></li>
-                            <li><a href="<?php echo base_url() . "product/index"; ?>"><i class="icon-key"></i> تسجـيل خـروج</a></li>
+                            <li><a href="<?php echo base_url() . "users/logout"; ?>"><i class="icon-key"></i> تسجـيل خـروج</a></li>
                         </ul>
                     </li>
                     <!-- END USER LOGIN DROPDOWN -->
@@ -183,3 +149,56 @@
     </div>
     <!-- END TOP NAVIGATION BAR -->
 </div>
+<script>
+    var notificationNumber = 0;
+    var callnotification = function() {
+        $.ajax({
+            type: "POST",
+            url: '<?php echo base_url() . "product/getNotification/"; ?>',
+            data: {
+            },
+            dataType: "json",
+            success: function(json) {
+                var item;
+                $.each( json, function( key , val ) {
+                    var productType;
+                    var deptName = val['MAIN_DEPARTMENT']+'>hasdkjhaskjdhkasd'+val['DEPARTMENT_NAME'];
+                    if(val['PRODUCT_TYPE'] === 1)
+                        productType = 'مستهلكة';
+                    else
+                        productType = 'طويلة الأجل';
+                    item = '<li>'+
+                                '<a href="#">'+
+                                    '<span class="subject">'+
+                                        '<span class="from">'+deptName.substring(0,30)+'</span>'+
+                                        '<span class="time">'+val['ADDED_DATE']+'</span>'+
+                                    '</span>'+
+                                    '<span class="message">'+
+                                        'قامت بطلب لوازم '+productType+' بطلب رقم '+val['ORDER_NUMBER']
+                                    '</span>'+
+                                '</a>'+
+                            '</li>';
+                    $('#notification').append(item);
+                  });
+                    $('#notification').append('<li><a href="<?php echo base_url() . "product/show_ordered_supplies/"; ?>">المزيد من الإشعارات</a></li>');
+            }, error: function() {
+                $('#message').text("هناك خطأ في تخزين البيانات");
+            }
+        });
+    }
+
+    var getNotificationsNumber = function() {
+        $.post('<?php echo base_url() . "product/getNotificationsNumber/"; ?>', function( data ) {
+          notificationNumber = data;
+          $("#noteNum").html(data);
+        });
+    }
+    var myTimer = setInterval(getNotificationsNumber, 300000);
+    
+    function showNotifications(){
+        $("#notificationNumber").html('هنـاك '+notificationNumber+' شعـار جـديد');
+        $("#noteNum").empty();
+        notificationNumber = 0;
+        callnotification();
+    }
+</script>

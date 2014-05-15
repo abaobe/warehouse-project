@@ -5,7 +5,7 @@
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title>Data Tables</title>
+        <title>تدقيق العهد</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -45,16 +45,16 @@
                             <!-- END THEME CUSTOMIZER-->
                             <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
                             <h3 class="page-title">
-                                Data Tables
+                                قسم الأصناف
                             </h3>
                             <ul class="breadcrumb">
                                 <li>
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">Components</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">قسم الأصناف</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">Data Tables</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">تدقيق العهد المرجعة والمستحقة</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -67,7 +67,7 @@
                             <!-- BEGIN EXAMPLE TABLE widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>جدول يحتوي على الأصناف المعارة</h4>
+                                    <h4><i class="icon-reorder"></i>جدول يحتوي على العهد التي تم إرجاعها أو إستحق إرجاعها</h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -108,14 +108,18 @@
                                                     <td><?= $value['ADDED_DATE'] ?></td>
                                                     <td class="text-error bold"><?= $value['RETURN_DATE'] ?></td>
                                                     <td>
-                                                        <?php if ($value['ORDER_STATUS'] == 'active') { ?>
+                                                        <?php if(USER_ROLE == ROLE_ONE) {
+                                                                if ($value['ORDER_STATUS'] == 'active') { ?>
                                                             <a class="btn mini purple" onclick="borrowing_info(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-eye-open"></i> عـرض</a>
                                                             <button class="btn mini purple" onclick="return_borrow(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-envelope-alt"></i> رسالة</button>
                                                         <?php } else if ($value['ORDER_STATUS'] == 'inactive') { ?>
                                                             <a class="btn mini purple" onclick="accept(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-ok"></i> تأكيد الإستلام</a>
                                                             <a class="btn mini purple" onclick="borrowing_info(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-eye-open"></i> عـرض</a>
                                                             <button class="btn mini purple" onclick="extend_date(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-retweet"></i> تمديد الوقت</button>
-                                                        <?php } ?>
+                                                        <?php }
+                                                        }else{?>
+                                                            <a class="btn mini purple" onclick="borrowing_info(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-eye-open"></i> عـرض</a>
+                                                        <?php }?>
                                                     </td>
                                                 </tr>
                                             <?php } ?>

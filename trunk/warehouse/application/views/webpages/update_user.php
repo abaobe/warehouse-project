@@ -5,7 +5,7 @@
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title>Form Layouts</title>
+        <title>تعديل بيانات المستخدم</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -42,16 +42,21 @@
                             <!-- END THEME CUSTOMIZER-->
                             <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
                             <h3 class="page-title">
-                                إدارة الأصناف
+                                قسم المستخدمين
                             </h3>
                             <ul class="breadcrumb">
                                 <li>
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">إضـافة مستخدم جديد</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">قسم المستخدمين</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">إضافة صنف جديد</a><span class="divider-last">&nbsp;</span></li>
+                                <li>
+                                    <a href="#">إدارة المستخدمين والصلاحيات</a> <span class="divider">&nbsp;</span>
+                                </li>
+                                <li>
+                                    <a href="#">تعديل بيانات المستخدم</a> <span class="divider-last">&nbsp;</span>
+                                </li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -63,7 +68,7 @@
                             <!-- BEGIN SAMPLE FORM widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>نموذج إدخال</h4>
+                                    <h4><i class="icon-reorder"></i>تعديل بيانات المستخدم</h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -80,9 +85,9 @@
                                     <div class="span3 left_info">
                                         <div class="text-center profile-pic">
                                             <?php if (file_exists('./uploads/'.$info[0]['USER_PICTURE'])) {?>
-                                            <img class="max_size border" src='<?=base_url().'uploads/'.$info[0]['USER_PICTURE']?>' alt="صورة المستخدم">
+                                            <img class="max_size border" width="150px" height="150px" src='<?=base_url().'uploads/'.$info[0]['USER_PICTURE']?>' alt="صورة المستخدم">
                                             <?php }else{?>
-                                            <img class="max_size border" class="border" src="<?php echo base_url(); ?>resource/img/profile-pic.jpg" alt="صورة المستخدم">
+                                            <img class="max_size border" width="150px" height="150px" class="border" src="<?php echo base_url(); ?>resource/img/profile-pic.jpg" alt="صورة المستخدم">
                                             <?php }?>
                                         </div>
                                     </div>

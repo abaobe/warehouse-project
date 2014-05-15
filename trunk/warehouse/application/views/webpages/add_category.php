@@ -5,7 +5,7 @@
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title>Form Layouts</title>
+        <title>إضافة فئة جديدة</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -42,14 +42,14 @@
                             <!-- END THEME CUSTOMIZER-->
                             <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
                             <h3 class="page-title">
-                                إدارة الفئات
+                                قسم الفئات
                             </h3>
                             <ul class="breadcrumb">
                                 <li>
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">إضافة فئة جديدة</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">قسم الفئات</a> <span class="divider">&nbsp;</span>
                                 </li>
                                 <li><a href="#">إضافة فئة جديدة</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
@@ -63,7 +63,7 @@
                             <!-- BEGIN SAMPLE FORM widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>نموذج إدخال</h4>
+                                    <h4><i class="icon-reorder"></i>إضافة فئة جديدة وفئات فرعية</h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>

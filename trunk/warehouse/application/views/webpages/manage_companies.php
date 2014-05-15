@@ -102,8 +102,10 @@
                                                     <td><?= $value['FAX_NUMBER'] ?></td>
                                                     <td><?= $value['ADDRESS'] ?></td>
                                                     <td>
+                                                        <?php if(USER_ROLE == ROLE_ONE) {?>
                                                         <a href='<?php echo base_url() . "companies/update_company/" . $value['COMPANY_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
                                                         <a href="#" onclick="delete_company(<?= $value['COMPANY_ID'] ?>,this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
+                                                        <?php }?>
                                                     </td>
                                                 </tr>
                                             <?php } ?>
@@ -114,9 +116,7 @@
                             <!-- END EXAMPLE TABLE widget-->
                         </div>
                     </div>
-
                     <!-- END ADVANCED TABLE widget-->
-
                     <!-- END PAGE CONTENT-->
                 </div>
                 <!-- END PAGE CONTAINER-->

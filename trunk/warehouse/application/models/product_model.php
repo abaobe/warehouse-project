@@ -2,12 +2,30 @@
 
 class Product_model extends CI_Model {
 
+    /**
+     * Constructor
+     * 
+     * Automatically load libraries needed in this controler
+     *
+     * @access public
+     * @return void
+     */
     function __construct() {
         parent::__construct();
         $this->load->library('OracleModel');
         $this->DBObject = new OracleModel();
     }
 
+    /**
+     * add_new_product
+     * 
+     * function takes product information from the controller and parse 
+     * it to pl/sql function add_product to store it into database 
+     * and return number have transaction status
+     * 
+     * @access public
+     * @return number
+     */
     function add_new_product($product_info) {
         try {
             $params = array(
@@ -42,10 +60,28 @@ class Product_model extends CI_Model {
         }
     }
 
+    /**
+     * get_all_products
+     * 
+     * function get products infroamtions from the database by calling pl/sql
+     * function and parse it to controller function and return cursor
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_all_products() {
         return $this->DBObject->readCursor("product_actions.get_all_products", null);
     }
 
+    /**
+     * get_static_products
+     * 
+     * function get static_products infroamtions from the database by calling pl/sql
+     * function and parse it to controller function and return cursor
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_static_products() {
         return $this->DBObject->readCursor("product_actions.get_static_products", null);
     }
@@ -56,7 +92,7 @@ class Product_model extends CI_Model {
             $params[1] = array("name" => ":columns", "value" => &$columns);
             return $this->DBObject->readCursor("product_actions.get_inserted_static_prod(:prod_id,:columns)", $params);
         } catch (Exception $ex) {
-            echo ">>" . ex;
+            return $ex;
         }
     }
 
@@ -69,6 +105,15 @@ class Product_model extends CI_Model {
         }
     }
 
+    /**
+     * get_static_product_by_voucherId
+     * 
+     * function get static_products infroamtions depends on voucher id from
+     * the database by calling pl/sql function and parse it to controller function and return cursor
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_static_product_by_voucherId($voucher_id) {
         try {
             $params[0] = array("name" => ":voucher_id", "value" => &$voucher_id);
@@ -78,6 +123,15 @@ class Product_model extends CI_Model {
         }
     }
 
+    /**
+     * get_temp_product_by_voucherId
+     * 
+     * function get temporary_products infroamtions depends on voucher id from
+     * the database by calling pl/sql function and parse it to controller function and return cursor
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_temp_product_by_voucherId($voucher_id) {
         try {
             $params[0] = array("name" => ":voucher_id", "value" => &$voucher_id);
@@ -87,6 +141,15 @@ class Product_model extends CI_Model {
         }
     }
 
+    /**
+     * get_product_by_id
+     * 
+     * function get product information depends on product id
+     * and parse these infromation to controller
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_product_by_id($product_id) {
         try {
             $params[0] = array("name" => ":prod_id", "value" => &$product_id);
@@ -157,6 +220,15 @@ class Product_model extends CI_Model {
         }
     }
 
+    /**
+     * update_product
+     * 
+     * function takes products infroamtions from the controller function and
+     * parse it to pl/sql update_product function and return transaction status
+     * 
+     * @access public
+     * @return number
+     */
     function update_product($product_info) {
         try {
             $params = array(
@@ -191,6 +263,15 @@ class Product_model extends CI_Model {
         }
     }
 
+    /**
+     * delete_product
+     * 
+     * function recieve product id from controller and parse it 
+     * to pl/sql function to delete product
+     * 
+     * @access public
+     * @return number
+     */
     function delete_product($product_id) {
         $params = array(array('name' => ':product_id', 'value' => &$product_id),
             array('name' => ':res', 'value' => &$result));
@@ -204,6 +285,15 @@ class Product_model extends CI_Model {
         return $result;
     }
 
+    /**
+     * delete_inserted_product
+     * 
+     * function recieve product id from controller and parse it 
+     * to pl/sql function to delete product depends on voucher id
+     * 
+     * @access public
+     * @return number
+     */
     function delete_inserted_product($voucher_id) {
         $params = array(array('name' => ':voucher_id', 'value' => &$voucher_id),
             array('name' => ':res', 'value' => &$result));
@@ -217,6 +307,16 @@ class Product_model extends CI_Model {
         return $result;
     }
 
+    /**
+     * insert_product
+     * 
+     * function takes product information from the controller and parse 
+     * it to pl/sql function add_product to store it into database 
+     * and return number have transaction status
+     * 
+     * @access public
+     * @return number
+     */
     function insert_product($product_info) {
         try {
             $r = 123; //see below comment
@@ -248,6 +348,16 @@ class Product_model extends CI_Model {
         }
     }
 
+    /**
+     * insert_product
+     * 
+     * function takes product information from the controller and parse 
+     * it to pl/sql function add_product to store it into database 
+     * and return number have transaction status
+     * 
+     * @access public
+     * @return number
+     */
     function insert_static_product($product_info) {
         try {
             $r = 123; //see below comment
@@ -293,16 +403,15 @@ class Product_model extends CI_Model {
     }
 
     function supplies_order($order_info) {
-        $r = '123'; //see below comment
         $result = null;
         $params = array(
             array('name' => ':product_id', 'value' => &$order_info[0]),
-            array('name' => ':quantity', 'value' => &$order_info[3]),
             array('name' => ':department_id', 'value' => &$order_info[1]),
             array('name' => ':notes', 'value' => &$order_info[2]),
-            array('name' => ':applicant_id', 'value' => &$r), //notes: this will take value from session
+            array('name' => ':quantity', 'value' => &$order_info[3]),
             array('name' => ':unit_type', 'value' => &$order_info[4]),
             array('name' => ':order_number', 'value' => &$order_info[5]),
+            array('name' => ':applicant_id', 'value' => &$order_info[6]),
             array('name' => ':res', 'value' => &$result)
         );
 
@@ -322,20 +431,19 @@ class Product_model extends CI_Model {
     }
 
     function static_supplies_order($order_info) {
-        $r = '123'; //see below comment
         $result = null;
         $params = array(
             array('name' => ':product_id', 'value' => &$order_info[0]),
-            array('name' => ':quantity', 'value' => &$order_info[3]),
             array('name' => ':department_id', 'value' => &$order_info[1]),
             array('name' => ':notes', 'value' => &$order_info[2]),
-            array('name' => ':applicant_id', 'value' => &$r), //notes: this will take value from session
+            array('name' => ':quantity', 'value' => &$order_info[3]),
             array('name' => ':unit_type', 'value' => &$order_info[4]),
             array('name' => ':order_number', 'value' => &$order_info[5]),
             array('name' => ':employee_name', 'value' => &$order_info[6]),
             array('name' => ':employee_number', 'value' => &$order_info[7]),
             array('name' => ':section_name', 'value' => &$order_info[8]),
             array('name' => ':room_number', 'value' => &$order_info[9]),
+            array('name' => ':applicant_id', 'value' => &$order_info[10]),
             array('name' => ':res', 'value' => &$result)
         );
 
@@ -362,6 +470,14 @@ class Product_model extends CI_Model {
         return $this->DBObject->readCursor("product_actions.get_supplies_info_byNumber(:order_number)", $params);
     }
 
+    /**
+     * get_order_number
+     * 
+     * function get order number from database sequence
+     * 
+     * @access public
+     * @return number
+     */
     function get_order_number() {
         $conn = $this->db->conn_id;
         $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.NEXT_ORDER_NUMBER(); END;");
@@ -373,6 +489,14 @@ class Product_model extends CI_Model {
         return $result;
     }
 
+    /**
+     * next_product_number
+     * 
+     * function get order number from database sequence
+     * 
+     * @access public
+     * @return number
+     */
     function next_product_number() {
         $conn = $this->db->conn_id;
         $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.NEXT_PRODUCT_NUMBER(); END;");
@@ -384,6 +508,14 @@ class Product_model extends CI_Model {
         return $result;
     }
 
+    /**
+     * get_insert_number
+     * 
+     * function get insert number from database sequence
+     * 
+     * @access public
+     * @return number
+     */
     function get_insert_number() {
         $conn = $this->db->conn_id;
         $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.NEXT_INSERT_NUMBER(); END;");
@@ -445,31 +577,43 @@ class Product_model extends CI_Model {
         return $result;
     }
 
-//    function get_order_status($order_number) {
-//        $conn = $this->db->conn_id;
-//        $stmt = oci_parse($conn, "BEGIN :v_Return := PRODUCT_ACTIONS.get_order_status(:order_number); END;");
-//        oci_bind_by_name($stmt, ':v_Return', $result, SQLT_STR);
-//        oci_bind_by_name($stmt, ':order_number', $order_number);
-//
-//        if (!oci_execute($stmt)) {
-//            return oci_error($stmt);
-//        }
-//        return $result;
-//    }
-//    function get_all_borrowing() {
-//        return $this->DBObject->readCursor("product_actions.get_all_borrowing", null);
-//    }
-
+    /**
+     * department_borrowing
+     * 
+     * function get products borrowed from the database depends on department id
+     * and parse it to controller function and return cursor
+     * 
+     * @access public
+     * @return cursor
+     */
     function department_borrowing($data) {
         $params[0] = array("name" => ":department_id", "value" => &$data['department_id']);
         return $this->DBObject->readCursor("product_actions.department_borrowing(:department_id)", $params);
     }
 
+    /**
+     * get_products_id_name
+     * 
+     * function get product ids,names from the database and parse 
+     * it to controller function and return cursor
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_products_id_name($product_type) {
         $params[0] = array("name" => ":product_type", "value" => &$product_type);
         return $this->DBObject->readCursor("product_actions.get_products_id_name(:product_type)", $params);
     }
 
+    /**
+     * get_borrowing_byID
+     * 
+     * function get products borrowed from the database and parse 
+     * it to controller function and return cursor
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_borrowing_byID($voucher_id) {
         $params[0] = array("name" => ":voucher_id", "value" => &$voucher_id);
         return $this->DBObject->readCursor("product_actions.get_borrowing_byID(:voucher_id)", $params);
@@ -510,6 +654,14 @@ class Product_model extends CI_Model {
         return $result;
     }
 
+    /**
+     * extend_date
+     * 
+     * function change the return date datae and return status
+     * 
+     * @access public
+     * @return cursor
+     */
     function extend_date($data) {
         $params = array(
             array('name' => ':new_return_date', 'value' => &$data['new_return_date']),
@@ -526,6 +678,15 @@ class Product_model extends CI_Model {
         return $result;
     }
 
+    /**
+     * get_ProductsBy_CatID
+     * 
+     * function get products depends on category IDinformation
+     * and parse these infromation to controller
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_ProductsBy_CatID($data) {
         $params[0] = array("name" => ":category_id", "value" => &$data['category_id']);
         $params[1] = array("name" => ":prodType", "value" => &$data['prodType']);
@@ -549,10 +710,28 @@ class Product_model extends CI_Model {
         return $result;
     }
 
+    /**
+     * get_temp_products
+     * 
+     * function get temporary products information
+     * and parse these infromation to controller
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_temp_products() {
         return $this->DBObject->readCursor("product_actions.get_temp_products", null);
     }
 
+    /**
+     * get_products_for_damage
+     * 
+     * function get damaged products information
+     * and parse these infromation to controller
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_products_for_damage() {
         return $this->DBObject->readCursor("product_actions.get_products_for_damage", null);
     }
@@ -571,6 +750,39 @@ class Product_model extends CI_Model {
         }
         oci_execute($stmt);
         return $result;
+    }
+
+    /**
+     * getNotification
+     * 
+     * function get unreadable orders information
+     * and parse these infromation to controller
+     * 
+     * @access public
+     * @return cursor
+     */
+    function getNotification() {
+        return $this->DBObject->readCursor("product_actions.getUnreadableOrders", null);
+    }
+
+    /**
+     * getNotificationsNumber
+     * 
+     * function get unreadable orders counts information
+     * and parse these infromation to controller
+     * 
+     * @access public
+     * @return cursor
+     */
+    function getNotificationsNumber() {
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "BEGIN :v_Return := product_actions.getUnreadableOrdersNumber; END;");
+        oci_bind_by_name($stmt, ':v_Return', $result, SQL_NUMERIC);
+
+        if (!oci_execute($stmt)) {
+            return oci_error($stmt);
+        }
+        return (int) $result;
     }
 
 }

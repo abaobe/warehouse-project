@@ -196,17 +196,14 @@
                 var unit_name=$(current).parents('tr').children().find($('td #unit_type option:selected')).text();
                 var quantity=$(current).parents('tr').children().find($('td #quantity')).val();
                 var notes=$(current).parents('tr').children().find($('td #notes')).val();
-                console.log("productName:"  + product_name);
-                console.log("u_name:"  + unit_name);
-                console.log("qunty:"  + quantity);
-                console.log("notes:"  + notes);
                 var d = new Array();
                 d[0] = $(current).attr('product_id');
-                d[1] = 1;
+                d[1] = '<?php $this->auth->getDepartment_Id(); ?>';
                 d[2] = notes;
                 d[3] = quantity;
                 d[4] = $(current).parents('tr').children().find($('td #unit_type')).val();
                 d[5] = $('#order_number').val();
+                d[6] = '<?php $this->auth->getUser_Id(); ?>';
                 data[index] = d;
                 
                 var product = jQuery('<tr id=' + index + '><td>' + [++index] + '</td><td class="text-info"><b>' + product_name

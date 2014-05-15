@@ -5,7 +5,7 @@
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title>Data Tables</title>
+        <title>إدارة المواد الثابتة</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -43,16 +43,16 @@
                             <!-- END THEME CUSTOMIZER-->
                             <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
                             <h3 class="page-title">
-                                Data Tables
+                                قسم الأصناف
                             </h3>
                             <ul class="breadcrumb">
                                 <li>
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">Components</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">قسم الأصناف</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">Data Tables</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">إدارة المواد الطويلة الأجل</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -65,7 +65,7 @@
                             <!-- BEGIN EXAMPLE TABLE widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>جدول يحتوي العهد  </h4>
+                                    <h4><i class="icon-reorder"></i>جدول يحتوي المواد الثابتة والطويلة الأجل  </h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -102,9 +102,11 @@
                                                     <td class="hidden-phone"><?= $value['RE_DEMAND_BORDER'] ?></td>
                                                     <td class="hidden-phone"><?= $value['NOTES'] ?></td>
                                                     <td class="hidden-phone">
+                                                        <a href='<?php echo base_url() . "product/inserted_static_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"> حركات الصنف</a>
+                                                        <?php if(USER_ROLE == ROLE_ONE) {?>
                                                         <a href='<?php echo base_url() . "product/update_product/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
                                                         <a id="delete" href="javascript:delete_product(<?= $value['PRODUCT_ID'] ?>)" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
-                                                        <a href='<?php echo base_url() . "product/inserted_static_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"> حركات الصنف</a>
+                                                        <?php }?>
                                                     </td>
                                                 </tr>
                                             <?php } ?>

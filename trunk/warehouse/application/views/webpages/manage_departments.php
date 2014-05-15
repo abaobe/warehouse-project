@@ -5,7 +5,7 @@
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title>Data Tables</title>
+        <title>إدارة الدوائر والإدارات</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -44,16 +44,16 @@
                             <!-- END THEME CUSTOMIZER-->
                             <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
                             <h3 class="page-title">
-                                Data Tables
+                                قسم الإدارات والدوائر 
                             </h3>
                             <ul class="breadcrumb">
                                 <li>
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">Components</a> <span class="divider">&nbsp;</span>
+                                    <a href="#"> قسم الإدارات والدوائر</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">Data Tables</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">إدارة الدوائر والإدارات</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -66,7 +66,7 @@
                             <!-- BEGIN EXAMPLE TABLE widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>جدول يحتوي على جميع الأصناف المخزنة</h4>
+                                    <h4><i class="icon-reorder"></i>جدول يحتوي على جميع الإدارات والدوائر </h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -112,8 +112,10 @@
                                                     <td><?= $value['FAX'] ?></td>
                                                     <td><?= $value['NOTES'] ?></td>
                                                     <td>
+                                                        <?php if(USER_ROLE == ROLE_ONE) {?>
                                                         <a href='<?php echo base_url() . "departments/update_department/" . $value['DOWN1_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i>  تعديل</a>
                                                         <a href="#" onclick="delete_department(<?= $value['DOWN1_ID'] ?>,this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
+                                                        <?php }?>
                                                     </td>
                                                 </tr>
                                             <?php } ?>

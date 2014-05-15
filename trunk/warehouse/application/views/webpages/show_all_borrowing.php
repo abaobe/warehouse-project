@@ -5,7 +5,7 @@
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title>Data Tables</title>
+        <title>عرض العهد</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -44,16 +44,16 @@
                             <!-- END THEME CUSTOMIZER-->
                             <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
                             <h3 class="page-title">
-                                Data Tables
+                                قسم الأصناف
                             </h3>
                             <ul class="breadcrumb">
                                 <li>
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">Components</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">قسم الأصناف</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">Data Tables</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">إدارة العهد</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>

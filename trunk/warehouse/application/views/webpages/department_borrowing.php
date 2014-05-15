@@ -65,7 +65,7 @@
                             <!-- BEGIN EXAMPLE TABLE widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>ط¬ط¯ظˆظ„ ظٹط­طھظˆظٹ ط¹ظ„ظ‰ ط§ظ„ط£طµظ†ط§ظپ ط§ظ„ظ…ط¹ط§ط±ط©</h4>
+                                    <h4><i class="icon-reorder"></i>جدول يحتوي على الأصناف المعارة</h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -73,7 +73,7 @@
                                 </div>
                                 <!-- Start Alert Message -->
                                 <div id="status" class="alert">
-                                    <button class="close" data-dismiss="alert">أ—</button>
+                                    <button class="close" data-dismiss="alert">×</button>
                                     <span id="message"></span>
                                 </div>
                                 <!-- End Alert Message -->
@@ -82,15 +82,15 @@
                                         <thead>
                                             <tr>
                                                 <th style="width:8px;" ><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
-                                                <th class="hidden-phone">ط¥ط³ظ… ط§ظ„طµظ†ظپ</th>
-                                                <th class="hidden-phone">ط§ظ„ط±ظ‚ظ… ط§ظ„طھط³ظ„ط³ظ„ظٹ</th>
-                                                <th class="hidden-phone">ط§ظ„ط­ط§ظ„ط© ط¹ظ†ط¯ ط§ظ„ط¥ط³طھط¹ط§ط±ط©</th>
-                                                <th class="hidden-phone">طھط§ط±ظٹط® ط§ظ„ط¥ط³طھط¹ط§ط±ط©</th>
-                                                <th class="hidden-phone">طھط§ط±ظٹط® ط§ظ„ط¥ط±ط¬ط§ط¹</th>
-                                                <th class="hidden-phone">ط¥ط³ظ… ط§ظ„ظ…ظˆط¸ظپ</th>
-                                                <th class="hidden-phone">ط±ظ‚ظ… ط§ظ„ط؛ط±ظپط©</th>
-                                                <th class="hidden-phone">ظ…ظ„ط§ط­ط¸ط§طھ</th>
-                                                <th class="hidden-phone">ظ‚ط§ط¦ظ€ظ…ط© ط§ظ„ظ…ظ‡ط§ظ…</th>
+                                                <th class="hidden-phone">إسم الصنف</th>
+                                                <th class="hidden-phone">الرقم التسلسلي</th>
+                                                <th class="hidden-phone">الحالة عند الإستعارة</th>
+                                                <th class="hidden-phone">تاريخ الإستعارة</th>
+                                                <th class="hidden-phone">تاريخ الإرجاع</th>
+                                                <th class="hidden-phone">إسم الموظف</th>
+                                                <th class="hidden-phone">رقم الغرفة</th>
+                                                <th class="hidden-phone">ملاحظات</th>
+                                                <th class="hidden-phone">قائـمة المهام</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -107,9 +107,9 @@
                                                     <td class="hidden-phone"><?= $value['NOTES'] ?></td>
                                                     <td class="hidden-phone">
                                                         <?php if ($value['ORDER_STATUS'] == 'active') { ?>
-                                                            <button class="btn mini purple" onclick="return_borrow(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-share-alt"></i> ط¥ط±ط¬ط§ط¹ ط§ظ„طµظ†ظپ</button>
+                                                            <button class="btn mini purple" onclick="return_borrow(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-share-alt"></i> إرجاع الصنف</button>
                                                         <?php } else if ($value['ORDER_STATUS'] == 'inactive') { ?>
-                                                            <span class="label label-warning"><b>ط¨ط¥ظ†طھط¸ظ€ط§ط± طھط£ظƒظٹط¯ ط§ظ„ظ…ط³ط¤ظˆظ„</b></span>
+                                                            <span class="label label-warning"><b>بإنتظـار تأكيد المسؤول</b></span>
                                                         <?php } ?>
                                                     </td>
                                                 </tr>
@@ -158,7 +158,7 @@
             function return_borrow(current) {
                 var voucher_id = $(current).attr('voucher_id');
                 $.confirm({
-                    text: "<h4>ظ‡ظ„ طھط±ظٹط¯ ط¥ط±ط¬ط§ط¹ ظ‡ط°ط§ ط§ظ„طµظ†ظپ طں</h4>",
+                    text: "<h4>هل تريد إرجاع هذا الصنف ؟</h4>",
                     confirm: function() {
                     $.ajax({type: "POST",
                         url: '<?php echo base_url() . "product/return_borrowing/"; ?>',
@@ -167,14 +167,14 @@
                         success: function(json) {
                             if (json == 1) {
                                 $('#status').removeClass('alert-error').addClass('alert alert-success');
-                                $('#message').html('<b>طھظ… ط§ظ„ط·ظ„ط¨ ط¨ظ†ط¬ط§ط­ :  ظٹط¬ط¨ ط¹ظ„ظٹظƒ ط¥ط±ط¬ط§ط¹ ظ‡ط°ط§ ط§ظ„طµظ†ظپ ط¥ظ„ظ‰ ط£ظ…ظٹظ† ط§ظ„ظ…ط®ط²ظ† </b>');
-                                $(current).parent().empty().html('<span class="label label-warning"><b>ط¨ط¥ظ†طھط¸ظ€ط§ط± طھط£ظƒظٹط¯ ط§ظ„ظ…ط³ط¤ظˆظ„</b></span>');
+                                $('#message').html('<b>تم الطلب بنجاح :  يجب عليك إرجاع هذا الصنف إلى أمين المخزن </b>');
+                                $(current).parent().empty().html('<span class="label label-warning"><b>بإنتظـار تأكيد المسؤول</b></span>');
                             } else {
                                 $('#status').addClass('alert alert-error');
-                                $('#message').removeClass('alert-success').text("ظٹط¬ط¨ ط¹ظ„ظٹظƒ ط§ظ„طھط£ظƒط¯ ظ…ظ† ط§ظ„ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ط¯ط®ظ„ط©");
+                                $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
                             }
                         }, error: function() {
-                            $('#message').text("ظ‡ظ†ط§ظƒ ط®ط·ط£ ظپظٹ طھط®ط²ظٹظ† ط§ظ„ط¨ظٹط§ظ†ط§طھ");
+                            $('#message').text("هناك خطأ في تخزين البيانات");
                         }
                     });
                     }

@@ -5,7 +5,7 @@
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title>Data Tables</title>
+        <title>إدارة الأصناف</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -43,16 +43,16 @@
                             <!-- END THEME CUSTOMIZER-->
                             <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
                             <h3 class="page-title">
-                                Data Tables
+                                قسم الأصناف
                             </h3>
                             <ul class="breadcrumb">
                                 <li>
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">Components</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">قسم الأصناف</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">Data Tables</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">إدارة الأصناف</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -121,8 +121,10 @@
                                                     </td>
                                                     <td><?= $value['NOTES'] ?></td>
                                                     <td>
+                                                        <?php if(USER_ROLE == ROLE_ONE) {?>
                                                         <a href='<?php echo base_url() . "product/update_product/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
                                                         <a href="#" onclick="delete_product(<?= $value['PRODUCT_ID'] ?>,this);return false;" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
+                                                        <?php }?>
                                                         <?php if($value['PRODUCT_TYPE'] == 1){ ?>
                                                             <a href='<?php echo base_url() . "product/inserted_temp_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-th-list"> حركات الصنف</i></a>
                                                         <?php } else if($value['PRODUCT_TYPE'] ==2){?>    

@@ -5,7 +5,7 @@
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title>Data Tables</title>
+        <title>إضافة مستخدم جديد</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -44,16 +44,18 @@
                             <!-- END THEME CUSTOMIZER-->
                             <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
                             <h3 class="page-title">
-                                Data Tables
+                                قسم المستخدمين
                             </h3>
                             <ul class="breadcrumb">
                                 <li>
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">Components</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">قسم المستخدمين</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">Data Tables</a><span class="divider-last">&nbsp;</span></li>
+                                <li>
+                                    <a href="#">إدارة المستخدمين والصلاحيات</a> <span class="divider-last">&nbsp;</span>
+                                </li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -66,7 +68,7 @@
                             <!-- BEGIN EXAMPLE TABLE widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>جدول يحتوي على جميع الأصناف المخزنة</h4>
+                                    <h4><i class="icon-reorder"></i>جدول يحتوي على جميع مستخدمين النظام </h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -103,15 +105,19 @@
                                                     <td><?= $value['ROLE_NAME'] ?></td>
                                                     <td><?= $value['PHONE_NUMBER'] ?></td>
                                                     <td><?= $value['MOBILE_NUMBER'] ?></td>
-                                                    <td><?php if($value['ACCOUNT_STATUS'] == 'active') 
-                                                                echo '<span class="label label-success">فـعال</span>';
-                                                              else
-                                                                echo '<span class="label label-important">غير فعال</span>';
-                                                    ?></td>
+                                                    <td><?php
+                                                        if ($value['ACCOUNT_STATUS'] == 'active')
+                                                            echo '<span class="label label-success">فـعال</span>';
+                                                         else
+                                                            echo '<span class="label label-important">غير فعال</span>';
+                                                         ?>
+                                                    </td>
                                                     <td>
                                                         <a href="#" onclick="show_user(<?= $value['USER_ID']?>);" class="btn mini purple" data-reveal-id="myModal"><i class="icon-edit"></i>  عـرض البيانات</a>
+                                                        <?php if(USER_ROLE == ROLE_ONE) {?>
                                                         <a href='<?php echo base_url() . "users/update_user/" . $value['USER_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i>  تعديل</a>
                                                         <a href="#" onclick="delete_user(<?= $value['USER_ID'] ?>,this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
+                                                        <?php }?>
                                                     </td>
                                                 </tr>
                                             <?php } ?>
