@@ -2,10 +2,25 @@
 
 class User_model extends CI_Model {
 
+    /**
+     * Constructor
+     * 
+     * Automatically load libraries needed in this controler
+     *
+     * @access public
+     * @return void
+     */
     function __construct() {
         parent::__construct();
         $this->load->library('OracleModel');
         $this->DBObject = new OracleModel();
+    }
+
+    function do_login($user_info) {
+        $params = array(
+            array('name' => ':user_name', 'value' => $user_info['username']),
+            array('name' => ':user_password', 'value' => $user_info['password']));
+        return $this->DBObject->readCursor("user_actions.login(:user_name,:user_password)", $params);
     }
 
     function get_all_roles() {
@@ -39,7 +54,7 @@ class User_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
-    
+
     function do_update_user($user_info) {
         $params = array(
             array('name' => ':user_id', 'value' => $user_info['user_id']),
@@ -68,12 +83,12 @@ class User_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
-    
+
     function get_users($fields) {
         $params[0] = array('name' => ':fields', 'value' => &$fields);
         return $this->DBObject->readCursor("user_actions.get_users(:fields)", $params);
     }
-    
+
     function get_user_byID($user_id) {
         $params[0] = array('name' => ':user_id', 'value' => &$user_id);
         return $this->DBObject->readCursor("user_actions.get_user_byID(:user_id)", $params);
@@ -93,6 +108,7 @@ class User_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
+
 }
 
 /* End of file user_model.php */

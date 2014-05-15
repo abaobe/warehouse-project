@@ -5,7 +5,7 @@
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title>Data Tables</title>
+        <title>طلبات صرف لوازم</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -43,16 +43,16 @@
                             <!-- END THEME CUSTOMIZER-->
                             <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
                             <h3 class="page-title">
-                                Data Tables
+                                قسم الأصناف
                             </h3>
                             <ul class="breadcrumb">
                                 <li>
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">Components</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">قسم الأصناف</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">Data Tables</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">طلبات صرف اللوازم</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -100,7 +100,9 @@
                                                     </td>
                                                     <td class="hidden-phone"><?= $value['ADDED_DATE'] ?></td>
                                                     <td class="hidden-phone">
+                                                        <?php if(USER_ROLE == ROLE_ONE) {?>
                                                         <a href='#' onclick="redirect(this);return false;" order_number="<?=$value["ORDER_NUMBER"]?>" product_type="<?=$value['PRODUCT_TYPE']?>" class="btn mini purple">صرف لوازم</a>
+                                                        <?php }?>
                                                         <a href='#' class="btn mini purple"><i class="icon-edit"></i> عرض</a>
                                                         <button id="refuse" class="btn mini purple" onclick="refuse_order('<?= $value['ORDER_NUMBER'] ?>', this)"><i class="icon-edit"></i> رفـض</button>
                                                     </td>

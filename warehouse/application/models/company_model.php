@@ -2,12 +2,30 @@
 
 class Company_model extends CI_Model {
 
+    /**
+     * Constructor
+     * 
+     * Automatically load libraries needed in this controler
+     *
+     * @access public
+     * @return void
+     */
     function __construct() {
         parent::__construct();
         $this->load->library('OracleModel');
         $this->DBObject = new OracleModel();
     }
     
+    /**
+     * add_company
+     * 
+     * function takes company information from the controller and parse 
+     * it to pl/sql function add_company to store it into database 
+     * and return number have transaction status
+     * 
+     * @access public
+     * @return number
+     */
     function add_company($data) {
         $params = array(array('name' => ':company_name', 'value' => &$data['company_name']),
             array('name' => ':license_number', 'value' => &$data['license_number']),
@@ -26,14 +44,41 @@ class Company_model extends CI_Model {
         return $result;
     }
 
+    /**
+     * get_companies_id_name
+     * 
+     * function get company ids,names from the database and parse 
+     * it to controller function and return cursor
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_companies_id_name() {
         return $this->DBObject->readCursor("company_actions.get_companies_id_name", null);
     }
     
+    /**
+     * get_all_companies
+     * 
+     * function get companies infroamtions from the database by calling pl/sql
+     * function and parse it to controller function and return cursor
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_all_companies() {
         return $this->DBObject->readCursor("company_actions.get_all_companies", null);
     }
     
+    /**
+     * update_company
+     * 
+     * function takes companies infroamtions from the controller function and
+     * parse it to pl/sql update_company function and return transaction status
+     * 
+     * @access public
+     * @return number
+     */
     function update_company($company_info) {
         $params = array(
             array('name' => ':company_id', 'value' => $company_info['company_id']),
@@ -56,11 +101,29 @@ class Company_model extends CI_Model {
         return $result;
     }
     
+    /**
+     * get_company_byID
+     * 
+     * function get company information depends on company id
+     * and parse these infromation to controller
+     * 
+     * @access public
+     * @return cursor
+     */
     function get_company_byID($data) {
         $params[0] = array('name' => ':company_id', 'value' => &$data['company_id']);
         return $this->DBObject->readCursor("company_actions.get_company_byID(:company_id)", $params);
     }
     
+    /**
+     * delete_company
+     * 
+     * function recieve company id from controller and parse it 
+     * to pl/sql function to delete company
+     * 
+     * @access public
+     * @return number
+     */
     function delete_company($company_info) {
         $params = array(
             array('name' => ':company_id', 'value' => $company_info['company_id']),

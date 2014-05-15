@@ -1460,9 +1460,14 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 
 .dropdown-menu.extended {
     top:40px;
-    min-width: 160px !important;
-    max-width: 300px !important;
-    width: 233px !important;
+    min-width: 330px !important;
+    max-width: 400px !important;
+    width: 330px !important;
+    max-height: 600px !important;
+    min-height: 300px !important;
+    height: 400px !important;
+    overflow-x:hidden;
+    overflow-y: scroll;
 }
 
 .dropdown-menu.extended li a{
@@ -3565,3 +3570,6 @@ ul.amounts li {
 
 /* voucher number inforamtion*/
 .left_info {position:absolute;left:50px;}
+
+/* max size for images*/
+.max_size {max-width: 150px; max-height: 150px;}

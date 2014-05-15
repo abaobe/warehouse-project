@@ -2,10 +2,10 @@
     <div class="span12">
         <div class="widget">
             <div class="widget-title">
-                <h4><i class="icon-user"></i>بيانات المستخدم</h4>
+                <h4><i class="icon-user"></i> بيانات المستخدم</h4>
             </div>
             <div class="widget-body">
-                <div class="span9">
+                <div class="span8">
                     <!-- BEGIN FORM-->
                     <form method="POST" onsubmit="return false;" class="form-horizontal">
                         <div class="control-group">
@@ -62,9 +62,9 @@
                 <div class="span3">
                     <div class="text-center profile-pic">
                         <?php if (file_exists('./uploads/'.$info[0]['USER_PICTURE'])) {?>
-                        <img class="max_size border" src='<?=base_url().'uploads/'.$info[0]['USER_PICTURE']?>' alt="صورة المستخدم">
+                        <img class="max_size border" width="150px" height="150px" src='<?=base_url().'uploads/'.$info[0]['USER_PICTURE']?>'>
                         <?php }else{?>
-                        <img class="max_size border" src="<?php echo base_url(); ?>resource/img/profile-pic.jpg" alt="صورة المستخدم">
+                        <img class="max_size border" width="150px" height="150px" src="<?php echo base_url(); ?>uploads/avatar.jpg">
                         <?php }?>
                     </div>
                 </div>

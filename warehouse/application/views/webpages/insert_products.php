@@ -5,7 +5,7 @@
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title>Form Layouts</title>
+        <title>إدخال لوازم مسنهلكة</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -44,16 +44,16 @@
                             <!-- END THEME CUSTOMIZER-->
                             <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
                             <h3 class="page-title">
-                                إدارة الأصناف
+                                قسم الأصناف
                             </h3>
                             <ul class="breadcrumb">
                                 <li>
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">إدارة الأصناف</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">قسم الأصناف</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">نموذج إدخال لوازم مستهلكة</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">إدخال لوازم مستهلكة</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -65,7 +65,7 @@
                             <!-- BEGIN SAMPLE FORM widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>إدخال لوازم مستهلكة</h4>
+                                    <h4><i class="icon-reorder"></i>إدخال لوازم مستهلكة تبعاً لرقم الطلب</h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -104,11 +104,11 @@
                                         <div class="control-group">
                                             <label class="control-label">رقم الفاتورة</label>
                                             <div class="controls">
-                                                <input type="text" class="span3" id="billing_id" placeholder="رقم الفاتورة" />
+                                                <input type="text" class="span2" id="billing_id" placeholder="رقم الفاتورة" />
                                                 <div class="input-append date date-picker" data-date="" data-date-format="yyyy/mm/dd" data-date-viewmode="years">
                                                     <input placeholder="تـاريخ الإستلام" id="received_date" class="m-ctrl-medium date-picker" size="16" type="text" value="" /><span class="add-on"><i class="icon-calendar"></i></span>
                                                 </div>
-                                                <select id="currency_type" class="span3" name="currency_type" data-placeholder="نوع االعملة" tabindex="1">
+                                                <select id="currency_type" class="span2" name="currency_type" data-placeholder="نوع االعملة" tabindex="1">
                                                     <option value="">نوع االعملة</option>
                                                     <option value="أغورة">أغورة</option>
                                                     <option value="شيكل">شيكل</option>
@@ -178,7 +178,7 @@
                             <!-- BEGIN SAMPLE FORM widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>إدخال خدمات</h4>
+                                    <h4><i class="icon-reorder"></i>إدخال خدمات تابعة لنفس رقم الطلب الحالي</h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
