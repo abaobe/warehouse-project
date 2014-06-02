@@ -164,7 +164,6 @@
                                         </div>
                                         <div class="form-actions">
                                             <button type="button" class="btn btn-success" onclick="insert_product()">حـفظ</button>
-                                            <button type="reset" id="reset" class="btn">إلغاء</button>
                                         </div>
                                     </form>
                                     <!-- END FORM-->
@@ -221,7 +220,6 @@
                                         </table>
                                         <div class="form-actions">
                                             <button type="button" class="btn btn-success" onclick="insert_service()">حـفظ</button>
-                                            <button type="reset" id="reset" class="btn">إلغاء</button>
                                         </div>
                                     </form>
                                     <!-- END FORM-->
@@ -305,9 +303,12 @@
                 SecCount++;
             }
             
+            var lastRow=1;
             function get_products_added(){
+                data = [];
+                data.length = 0;
                 var index = 0;
-                for(var i=1; i < count; i++){
+                for(var i=lastRow; i < count; i++){
                     if (jQuery.contains(document, $('#row'+i)[0])) {
                         var d=new Array();
                         d[0]=$('#row'+i +' #product_id'+i).val();
@@ -330,102 +331,36 @@
                 $(current).parents('tr').remove();
             }
             
-            var x = 0;
-            var temp =false;
-            var quantity=0;
-            var total_cost = 0;
-            var unit_price = 0;
-            var q= false;
-            var p= false;
-            var c= false;
-            var sum= 0;
-            var costt =new Array();
-            function calculate_cost(current,flag){
-                var i = ($(current).parents('tr').attr('id')).split('row')[1];
-                quantity = $(current).parents('tr').children().find($('td #quantity')).val();
-                unit_price = $(current).parents('tr').children().find($('td #unit_price')).val();
-                total_cost = $(current).parents('tr').children().find($('td #total_cost')).val();
-                if(flag == 1){
-                    q=true;
-                    if(p){
-                        $(current).parents('tr').children().find($('td #total_cost')).empty();
-                        $(current).parents('tr').children().find($('td #total_cost')).val(quantity*unit_price);
-                        sum=0;
-                        sum= quantity*unit_price;
-                        temp = true;
-                        c=false;
-                    }else if(c){
-                        $(current).parents('tr').children().find($('td #unit_price')).empty();
-                        sum=0;
-                        if(quantity!=0){
-                            $(current).parents('tr').children().find($('td #unit_price')).val(total_cost/quantity);temp = true;
-                            
-                            sum= total_cost;
-                        p=false;
-                        }
-                    }
-                }else if(flag == 2){
-                    p= true;
-                    sum=0;
-                    if(quantity){
-                        $(current).parents('tr').children().find($('td #total_cost')).empty();
-                        $(current).parents('tr').children().find($('td #total_cost')).val(quantity*unit_price);temp = true;
-                        
-                        sum= quantity*unit_price;
-                        c= false;
-                    }
-                }else if(flag == 3){ 
-                    c = true;
-                    p = false;
-                    if(q){
-                        $(current).parents('tr').children().find($('td #unit_price')).empty();
-                        sum=0;
-                        if(quantity!=0){
-                            $(current).parents('tr').children().find($('td #unit_price')).val(total_cost/quantity);temp = true;
-                            
-                            sum= total_cost;
-                        }
-                        p = false;
-                    }
-                }
-                if(temp){
-                    if(costt[i]){
-                        delete costt[i];
-                    }
-                    costt[i] = sum;
-                sum=0;
-                var finalCost=0;
-                for(var x=1; x< costt.length; x++){
-                    finalCost ++;
-                    console.log(">>"+finalCost);
-                }
-                console.log("***"+finalCost);
-                $('#final_cost').empty();
-                $('#final_cost').val(finalCost);
-                finalCost=0;sum=0;
-            }
-                }
-
             function insert_product() {
                 get_products_added();
+                if(data.length > 0){
                 $.ajax({
                     type: "POST",
                     url: '<?php echo base_url() . "product/do_insert_product/"; ?>',
                     data: {insert_orders: JSON.stringify(data)},
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إدخال الكمية بنجاح");
-                            //$('#reset').click();
-                        } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        if (json['status'] == true) {
+                            $('#status').removeClass().addClass('alert alert-success');
+                            $('#message').html(json['msg']);
+                            lastRow = count;
+                            data = [];
+                            data.length = 0;
+                        } else if(json['status'] == false){
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').html(json['msg']);
                         }
                     }, error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });
+                },complete: function(){
+                    App.scrollTo();
+                },error: function() {
+                    $('#status').removeClass().addClass('alert alert-error');
+                    $('#message').text("هناك خطأ في تخزين البيانات");
+                }
             }
 
             function product_unit_names(current) {
@@ -449,9 +384,12 @@
               }
             }
             
+            var lastService=1;
             function get_services_added(){
+                data = [];
+                SecData.length = 0;
                 var SecIndex=  0;
-                for(var i=1; i < SecCount; i++){
+                for(var i=lastService; i < SecCount; i++){
                     if (jQuery.contains(document, $('#service'+i)[0])) {
                         var d=new Array();
                         d[0]=$('#service'+i +' #service_name').val();
@@ -471,25 +409,35 @@
             
             function insert_service(){
                 get_services_added();
+                if(SecData.length > 0){
                 $.ajax({
                     type: "POST",
                     url: '<?php echo base_url() . "services/insert_multiple_service/"; ?>',
                     data: {services: JSON.stringify(SecData)},
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
-                            $('#status2').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message2').text("تم إضافة الخدمة  بنجاح");
-                            $('#reset').click();
-                        }else{
-                            $('#status2').addClass('alert alert-error');
-                            $('#message2').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        if (json['status'] == true) {
+                            $('#status2').removeClass().addClass('alert alert-success');
+                            $('#message2').html(json['msg']);
+                            lastService = SecCount;
+                            data = [];
+                            SecData.length = 0;
+                        } else if(json['status'] == false){
+                            $('#status2').removeClass().addClass('alert alert-error');
+                            $('#message2').html(json['msg']);
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });
-                return false;
+                }else{
+                    $('#status2').removeClass().addClass('alert alert-info');
+                    $('#message2').text("تم إضافة هذة البيانات سابقا لايوجد بيانات جديدة");
+                    App.scrollTo();
+                }
             }
             
             function get_insert_number() {

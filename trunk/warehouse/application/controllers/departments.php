@@ -96,7 +96,10 @@ class Departments extends CI_Controller {
         if (USER_ROLE == ROLE_ONE) {
             $data['department_id'] = $this->input->post('department_id');
             $result = $this->department_model->delete_department($data);
-            echo json_encode($result);
+            if ($result)
+                echo json_encode(array('status' => true, 'msg' => "تم الحذف  بنجاح"));
+            else
+                echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة أو قد يكون هناك أصناف مدرجة لهذة الدائرة'));
         }
     }
 
@@ -130,16 +133,34 @@ class Departments extends CI_Controller {
      */
     public function do_add_department() {
         if (USER_ROLE == ROLE_ONE) {
-            $data['department_name'] = $this->input->post('department_name');
-            $data['address'] = $this->input->post('address');
-            $data['phone'] = $this->input->post('phone');
-            $data['notes'] = $this->input->post('notes');
-            $data['mobile'] = $this->input->post('mobile');
-            $data['fax'] = $this->input->post('fax');
-            $data['parent_id'] = $this->input->post('parent_id');
+            $this->form_validation->set_rules('department_name', 'إسم الإدارة', 'required|trim|max_length[70]');
+            $this->form_validation->set_rules('address', 'العنوان', 'required|trim|max_length[100]');
+            $this->form_validation->set_rules('phone', 'رقم الهاتف', 'trim|max_length[30]');
+            $this->form_validation->set_rules('mobile', 'رقم الجوال', 'trim|max_length[30]');
+            $this->form_validation->set_rules('notes', 'ملاحظات', 'trim|max_length[100]');
+            $this->form_validation->set_rules('fax', 'رقم الفاكس', 'trim|max_length[30]');
+            $this->form_validation->set_rules('parent_id', 'إسم الإدارة', 'required|trim|numeric');
 
-            $result = $this->department_model->add_department($data);
-            echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => $errorMsg));
+            } else {
+                $data['department_name'] = $this->input->post('department_name');
+                $data['address'] = $this->input->post('address');
+                $data['phone'] = $this->input->post('phone');
+                $data['notes'] = $this->input->post('notes');
+                $data['mobile'] = $this->input->post('mobile');
+                $data['fax'] = $this->input->post('fax');
+                $data['parent_id'] = $this->input->post('parent_id');
+
+                $result = $this->department_model->add_department($data);
+                if ($result)
+                    echo json_encode(array('status' => true, 'msg' => 'تم إضافة البيانات بنجاح'));
+                else
+                    echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
+            }
+        } else {
+            $this->load->view('webpages/404');
         }
     }
 
@@ -155,20 +176,37 @@ class Departments extends CI_Controller {
      */
     public function do_update_department() {
         if (USER_ROLE == ROLE_ONE) {
-            $data['department_id'] = $this->input->post('department_id');
-            $data['department_name'] = $this->input->post('department_name');
-            $data['address'] = $this->input->post('address');
-            $data['phone'] = $this->input->post('phone');
-            $data['notes'] = $this->input->post('notes');
-            $data['mobile'] = $this->input->post('mobile');
-            $data['fax'] = $this->input->post('fax');
-            $data['parent_id'] = $this->input->post('parent_id');
+            $this->form_validation->set_rules('department_name', 'إسم الإدارة', 'required|trim|max_length[70]');
+            $this->form_validation->set_rules('address', 'العنوان', 'required|trim|max_length[100]');
+            $this->form_validation->set_rules('phone', 'رقم الهاتف', 'trim|max_length[30]');
+            $this->form_validation->set_rules('mobile', 'رقم الجوال', 'trim|max_length[30]');
+            $this->form_validation->set_rules('notes', 'ملاحظات', 'trim|max_length[100]');
+            $this->form_validation->set_rules('fax', 'رقم الفاكس', 'trim|max_length[30]');
+            $this->form_validation->set_rules('parent_id', 'إسم الإدارة', 'required|trim|numeric');
 
-            $result = $this->department_model->update_department($data);
-            echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => $errorMsg));
+            } else {
+                $data['department_id'] = $this->input->post('department_id');
+                $data['department_name'] = $this->input->post('department_name');
+                $data['address'] = $this->input->post('address');
+                $data['phone'] = $this->input->post('phone');
+                $data['notes'] = $this->input->post('notes');
+                $data['mobile'] = $this->input->post('mobile');
+                $data['fax'] = $this->input->post('fax');
+                $data['parent_id'] = $this->input->post('parent_id');
+
+                $result = $this->department_model->update_department($data);
+
+                if ($result)
+                    echo json_encode(array('status' => true, 'msg' => 'تم إضافة البيانات بنجاح'));
+                else
+                    echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
+            }
         }
     }
 
 }
 
-/* End of file departments.php */
+/* End of file departments.php */    

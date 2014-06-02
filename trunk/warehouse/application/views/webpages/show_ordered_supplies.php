@@ -87,7 +87,15 @@
                                         <tbody>
                                             <?php foreach ($orders as $value) { ?>
                                                 <tr class="odd gradeX">
-                                                    <td status="<?= $value['STATUS'] ?>"><input type="checkbox" class="checkboxes" value="1" /></td>
+                                                    <?php if ($value['STATUS'] == "refuse") {?>
+                                                        <td class="label-important"><input type="checkbox" class="checkboxes" value="1" /></td>
+                                                    <?php } else if ($value['STATUS'] == "accept") {?>
+                                                        <td class="label-success"><input type="checkbox" class="checkboxes" value="1" /></td>
+                                                    <?php } else if ($value['STATUS'] == "some") {?>
+                                                        <td class="label-info"><input type="checkbox" class="checkboxes" value="1" /></td>
+                                                    <?php }else{?>
+                                                        <td><input type="checkbox" class="checkboxes" value="1" /></td>
+                                                    <?php }?>
                                                     <td class="hidden-phone"><?= $value['ORDER_NUMBER'] ?></td>
                                                     <td class="hidden-phone"><?= $value['DEPARTMENT_NAME'] ?></td>
                                                     <td class="hidden-phone"><?= $value['MAIN_DEPARTMENT'] ?></td>
@@ -149,16 +157,16 @@
                 var oTable = $('#sample_1').dataTable();
                 
                 //this function should put after each paging
-                $("tr td[status]").each(function() {
-                    var status = $(this).attr('status');
-                    if (status == "refuse") {
-                        $(this).addClass('label-important');
-                    } else if (status == "accept") {
-                        $(this).addClass('label-success');
-                    } else if (status == "some") {
-                        $(this).addClass('label-info');
-                    }
-                });
+//                $("tr td[status]").each(function() {
+//                    var status = $(this).attr('status');
+//                    if (status == "refuse") {
+//                        $(this).addClass('label-important');
+//                    } else if (status == "accept") {
+//                        $(this).addClass('label-success');
+//                    } else if (status == "some") {
+//                        $(this).addClass('label-info');
+//                    }
+//                });
             });
             
             function redirect (current){

@@ -108,6 +108,10 @@ class User_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
+    
+    function users_statistics(){
+        return $this->DBObject->readCursor("user_actions.users_statistics", null);
+    }
 
 }
 

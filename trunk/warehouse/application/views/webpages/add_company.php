@@ -167,15 +167,17 @@
                     },
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إضافة الخدمة  بنجاح");
-                            $('#reset').click();
-                        }else{
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        if (json['status'] == true) {
+                            $('#status').removeClass().addClass('alert alert-success');
+                            $('#message').html(json['msg']);
+                        } else if(json['status'] == false){
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').html(json['msg']);
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });

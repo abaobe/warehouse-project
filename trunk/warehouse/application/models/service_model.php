@@ -27,6 +27,19 @@ class Service_model extends CI_Model {
         foreach ($params as $variable) {
             oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
         }
+        oci_execute($stmt);
+        return $result;
+    }
+    
+    function delete_many_services($vouchers_ids){
+        echo ">>".$vouchers_ids;
+        $params = array(array('name' => ':vouchers_ids', 'value' => &$vouchers_ids),
+            array('name' => ':res', 'value' => &$result));
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := service_actions.delete_many_services(:vouchers_ids); end;");
+
+        foreach ($params as $variable)
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
 
         oci_execute($stmt);
         return $result;

@@ -80,7 +80,7 @@
                                             <button class="close" data-dismiss="alert">×</button>
                                             <span id="message"></span>
                                         </div>
-                                        <!-- End Alert Message -->
+                                     <!-- End Alert Message -->
                                     <table class="table table-striped table-bordered" id="sample_1">
                                         <thead>
                                             <tr>
@@ -96,7 +96,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php $i=0; foreach ($supplies as $value) { ?>
+                                            <?php $i=1; foreach ($supplies as $value) { ?>
                                                 <tr class="odd gradeX" index='<?=$i?>' orderID='<?=$value['ORDER_ID']?>'>
                                                     <td><input type="checkbox" class="checkboxes" value="1" /></td>
                                                     <td class="hidden-phone"><?= $value['PRODUCT_NAME'] ?></td>
@@ -170,20 +170,22 @@
         <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script>
             var info = new Array();
-            var index = 0;
+            var index = 1;
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
             });
-            
+            var inc= 1;
             function addToCart(current){
                 var d = new Array();
                 d[0] = $(current).parents('tr').attr('orderID');
                 d[1] = $(current).parents('tr').children().find($('td #quantity_disbursed')).val();
                 d[2] = $(current).parents('tr').children().find($('td #unit_type')).val();
                 d[3] = $(current).parents('tr').children().find($('td #notes')).val();
+                d[4] = inc;
                 info[index] = d;
                 ++index;
+                ++inc;
                 $(current).parent().empty().append('<button class="btn btn-danger" onclick="undo(this)"><i class="icon-remove"></i></button>');
             }
             
@@ -194,27 +196,56 @@
             }
             
             function supply_order() {
-                $.ajax({
-                    type: "POST",
-                    url: '<?php echo base_url() . "product/disburse_temp_supplies/"; ?>',
-                    data: {disbursed: JSON.stringify(info)
-                    },
-                    dataType: "json",
-                    success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text('تـم الصرف بنجاح');
-                            info = [];
-                            info.length = 0;
-                            index = 0;
-                        } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                var newArray= new Array();
+                for (var i = 1; i < info.length; i++) {
+                  if (info[i] !== undefined && info[i] !== null && info[i] !== "") {
+                    newArray.push(info[i]);
+                  }
+                }
+                if(newArray.length !== 0){
+                    $.ajax({
+                        type: "POST",
+                        url: '<?php echo base_url() . "product/disburse_temp_supplies/"; ?>',
+                        data: {disbursed: JSON.stringify(newArray)
+                        },
+                        dataType: "json",
+                        success: function(json) {
+                            if (json['status'] === 'warning') {
+                                $('#status').removeClass().addClass('alert show');
+                                $('#message').html(json['msg']);
+                                var orders = json['orders'];
+                                var mySplitResult = orders.split(",");
+                                mySplitResult.forEach(function(i) {
+                                    if(i !== ''){
+                                        info.splice(parseInt(i), 1);
+                                    }
+                                });
+                                newArray = [];
+                                newArray.length = 0;
+                            } else if(json['status'] === 'success'){
+                                $('#status').removeClass().addClass('alert alert-success');
+                                $('#message').html(json['msg']);
+                                info = [];
+                                info.length = 0;
+                                newArray = [];
+                                newArray.length = 0;
+                                index = 1;
+                            } else if(json['status'] === 'danger'){
+                                $('#status').removeClass().addClass('alert alert-error');
+                                $('#message').html(json['msg']);
+                            }
+                        },complete: function(){
+                            App.scrollTo();
+                        }, error: function() {
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').text("هناك خطأ في تخزين البيانات");
                         }
-                    }, error: function() {
-                        $('#message').text("هناك خطأ في تخزين البيانات");
-                    }
-                });
+                    });
+                }else{
+                    $('#status').removeClass().addClass('alert alert-info');
+                    $('#message').text("عذرا لم تقم بصرف أي صنف");
+                    App.scrollTo();
+                }
             }
 
         </script>

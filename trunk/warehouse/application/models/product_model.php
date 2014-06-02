@@ -48,11 +48,9 @@ class Product_model extends CI_Model {
 
             $conn = $this->db->conn_id;
             $stmt = oci_parse($conn, "begin :res := product_actions.add_new_product(:product_name,:product_number,:product_type,:notes,:category_id,:width,:height,:h_length,:re_demand_border,:primary_unit_name,:secondary_unit_name,:primary_unit_quantity,:secondary_unit_quantity,:quantity_status); end;");
-
             foreach ($params as $variable) {
                 oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
             }
-
             oci_execute($stmt);
             return $result;
         } catch (Exception $ex) {
@@ -347,9 +345,22 @@ class Product_model extends CI_Model {
             return ">>" . $ex;
         }
     }
+    
+    function delete_many_inserted_products($vouchers_ids){
+        $params = array(array('name' => ':vouchers_ids', 'value' => &$vouchers_ids),
+            array('name' => ':res', 'value' => &$result));
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := product_actions.delete_many_inserted_products(:vouchers_ids); end;");
+
+        foreach ($params as $variable)
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
+
+        oci_execute($stmt);
+        return $result;
+    }
 
     /**
-     * insert_product
+     * insert_static_product
      * 
      * function takes product information from the controller and parse 
      * it to pl/sql function add_product to store it into database 
@@ -562,15 +573,15 @@ class Product_model extends CI_Model {
 
     function disburse_temp_supplies($data) {
         $params = array(
-            array('name' => ':order_supplies_id', 'value' => &$data['order_supplies_id']),
-            array('name' => ':quantity_disbursed', 'value' => &$data['quantity_disbursed']),
-            array('name' => ':unit_type', 'value' => &$data['unit_type']),
-            array('name' => ':notes', 'value' => &$data['notes']),
+            array('name' => ':order_supplies_id', 'value' => &$data[0]),
+            array('name' => ':quantity_disbursed', 'value' => &$data[1]),
+            array('name' => ':unit_type', 'value' => &$data[2]),
+            array('name' => ':notes', 'value' => &$data[3]),
+            array('name' => ':acknowledgement', 'value' => &$data[4]),
             array('name' => ':res', 'value' => &$result)
         );
-
         $conn = $this->db->conn_id;
-        $stmt = oci_parse($conn, "begin :res := product_actions.insert_temp_disburse_info(:order_supplies_id,:quantity_disbursed, :unit_type, :notes); end;");
+        $stmt = oci_parse($conn, "begin :res := product_actions.insert_temp_disburse_info(:order_supplies_id,:quantity_disbursed, :unit_type, :notes,:acknowledgement); end;");
         foreach ($params as $variable)
             oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
         oci_execute($stmt);
@@ -783,6 +794,18 @@ class Product_model extends CI_Model {
             return oci_error($stmt);
         }
         return (int) $result;
+    }
+
+    function getStatistcs() {
+        $conn = $this->db->conn_id;
+        $s = oci_parse($conn, "select * from table(product_actions.getMainStatistics())");
+        oci_execute($s);
+        oci_fetch_all($s, $res);
+        return $res;
+    }
+
+    function getProductsTopOrdered() {
+        return $this->DBObject->readCursor("product_actions.getProductsTopOrdered", null);
     }
 
 }

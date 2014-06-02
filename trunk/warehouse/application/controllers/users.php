@@ -40,16 +40,23 @@ class Users extends CI_Controller {
      * @return json
      */
     function do_login() {
-        $data['username'] = $this->input->post('username');
-        $data['password'] = md5($this->input->post('password'));
-        $info = $this->user_model->do_login($data);
-        if (count($info) && $info[0]['ACCOUNT_STATUS'] == 'active') {
-            $this->auth->fill_session($info[0]);
-            echo json_encode(array('status' => 'true', 'msg' => 'تم تسجيل الدخول بنجاح'));
-        } else if (count($info) == 1 && $info[0]['ACCOUNT_STATUS'] == 'inactive') {
-            echo json_encode(array('status' => 'blocked', 'msg' => 'عذراً حسابك مقفل يجب عليك مراجعة المسؤول'));
-        } else if (count($info) < 1) {
-            echo json_encode(array('status' => 'false', 'msg' => 'خطأ في إسم المستخدم أو كلمة المرور'));
+        $this->form_validation->set_rules('username', 'إسم المستخدم', 'required|trim|xss_clean');
+        $this->form_validation->set_rules('password', 'كلمة المرور', 'required|trim|xss_clean');
+        if ($this->form_validation->run() == FALSE) {
+            $errorMsg = validation_errors();
+            echo json_encode(array('status' => 'false', 'msg' => $errorMsg));
+        } else {
+            $data['username'] = $this->input->post('username');
+            $data['password'] = md5($this->input->post('password'));
+            $info = $this->user_model->do_login($data);
+            if (count($info) && $info[0]['ACCOUNT_STATUS'] == 'active') {
+                $this->auth->fill_session($info[0]);
+                echo json_encode(array('status' => 'true', 'msg' => 'تم تسجيل الدخول بنجاح'));
+            } else if (count($info) == 1 && $info[0]['ACCOUNT_STATUS'] == 'inactive') {
+                echo json_encode(array('status' => 'blocked', 'msg' => 'عذراً حسابك مقفل يجب عليك مراجعة المسؤول'));
+            } else if (count($info) < 1) {
+                echo json_encode(array('status' => 'false', 'msg' => 'خطأ في إسم المستخدم أو كلمة المرور'));
+            }
         }
     }
 
@@ -96,40 +103,55 @@ class Users extends CI_Controller {
      */
     function do_add_user() {
         if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_FOUR) {
-            $status = "";
-            $msg = "";
-            $file_element_name = 'user_picture';
-            $imageName = $this->uploadImage($file_element_name);
-            $this->generateThumb(35, 35);
-            @unlink($_FILES[$file_element_name]);
+            $this->form_validation->set_rules('first_name', 'الإسم الأول', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('middle_name', 'الإسم الثاني', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('last_name', 'الإسم العائلة', 'required|trim|max_length[25]');
+            $this->form_validation->set_rules('employee_number', 'الرقم الوظيفي', 'required|trim|max_length[30]|numeric');
+            $this->form_validation->set_rules('username', 'إسم المستخدم', 'required|trim|max_length[50]'); //|numeric
+            $this->form_validation->set_rules('password', 'كلمة المرور', 'required|trim|max_length[50]|matches[repassword]'); //|min_length[6]
+            $this->form_validation->set_rules('repassword', 'كلمة المرور المعادة', 'required|trim|max_length[50]');
+            $this->form_validation->set_rules('phone_number', 'رقم الهاتف', 'trim|max_length[20]');
+            $this->form_validation->set_rules('mobile_number', 'رقم الهاتف المحمول', 'trim|max_length[20]');
+            $this->form_validation->set_rules('department_id', 'الدائرة التي ينتمي إليها', 'required|trim');
+            $this->form_validation->set_rules('user_role', 'صلاحية المستخدم', 'required|trim');
+            $this->form_validation->set_rules('email_address', 'البريد الإلكتروني', 'required|trim|valid_email');
 
-            $data['first_name'] = $this->input->post('first_name');
-            $data['middle_name'] = $this->input->post('middle_name');
-            $data['last_name'] = $this->input->post('last_name');
-            $data['employee_number'] = $this->input->post('employee_number');
-            $data['username'] = $this->input->post('username');
-            $data['password'] = md5($this->input->post('password'));
-            $data['phone_number'] = $this->input->post('phone_number');
-            $data['mobile_number'] = $this->input->post('mobile_number');
-            $data['department_id'] = $this->input->post('department_id');
-            $data['user_role'] = $this->input->post('user_role');
-            $data['email_address'] = $this->input->post('email_address');
-            $data['user_picture'] = ($imageName != 'false') ? $imageName : '';
-            $data['email_address'] = $this->input->post('email_address');
-            $data['account_status'] = $this->input->post('account_status');
-
-            $result = $this->user_model->do_add_user($data);
-            if ($result) {
-                $status = "success";
-                $msg = "File successfully uploaded";
-                echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => htmlentities($errorMsg)));
             } else {
-                unlink($picture['full_path']);
-                $status = "error";
-                $msg = "Something went wrong when saving the file, please try again.";
-                echo json_encode($result);
+                $status = "";
+                $msg = "";
+                $file_element_name = 'user_picture';
+                $imageName = $this->uploadImage($file_element_name);
+                $this->generateThumb(35, 35);
+                @unlink($_FILES[$file_element_name]);
+
+                $data['first_name'] = $this->input->post('first_name');
+                $data['middle_name'] = $this->input->post('middle_name');
+                $data['last_name'] = $this->input->post('last_name');
+                $data['employee_number'] = $this->input->post('employee_number');
+                $data['username'] = $this->input->post('username');
+                $data['password'] = md5($this->input->post('password'));
+                $data['phone_number'] = $this->input->post('phone_number');
+                $data['mobile_number'] = $this->input->post('mobile_number');
+                $data['department_id'] = $this->input->post('department_id');
+                $data['user_role'] = $this->input->post('user_role');
+                $data['email_address'] = $this->input->post('email_address');
+                $data['user_picture'] = ($imageName != 'false') ? $imageName : '';
+                $data['account_status'] = $this->input->post('account_status');
+
+                $result = $this->user_model->do_add_user($data);
+                if ($result) {
+                    //$status = "success";$msg = "File successfully uploaded";
+                    echo json_encode(array('status' => true, 'msg' => 'تم إضافة المستخدم بنجاح'));
+                } else {
+                    //$status = "error";$msg = "Something went wrong when saving the file, please try again.";
+                    unlink('./uploads/' . $imageName);
+                    unlink('./uploads/thumbs/' . $imageName);
+                    echo json_encode(array('status' => false, 'msg' => htmlentities('هناك خطأ في البيانات المدخلة')));
+                }
             }
-//        echo json_encode(array('status' => $status, 'msg' => $msg));
         } else {
             $this->load->view('webpages/404');
         }
@@ -251,50 +273,63 @@ class Users extends CI_Controller {
      */
     public function do_update_user() {
         if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_FOUR) {
-            $new_pic = $this->input->post('user_picture');
+            $this->form_validation->set_rules('first_name', 'الإسم الأول', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('middle_name', 'الإسم الثاني', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('last_name', 'الإسم العائلة', 'required|trim|max_length[25]');
+            $this->form_validation->set_rules('employee_number', 'الرقم الوظيفي', 'required|trim|max_length[30]|numeric');
+            $this->form_validation->set_rules('username', 'إسم المستخدم', 'required|trim|max_length[50]'); //|numeric
+            $this->form_validation->set_rules('password', 'كلمة المرور', 'required|trim|max_length[50]|matches[repassword]'); //|min_length[6]
+            $this->form_validation->set_rules('repassword', 'كلمة المرور المعادة', 'required|trim|max_length[50]');
+            $this->form_validation->set_rules('phone_number', 'رقم الهاتف', 'trim|max_length[20]');
+            $this->form_validation->set_rules('mobile_number', 'رقم الهاتف المحمول', 'trim|max_length[20]');
+            $this->form_validation->set_rules('department_id', 'الدائرة التي ينتمي إليها', 'required|trim');
+            $this->form_validation->set_rules('user_role', 'صلاحية المستخدم', 'required|trim');
+            $this->form_validation->set_rules('email_address', 'البريد الإلكتروني', 'required|trim|valid_email');
 
-            $status = "";
-            $msg = "";
-            if ($new_pic != NULL) {
-                $file_element_name = 'user_picture';
-
-                $imageName = $this->uploadImage($file_element_name);
-                $this->generateThumb(35, 35);
-            }
-            $picture = $this->upload->data();
-            $data['user_id'] = $this->input->post('user_id');
-            $data['first_name'] = $this->input->post('first_name');
-            $data['middle_name'] = $this->input->post('middle_name');
-            $data['last_name'] = $this->input->post('last_name');
-            $data['employee_number'] = $this->input->post('employee_number');
-            $data['username'] = $this->input->post('username');
-            $data['password'] = md5($this->input->post('password'));
-            $data['phone_number'] = $this->input->post('phone_number');
-            $data['mobile_number'] = $this->input->post('mobile_number');
-            $data['department_id'] = $this->input->post('department_id');
-            $data['user_role'] = $this->input->post('user_role');
-            $data['email_address'] = $this->input->post('email_address');
-            if ($new_pic == NULL)
-                $data['user_picture'] = $this->input->post('old_picture');
-            else
-                $data['user_picture'] = ($imageName != 'false') ? $imageName : '';
-            $data['email_address'] = $this->input->post('email_address');
-            $data['account_status'] = $this->input->post('account_status');
-
-            $result = $this->user_model->do_update_user($data);
-            if ($result) {
-                $status = "success";
-                $msg = "File successfully uploaded";
-                unlink('./uploads/' . $this->input->post('old_picture'));
-                unlink('./uploads/thumbs/' . $this->input->post('old_picture'));
-                echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => htmlentities($errorMsg)));
             } else {
-                unlink($picture['full_path']);
-                $status = "error";
-                $msg = "Something went wrong when saving the file, please try again.";
-                echo json_encode($result);
+                $new_pic = $this->input->post('user_picture');
+                $status = "";
+                $msg = "";
+                if ($new_pic != NULL) {
+                    $file_element_name = 'user_picture';
+                    $imageName = $this->uploadImage($file_element_name);
+                    $this->generateThumb(35, 35);
+                }
+                $data['user_id'] = $this->input->post('user_id');
+                $data['first_name'] = $this->input->post('first_name');
+                $data['middle_name'] = $this->input->post('middle_name');
+                $data['last_name'] = $this->input->post('last_name');
+                $data['employee_number'] = $this->input->post('employee_number');
+                $data['username'] = $this->input->post('username');
+                $data['password'] = md5($this->input->post('password'));
+                $data['phone_number'] = $this->input->post('phone_number');
+                $data['mobile_number'] = $this->input->post('mobile_number');
+                $data['department_id'] = $this->input->post('department_id');
+                $data['user_role'] = $this->input->post('user_role');
+                $data['email_address'] = $this->input->post('email_address');
+                if ($new_pic == NULL)
+                    $data['user_picture'] = $this->input->post('old_picture');
+                else
+                    $data['user_picture'] = ($imageName != 'false') ? $imageName : '';
+                $data['email_address'] = $this->input->post('email_address');
+                $data['account_status'] = $this->input->post('account_status');
+
+                $result = $this->user_model->do_update_user($data);
+                if ($result) {
+                    if ($new_pic != NULL) {
+                        unlink('./uploads/' . $this->input->post('old_picture'));
+                        unlink('./uploads/thumbs/' . $this->input->post('old_picture'));
+                    }
+                    echo json_encode(array('status' => true, 'msg' => 'تم إضافة المستخدم بنجاح'));
+                } else {
+                    unlink('./uploads/' . $imageName);
+                    unlink('./uploads/thumbs/' . $imageName);
+                    echo json_encode(array('status' => false, 'msg' => htmlentities('هناك خطأ في البيانات المدخلة')));
+                }
             }
-            //echo json_encode(array('status' => $status, 'msg' => $msg));
         }
     }
 
@@ -312,12 +347,19 @@ class Users extends CI_Controller {
         if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_FOUR) {
             $data['user_id'] = $this->input->post('user_id');
             $result = $this->user_model->delete_user($data);
-            echo json_encode($result);
+            if ($result)
+                echo json_encode(array('status' => true, 'msg' => "تم حذف المستخدم بنجاح"));
+            else
+                echo json_encode(array('status' => false, 'msg' => ' هناك خطأ في البيانات المدخلة'));
         } else {
             $this->load->view('webpages/404');
         }
     }
 
-}
+    function users_statistics() {
+        $result['info'] = $this->user_model->users_statistics();
+        echo json_encode($result);
+    }
 
+}
 //End of File

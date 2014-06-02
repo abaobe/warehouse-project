@@ -252,40 +252,21 @@
                     },
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إدخال الكمية بنجاح");
-                            //$('#reset').click();
-                        } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        if (json['status'] == true) {
+                            $('#status').removeClass().addClass('alert alert-success');
+                            $('#message').html(json['msg']);
+                        } else if(json['status'] == false){
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').html(json['msg']);
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });
             }
-
-//            function product_unit_names(current) {
-//                if ($(current).val()) {
-//                    $.ajax({
-//                        type: "POST",
-//                        url: '<?php echo base_url() . "product/product_unit_names/"; ?>',
-//                        data: {
-//                            product_id: $(current).val()
-//                        },
-//                        dataType: "json",
-//                        success: function(json) {
-//                            if (json.length != 0) {
-//                                $('#unit_type').empty().append('<option value=primary>' + json[0]['PRIMARY_UNIT_NAME'] + '</option>');
-//                                $('#unit_type').append('<option value=secondary>' + json[0]['SECONDARY_UNIT_NAME'] + '</option>').selectmenu('refresh');
-//                            } else {
-//                                $('#unit_type').empty().append('<option value=nothing>لا يوجد وحدات مدخلة</option>').selectmenu('refresh');
-//                            }
-//                        }
-//                    });
-//                }
-//            }
         </script>
         <!-- END JAVASCRIPTS -->   
     </body>

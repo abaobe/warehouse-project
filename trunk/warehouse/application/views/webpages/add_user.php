@@ -245,12 +245,10 @@
             }
 
             function add_user() {
-
                 $.ajaxFileUpload({
                     url: '<?php echo base_url() . "users/do_add_user/"; ?>',
                     secureuri: false,
                     fileElementId: 'user_picture',
-                    dataType: 'json',
                     data: {
                         first_name: $('#first_name').val(),
                         middle_name: $('#middle_name').val(),
@@ -264,21 +262,31 @@
                         user_role: $('#user_role').val(),
                         email_address: $('#email_address').val(),
                         user_picture: $('#user_picture').val(),
-                        account_status: $('input[name="account_status"]:checked').val()
-                    },
-                    success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إضافة الصنف بنجاح");
-                            $('#reset').click();
-                        } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        account_status: $('input[name="account_status"]:checked').val(),
+                        repassword: $('#repassword').val()
+                    },dataType: "json",
+                      success: function(json) {
+                        if (json['status'] == true) {
+                            $('#status').removeClass().addClass('alert alert-success');
+                            $('#message').html(json['msg']);
+                        } else if(json['status'] == false){
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').html(decodeEntities(json['msg']));
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });
+            }
+            function decodeEntities(s){
+                var str, temp= document.createElement('p');
+                temp.innerHTML= s;
+                str= temp.textContent || temp.innerText;
+                temp=null;
+                return str;
             }
         </script>
         <!-- END JAVASCRIPTS -->   

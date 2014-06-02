@@ -15,6 +15,7 @@
         <link href="<?php echo base_url(); ?>resource/css/style.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
+        <link href="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.css" rel="stylesheet" type="text/css"/>
 
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
@@ -87,7 +88,12 @@
                                         <div class="control-group">
                                             <label class="control-label">الجهة التي قدمت الخدمة</label>
                                             <div class="controls">
-                                                <input type="text" id="provided_by" class="span6" />
+                                                <select id="provided_by" class="chosen span3" placeholder="إستلمت من" tabindex="1">
+                                                    <option value="">إختيار</option>
+                                                    <?php foreach ($companies as $company) { ?>
+                                                        <option value="<?= $company['COMPANY_ID'] ?>"><?= $company['COMPANY_NAME'] ?></option>
+                                                    <?php } ?>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="control-group">
@@ -148,6 +154,7 @@
         <script src="js/respond.js"></script>
         <![endif]-->
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
         <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
         <script>
             jQuery(document).ready(function() {
@@ -168,15 +175,17 @@
                     },
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إضافة الخدمة  بنجاح");
-                            $('#reset').click();
-                        }else{
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        if (json['status'] == true) {
+                            $('#status').removeClass().addClass('alert alert-success');
+                            $('#message').html(json['msg']);
+                        } else if(json['status'] == false){
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').html(json['msg']);
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });

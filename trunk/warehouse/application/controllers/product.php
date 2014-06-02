@@ -29,6 +29,16 @@ class Product extends CI_Controller {
         $this->main_page();
     }
 
+    function comming_soon() {
+        $this->load->view('webpages/comming_soon');
+    }
+
+    public function statistics() {
+        $result['statistics'] = $this->product_model->getStatistcs();
+        $result['top_ordered'] = $this->product_model->getProductsTopOrdered();
+        $this->load->view('webpages/statistics', $result);
+    }
+
     /**
      * main_page 
      * 
@@ -145,23 +155,45 @@ class Product extends CI_Controller {
      */
     public function do_add_product() {
         if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) {
-            $data['product_name'] = $this->input->post('product_name');
-            $data['product_number'] = $this->input->post('product_number');
-            $data['product_type'] = $this->input->post('product_type');
-            $data['notes'] = $this->input->post('notes');
-            $data['category_id'] = $this->input->post('category_id');
-            $data['width'] = $this->input->post('width');
-            $data['height'] = $this->input->post('height');
-            $data['h_length'] = $this->input->post('h_length');
-            $data['re_demand_border'] = $this->input->post('re_demand_border');
-            $data['primary_unit_name'] = $this->input->post('primary_unit_name');
-            $data['secondary_unit_name'] = $this->input->post('secondary_unit_name');
-            $data['primary_unit_quantity'] = $this->input->post('primary_unit_quantity');
-            $data['secondary_unit_quantity'] = $this->input->post('secondary_unit_quantity');
-            $data['quantity_status'] = $this->input->post('quantity_status');
+            $this->form_validation->set_rules('product_name', 'إسم الصنف', 'required|trim|max_length[40]');
+            $this->form_validation->set_rules('product_number', 'رقم الصنف', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('product_type', 'نوع الصنف', 'required|trim');
+            $this->form_validation->set_rules('category_id', 'الفئة', 'required|trim|numeric');
+            $this->form_validation->set_rules('notes', 'ملاحظات', 'trim|max_length[100]');
+            $this->form_validation->set_rules('width', 'العرض', 'trim|max_length[20]');
+            $this->form_validation->set_rules('h_length', 'الطول', 'trim|max_length[20]');
+            $this->form_validation->set_rules('height', 'الإرتفاع', 'trim|max_length[20]');
+            $this->form_validation->set_rules('re_demand_border', 'حد إعادة الطلب', 'required|trim|max_length[15]|numeric');
+            $this->form_validation->set_rules('primary_unit_name', 'الوحدة الأساسية', 'required|trim|max_length[25]');
+            $this->form_validation->set_rules('secondary_unit_name', 'الوحدة الثانوية', 'trim|max_length[25]');
+            $this->form_validation->set_rules('primary_unit_quantity', 'رصيد أول المدة', 'trim|numeric');
+            $this->form_validation->set_rules('secondary_unit_quantity', 'كمية الوحدة الرئيسية من الوحدة الثانوية', 'trim|numeric');
 
-            $result = $this->product_model->add_new_product($data);
-            echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => $errorMsg));
+            } else {
+                $data['product_name'] = $this->input->post('product_name');
+                $data['product_number'] = $this->input->post('product_number');
+                $data['product_type'] = $this->input->post('product_type');
+                $data['notes'] = $this->input->post('notes');
+                $data['category_id'] = $this->input->post('category_id');
+                $data['width'] = $this->input->post('width');
+                $data['height'] = $this->input->post('height');
+                $data['h_length'] = $this->input->post('h_length');
+                $data['re_demand_border'] = $this->input->post('re_demand_border');
+                $data['primary_unit_name'] = $this->input->post('primary_unit_name');
+                $data['secondary_unit_name'] = $this->input->post('secondary_unit_name');
+                $data['primary_unit_quantity'] = $this->input->post('primary_unit_quantity');
+                $data['secondary_unit_quantity'] = $this->input->post('secondary_unit_quantity');
+                $data['quantity_status'] = $this->input->post('quantity_status');
+
+                $result = $this->product_model->add_new_product($data);
+                if ($result)
+                    echo json_encode(array('status' => true, 'msg' => 'تم إضافة الصنف بنجاح'));
+                else
+                    echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
+            }
         } else {
             $this->load->view('webpages/404');
         }
@@ -180,7 +212,7 @@ class Product extends CI_Controller {
     public function update_product($product_id) {
         if (USER_ROLE == ROLE_ONE) {
             $result['categories'] = $this->category_model->get_categories_id_name();
-            $result['product_info'] = $this->product_model->get_product_by_id($product_id);
+            $result['product_info'] = $this->product_model->get_product_by_id(trim($product_id));
             $this->load->view('webpages/update_product', $result);
         } else {
             $this->load->view('webpages/404');
@@ -236,22 +268,45 @@ class Product extends CI_Controller {
      */
     public function do_update_inserted_static_product() {
         if (USER_ROLE == ROLE_ONE) {
-            $data['voucher_id'] = $this->input->post('voucher_id');
-            $data['received_from'] = $this->input->post('received_from');
-            $data['billing_id'] = $this->input->post('billing_id');
-            $data['notes'] = $this->input->post('notes');
-            $data['quantity'] = $this->input->post('quantity');
-            $data['unit_type'] = $this->input->post('unit_type');
-            $data['unit_price'] = $this->input->post('unit_price');
-            $data['currency_type'] = $this->input->post('currency_type');
-            $data['product_status'] = $this->input->post('product_status');
-            $data['product_nature'] = $this->input->post('product_nature');
-            $data['supply_type'] = $this->input->post('supply_type');
-            $data['expire_date'] = $this->input->post('expire_date');
-            $data['serial_number'] = $this->input->post('serial_number');
-            $result = $this->product_model->update_inserted_static_product($data);
+            $this->form_validation->set_rules('received_from', 'إستلمت من', 'required|trim|numeric');
+            $this->form_validation->set_rules('billing_id', 'رقم الفاتورة', 'trim|max_length[20]');
+            $this->form_validation->set_rules('notes', 'ملاحظات', 'trim|max_length[100]');
+            $this->form_validation->set_rules('quantity', 'الكمية', 'required|trim|numeric');
+            $this->form_validation->set_rules('unit_type', 'تحديد الوحدة', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('unit_price', 'سعر الوحدة', 'required|trim');
+            $this->form_validation->set_rules('currency_type', 'تحديد العملة', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('product_status', 'حالة الصنف', 'required|trim|max_length[30]');
+            $this->form_validation->set_rules('product_nature', 'طبيعة التوريد', 'required|trim|max_length[30]');
+            $this->form_validation->set_rules('supply_type', 'وقت الإرجاع', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('expire_date', 'تاريخ الإرجاع', 'trim|max_length[20]');
+            if ($this->input->post('supply_type') == 'مؤقتة')
+                $this->form_validation->set_rules('expire_date', 'تاريخ الإرجاع', 'required|max_length[20]');
+            $this->form_validation->set_rules('serial_number', 'الرقم التسلسلي', 'required|trim|max_length[25]');
 
-            echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => $errorMsg));
+            } else {
+                $data['voucher_id'] = $this->input->post('voucher_id');
+                $data['received_from'] = $this->input->post('received_from');
+                $data['billing_id'] = $this->input->post('billing_id');
+                $data['notes'] = $this->input->post('notes');
+                $data['quantity'] = $this->input->post('quantity');
+                $data['unit_type'] = $this->input->post('unit_type');
+                $data['unit_price'] = $this->input->post('unit_price');
+                $data['currency_type'] = $this->input->post('currency_type');
+                $data['product_status'] = $this->input->post('product_status');
+                $data['product_nature'] = $this->input->post('product_nature');
+                $data['supply_type'] = $this->input->post('supply_type');
+                $data['expire_date'] = $this->input->post('expire_date');
+                $data['serial_number'] = $this->input->post('serial_number');
+
+                $result = $this->product_model->update_inserted_static_product($data);
+                if ($result)
+                    echo json_encode(array('status' => true, 'msg' => 'تم تعديل بيانات الصنف بنجاح'));
+                else
+                    echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة '));
+            }
         } else {
             $this->load->view('webpages/404');
         }
@@ -269,17 +324,33 @@ class Product extends CI_Controller {
      */
     public function do_update_inserted_temp_product() {
         if (USER_ROLE == ROLE_ONE) {
-            $data['voucher_id'] = $this->input->post('voucher_id');
-            $data['received_from'] = $this->input->post('received_from');
-            $data['billing_id'] = $this->input->post('billing_id');
-            $data['notes'] = $this->input->post('notes');
-            $data['quantity'] = $this->input->post('quantity');
-            $data['unit_type'] = $this->input->post('unit_type');
-            $data['unit_price'] = $this->input->post('unit_price');
-            $data['currency_type'] = $this->input->post('currency_type');
-            $result = $this->product_model->update_inserted_temp_product($data);
+            $this->form_validation->set_rules('received_from', 'إستلمت من', 'required|trim|numeric');
+            $this->form_validation->set_rules('billing_id', 'رقم الفاتورة', 'trim|max_length[20]');
+            $this->form_validation->set_rules('notes', 'ملاحظات', 'trim|max_length[100]');
+            $this->form_validation->set_rules('quantity', 'الكمية', 'required|trim|numeric');
+            $this->form_validation->set_rules('unit_type', 'تحديد الوحدة', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('unit_price', 'سعر الوحدة', 'required|trim');
+            $this->form_validation->set_rules('currency_type', 'تحديد العملة', 'required|trim|max_length[20]');
 
-            echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => $errorMsg));
+            } else {
+                $data['voucher_id'] = $this->input->post('voucher_id');
+                $data['received_from'] = $this->input->post('received_from');
+                $data['billing_id'] = $this->input->post('billing_id');
+                $data['notes'] = $this->input->post('notes');
+                $data['quantity'] = $this->input->post('quantity');
+                $data['unit_type'] = $this->input->post('unit_type');
+                $data['unit_price'] = $this->input->post('unit_price');
+                $data['currency_type'] = $this->input->post('currency_type');
+
+                $result = $this->product_model->update_inserted_temp_product($data);
+                if ($result)
+                    echo json_encode(array('status' => true, 'msg' => 'تم تعديل بيانات الصنف بنجاح'));
+                else
+                    echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة '));
+            }
         } else {
             $this->load->view('webpages/404');
         }
@@ -297,24 +368,46 @@ class Product extends CI_Controller {
      */
     public function do_update_product() {
         if (USER_ROLE == ROLE_ONE) {
-            $data['product_id'] = $this->input->post('product_id');
-            $data['product_name'] = $this->input->post('product_name');
-            $data['product_number'] = $this->input->post('product_number');
-            $data['product_type'] = $this->input->post('product_type');
-            $data['notes'] = $this->input->post('notes');
-            $data['category_id'] = $this->input->post('category_id');
-            $data['width'] = $this->input->post('width');
-            $data['height'] = $this->input->post('height');
-            $data['h_length'] = $this->input->post('h_length');
-            $data['re_demand_border'] = $this->input->post('re_demand_border');
-            $data['primary_unit_name'] = $this->input->post('primary_unit_name');
-            $data['secondary_unit_name'] = $this->input->post('secondary_unit_name');
-            $data['primary_unit_quantity'] = $this->input->post('primary_unit_quantity');
-            $data['secondary_unit_quantity'] = $this->input->post('secondary_unit_quantity');
-            $data['quantity_status'] = $this->input->post('quantity_status');
+            $this->form_validation->set_rules('product_id', 'إسم الصنف', 'required|trim|max_length[40]');
+            $this->form_validation->set_rules('product_number', 'رقم الصنف', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('product_type', 'نوع الصنف', 'required|trim');
+            $this->form_validation->set_rules('category_id', 'الفئة', 'required|trim|numeric');
+            $this->form_validation->set_rules('notes', 'ملاحظات', 'trim|max_length[100]');
+            $this->form_validation->set_rules('width', 'العرض', 'trim|max_length[20]');
+            $this->form_validation->set_rules('h_length', 'الطول', 'trim|max_length[20]');
+            $this->form_validation->set_rules('height', 'الإرتفاع', 'trim|max_length[20]');
+            $this->form_validation->set_rules('re_demand_border', 'حد إعادة الطلب', 'required|trim|max_length[15]|numeric');
+            $this->form_validation->set_rules('primary_unit_name', 'الوحدة الأساسية', 'required|trim|max_length[25]');
+            $this->form_validation->set_rules('secondary_unit_name', 'الوحدة الثانوية', 'trim|max_length[25]');
+            $this->form_validation->set_rules('primary_unit_quantity', 'رصيد أول المدة', 'trim|numeric');
+            $this->form_validation->set_rules('secondary_unit_quantity', 'كمية الوحدة الرئيسية من الوحدة الثانوية', 'trim|numeric');
 
-            $result = $this->product_model->update_product($data);
-            echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => $errorMsg));
+            } else {
+                $data['product_id'] = $this->input->post('product_id');
+                $data['product_name'] = $this->input->post('product_name');
+                $data['product_number'] = $this->input->post('product_number');
+                $data['product_type'] = $this->input->post('product_type');
+                $data['notes'] = $this->input->post('notes');
+                $data['category_id'] = $this->input->post('category_id');
+                $data['width'] = $this->input->post('width');
+                $data['height'] = $this->input->post('height');
+                $data['h_length'] = $this->input->post('h_length');
+                $data['re_demand_border'] = $this->input->post('re_demand_border');
+                $data['primary_unit_name'] = $this->input->post('primary_unit_name');
+                $data['secondary_unit_name'] = $this->input->post('secondary_unit_name');
+                $data['primary_unit_quantity'] = $this->input->post('primary_unit_quantity');
+                $data['secondary_unit_quantity'] = $this->input->post('secondary_unit_quantity');
+                $data['quantity_status'] = $this->input->post('quantity_status');
+
+                $result = $this->product_model->update_product($data);
+                if ($result)
+                    echo json_encode(array('status' => true, 'msg' => 'تم تعديل بيانات الصنف بنجاح'));
+                else
+                    echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
+            }
         } else {
             $this->load->view('webpages/404');
         }
@@ -334,7 +427,10 @@ class Product extends CI_Controller {
         if (USER_ROLE == ROLE_ONE) {
             $product_id = $this->input->post('product_id');
             $result = $this->product_model->delete_product($product_id);
-            echo json_encode($result);
+            if ($result)
+                echo json_encode(array('status' => true, 'msg' => "تم تعديل الصنف بنجاح"));
+            else
+                echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
         } else {
             $this->load->view('webpages/404');
         }
@@ -433,6 +529,8 @@ class Product extends CI_Controller {
     public function do_insert_product() {
         if (USER_ROLE == ROLE_ONE) {
             $inserts = json_decode($this->input->post('insert_orders'));
+            $vouchers_ids = ",";
+            $flag = false;
             foreach ($inserts as $item) {
                 $data['product_id'] = $item[0];
                 $data['received_from'] = $item[1];
@@ -445,8 +543,21 @@ class Product extends CI_Controller {
                 $data['received_date'] = $item[8];
                 $data['insert_number'] = $item[9];
                 $result = $this->product_model->insert_product($data);
+                if ($result != -1) {
+                    $vouchers_ids .= $result . ",";
+                    $flag = true;
+                } else if ($result == -1) {
+                    $flag = false;
+                    $result2 = $this->product_model->delete_many_inserted_products($vouchers_ids);
+                }
+                if ($flag != true)
+                    break;
             }
-            echo json_encode($result);
+            if ($flag) {
+                echo json_encode(array('status' => true, 'msg' => "تم إدخال البيانات بنجاح"));
+            } else {
+                echo json_encode(array('status' => false, 'msg' => "لم يتم إدخال البيانات هناك خطأ في البيانات المدخلة"));
+            }
         } else {
             $this->load->view('webpages/404');
         }
@@ -483,23 +594,48 @@ class Product extends CI_Controller {
      */
     public function do_insert_static_product() {
         if (USER_ROLE == ROLE_ONE) {
-            $data['product_id'] = $this->input->post('product_id');
-            $data['received_from'] = $this->input->post('received_from');
-            $data['billing_id'] = $this->input->post('billing_id');
-            $data['notes'] = $this->input->post('notes');
-            $data['quantity'] = $this->input->post('quantity');
-            $data['unit_type'] = $this->input->post('unit_type');
-            $data['unit_price'] = $this->input->post('unit_price');
-            $data['currency_type'] = $this->input->post('currency_type');
-            $data['product_status'] = $this->input->post('product_status');
-            $data['product_nature'] = $this->input->post('product_nature');
-            $data['supply_type'] = $this->input->post('supply_type');
-            $data['expire_date'] = $this->input->post('expire_date');
-            $data['serial_number'] = $this->input->post('serial_number');
-            $data['insert_number'] = $this->input->post('insert_number');
-            $result = $this->product_model->insert_static_product($data);
+            $this->form_validation->set_rules('product_id', 'إسم الصنف', 'required|trim|numeric');
+            $this->form_validation->set_rules('received_from', 'إستلمت من', 'required|trim|numeric');
+            $this->form_validation->set_rules('billing_id', 'رقم الفاتورة', 'trim|max_length[20]');
+            $this->form_validation->set_rules('notes', 'ملاحظات', 'trim|max_length[100]');
+            $this->form_validation->set_rules('quantity', 'الكمية', 'required|trim|numeric');
+            $this->form_validation->set_rules('unit_type', 'تحديد الوحدة', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('unit_price', 'سعر الوحدة', 'required|trim');
+            $this->form_validation->set_rules('currency_type', 'تحديد العملة', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('product_status', 'حالة الصنف', 'required|trim|max_length[30]');
+            $this->form_validation->set_rules('product_nature', 'طبيعة التوريد', 'required|trim|max_length[30]');
+            $this->form_validation->set_rules('supply_type', 'وقت الإرجاع', 'required|trim|max_length[20]');
+            $this->form_validation->set_rules('expire_date', 'تاريخ الإرجاع', 'trim|max_length[20]');
+            if ($this->input->post('supply_type') == 'مؤقتة')
+                $this->form_validation->set_rules('expire_date', 'تاريخ الإرجاع', 'required|max_length[20]');
+            $this->form_validation->set_rules('serial_number', 'الرقم التسلسلي', 'required|trim|max_length[25]');
+            $this->form_validation->set_rules('insert_number', 'رقم سند الإدخال', 'required|trim|max_length[25]');
 
-            echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => $errorMsg));
+            } else {
+                $data['product_id'] = $this->input->post('product_id');
+                $data['received_from'] = $this->input->post('received_from');
+                $data['billing_id'] = $this->input->post('billing_id');
+                $data['notes'] = $this->input->post('notes');
+                $data['quantity'] = $this->input->post('quantity');
+                $data['unit_type'] = $this->input->post('unit_type');
+                $data['unit_price'] = $this->input->post('unit_price');
+                $data['currency_type'] = $this->input->post('currency_type');
+                $data['product_status'] = $this->input->post('product_status');
+                $data['product_nature'] = $this->input->post('product_nature');
+                $data['supply_type'] = $this->input->post('supply_type');
+                $data['expire_date'] = $this->input->post('expire_date');
+                $data['serial_number'] = $this->input->post('serial_number');
+                $data['insert_number'] = $this->input->post('insert_number');
+
+                $result = $this->product_model->insert_static_product($data);
+                if ($result)
+                    echo json_encode(array('status' => true, 'msg' => 'تم إضافة الصنف بنجاح'));
+                else
+                    echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة تأكد من أن الرقم التسلسلي غير مكرر '));
+            }
         } else {
             $this->load->view('webpages/404');
         }
@@ -724,10 +860,28 @@ class Product extends CI_Controller {
     public function disburse_temp_supplies() {
         if (USER_ROLE == ROLE_ONE) {
             $disbursed = json_decode($this->input->post('disbursed'));
+            $orders_success = "";
+            $status = array();
             foreach ($disbursed as $data) {
                 $result = $this->product_model->disburse_temp_supplies($data);
+                if ($result != -1) {
+                    $orders_success .= $result . ",";
+                    array_push($status, 'true');
+                } else {
+                    array_push($status, 'false');
+                }
             }
-            echo json_encode($result);
+            if (in_array('false', $status)) {
+                if (in_array('true', $status))
+                    echo json_encode(array('status' => 'warning', 'msg' => "تـم صرف بعض اللوازم بنجاح وهي الصفوف رقم" . $orders_success . " عليك مراجعة باقي المدخلات والتأكد من صحتها", 'orders' => $orders_success));
+                else
+                    echo json_encode(array('status' => 'danger', 'msg' => "لم يتم صرف اللوازم هناك خطأ في البيانات المدخلة"));
+            } else if (!in_array('false', $status)) {
+                if (in_array('true', $status))
+                    echo json_encode(array('status' => 'success', 'msg' => "تم صرف جميع اللوازم بنجاح"));
+            }else {
+                echo json_encode(array('status' => 'danger', 'msg' => "لم يتم صرف اللوازم هناك خطأ في البيانات المدخلة"));
+            }
         }
     }
 
@@ -743,10 +897,26 @@ class Product extends CI_Controller {
     public function disburse_static_supplies() {
         if (USER_ROLE == ROLE_ONE) {
             $disbursed = json_decode($this->input->post('disbursed'));
+            $status = array();
             foreach ($disbursed as $data) {
                 $result = $this->product_model->disburse_static_supplies($data);
+                if ($result != 0) {
+                    array_push($status, 'true');
+                } else {
+                    array_push($status, 'false');
+                }
             }
-            echo json_encode($result);
+            if (in_array('false', $status)) {
+                if (in_array('true', $status))
+                    echo json_encode(array('status' => 'warning', 'msg' => "تـم صرف بعض اللوازم بنجاح  " . " عليك مراجعة باقي المدخلات والتأكد من صحتها"));
+                else
+                    echo json_encode(array('status' => 'danger', 'msg' => "لم يتم صرف اللوازم هناك خطأ في البيانات المدخلة"));
+            } else if (!in_array('false', $status)) {
+                if (in_array('true', $status))
+                    echo json_encode(array('status' => 'success', 'msg' => "تم صرف جميع اللوازم بنجاح"));
+            }else {
+                echo json_encode(array('status' => 'danger', 'msg' => "لم يتم صرف اللوازم هناك خطأ في البيانات المدخلة"));
+            }
         }
     }
 
@@ -947,7 +1117,10 @@ class Product extends CI_Controller {
             $data['reasons'] = $this->input->post('reasons');
             $data['company_id'] = $this->input->post('company_id');
             $result = $this->product_model->disburse_servicing($data);
-            echo json_encode($result);
+            if ($result)
+                echo json_encode(array('status' => true, 'msg' => "تم الطلب بنجاح"));
+            else
+                echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
         } else {
             $this->load->view('webpages/404');
         }
@@ -967,17 +1140,13 @@ class Product extends CI_Controller {
         if (USER_ROLE == ROLE_ONE) {
             $result['notify_orders'] = $this->product_model->getNotification();
             echo json_encode($result['notify_orders']);
-        } else {
-            $this->load->view('webpages/404');
         }
     }
-    
+
     function getNotificationsNumber() {
         if (USER_ROLE == ROLE_ONE) {
             $result['NotificationsNumber'] = $this->product_model->getNotificationsNumber();
             echo json_encode($result['NotificationsNumber']);
-        } else {
-            $this->load->view('webpages/404');
         }
     }
 

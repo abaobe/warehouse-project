@@ -70,15 +70,30 @@ class Companies extends CI_Controller {
      */
     public function do_add_company() {
         if (USER_ROLE == ROLE_ONE) {
-            $data['company_name'] = $this->input->post('company_name');
-            $data['license_number'] = $this->input->post('license_number');
-            $data['telephone'] = $this->input->post('telephone');
-            $data['mobile'] = $this->input->post('mobile');
-            $data['address'] = $this->input->post('address');
-            $data['fax_number'] = $this->input->post('fax_number');
+            $this->form_validation->set_rules('company_name', 'إسم الشركة', 'required|trim|max_length[35]');
+            $this->form_validation->set_rules('license_number', 'رقم الترخيص', 'trim|max_length[25]');
+            $this->form_validation->set_rules('telephone', 'رقم الهاتف', 'trim|max_length[30]');
+            $this->form_validation->set_rules('mobile', 'رقم الجوال', 'trim|max_length[30]');
+            $this->form_validation->set_rules('address', 'العنوان', 'required|trim|max_length[40]');
+            $this->form_validation->set_rules('fax_number', 'رقم الفاكس', 'trim|max_length[30]');
 
-            $result = $this->company_model->add_company($data);
-            echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => $errorMsg));
+            } else {
+                $data['company_name'] = $this->input->post('company_name');
+                $data['license_number'] = $this->input->post('license_number');
+                $data['telephone'] = $this->input->post('telephone');
+                $data['mobile'] = $this->input->post('mobile');
+                $data['address'] = $this->input->post('address');
+                $data['fax_number'] = $this->input->post('fax_number');
+
+                $result = $this->company_model->add_company($data);
+                if ($result)
+                    echo json_encode(array('status' => true, 'msg' => 'تم إضافة الصنف بنجاح'));
+                else
+                    echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة تأكد من أن الرقم التسلسلي غير مكرر '));
+            }
         }
     }
 
@@ -133,7 +148,10 @@ class Companies extends CI_Controller {
         if (USER_ROLE == ROLE_ONE) {
             $data['company_id'] = $this->input->post('company_id');
             $result = $this->company_model->delete_company($data);
-            echo json_encode($result);
+            if ($result)
+                echo json_encode(array('status' => true, 'msg' => "تم حذف الشركة بنجاح"));
+            else
+                echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة أو قد يكون هناك أصناف مدرجة لهذة الشركة'));
         }
     }
 
@@ -149,16 +167,31 @@ class Companies extends CI_Controller {
      */
     public function do_update_company() {
         if (USER_ROLE == ROLE_ONE) {
-            $data['company_id'] = $this->input->post('company_id');
-            $data['company_name'] = $this->input->post('company_name');
-            $data['license_number'] = $this->input->post('license_number');
-            $data['telephone'] = $this->input->post('telephone');
-            $data['mobile'] = $this->input->post('mobile');
-            $data['address'] = $this->input->post('address');
-            $data['fax_number'] = $this->input->post('fax_number');
+            $this->form_validation->set_rules('company_name', 'إسم الشركة', 'required|trim|max_length[35]');
+            $this->form_validation->set_rules('license_number', 'رقم الترخيص', 'trim|max_length[25]');
+            $this->form_validation->set_rules('telephone', 'رقم الهاتف', 'trim|max_length[30]');
+            $this->form_validation->set_rules('mobile', 'رقم الجوال', 'trim|max_length[30]');
+            $this->form_validation->set_rules('address', 'العنوان', 'required|trim|max_length[40]');
+            $this->form_validation->set_rules('fax_number', 'رقم الفاكس', 'trim|max_length[30]');
 
-            $result = $this->company_model->update_company($data);
-            echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => $errorMsg));
+            } else {
+                $data['company_id'] = $this->input->post('company_id');
+                $data['company_name'] = $this->input->post('company_name');
+                $data['license_number'] = $this->input->post('license_number');
+                $data['telephone'] = $this->input->post('telephone');
+                $data['mobile'] = $this->input->post('mobile');
+                $data['address'] = $this->input->post('address');
+                $data['fax_number'] = $this->input->post('fax_number');
+
+                $result = $this->company_model->update_company($data);
+                if ($result)
+                    echo json_encode(array('status' => true, 'msg' => 'تم إضافة الشركة بنجاح'));
+                else
+                    echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
+            }
         }
     }
 

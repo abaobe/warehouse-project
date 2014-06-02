@@ -93,7 +93,7 @@
                                         </div>
                                         <div id="main">
                                             <div class="control-group">
-                                                <label class="control-label">إسم المحكمة/الإدارة</label>
+                                                <label class="control-label">إسم الإدارة</label>
                                                 <div class="controls">
                                                     <input type="text" id="department_name" class="span6" />
                                                 </div>
@@ -123,9 +123,9 @@
                                                 </div>
                                             </div>
                                             <div class="control-group">
-                                                <label class="control-label">إسم المحكمة</label>
+                                                <label class="control-label">إسم الإدارة</label>
                                                 <div class="controls">
-                                                    <select id="parent_id" class="span6 chosen" data-placeholder="المحكمة التي تنتمي إليها" tabindex="1">
+                                                    <select id="parent_id" onchange="check_parent()" class="span6 chosen" data-placeholder="المحكمة التي تنتمي إليها" tabindex="1">
                                                         <option value=""></option>
                                                         <?php
                                                         $current_main = "";
@@ -134,14 +134,15 @@
                                                                 $current_main = $department['ROOT_NAME'];
                                                                 ?>
                                                                 <option class="text-success bold large" value="<?= $department['ROOT_ID'] ?>"><?= $department['ROOT_NAME'] ?></option>
-                                                                <option id="test"><?php if ($department['DOWN1_NAME'] != null) echo $department['DOWN1_NAME'] ?></option>
+                                                                <option value="not-accepted"><?php if ($department['DOWN1_NAME'] != null) echo '>'.$department['DOWN1_NAME'] ?></option>
                                                             <?php } else { ?>
-                                                                <option value="<?= $department['DOWN1_ID'] ?>"><?php if ($department['DOWN1_NAME'] != null) echo $department['DOWN1_NAME'] ?></option>
+                                                                <option value="not-accepted"><?php if ($department['DOWN1_NAME'] != null) echo '>'.$department['DOWN1_NAME'] ?></option>
                                                                 <?php
                                                             }
                                                         }
                                                         ?>
                                                     </select>
+                                                    <span class="help-inline">يجب إختيار إسم الإدارة فقط</span>
                                                 </div>
                                             </div>
                                             <div class="control-group">
@@ -216,6 +217,15 @@
                 $('#main').hide();
                 $('#sub').hide();
             });
+            
+            function check_parent(){
+                var x = $('#parent_id').val();
+                var y = $( "#parent_id option:selected" ).text();
+                if (y.indexOf(">") !=-1) {
+                     $('#parent_id').val('').trigger('liszt:updated');;
+                }
+            }
+            
             var checked;
             function checkType() {
                 if ($("input:radio[name=insertType]:checked").val() == 'main') {
@@ -261,15 +271,17 @@
                     },
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إضافة الدائرة  بنجاح");
-                            $('#reset').click();
-                        }else{
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        if (json['status'] == true) {
+                            $('#status').removeClass().addClass('alert alert-success');
+                            $('#message').html(json['msg']);
+                        } else if(json['status'] == false){
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').html(json['msg']);
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });

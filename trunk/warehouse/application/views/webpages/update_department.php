@@ -89,7 +89,7 @@
                                                     محكمة 
                                                 </label>
                                                 <label class="radio">
-                                                    <input type="radio" name="insertType" value="sub" checked="" onclick="checkType()" />
+                                                    <input type="radio" name="insertType" value="sub" checked="checked" onclick="checkType()" />
                                                     دائرة 
                                                 </label>
                                             </div>
@@ -138,15 +138,16 @@
                                                                 ?>
                                                                 <option <?php if (!(strcmp($department_info[0]['ROOT_ID'],$department['ROOT_ID']))) {echo "selected=\"selected\"";} ?> class="text-success bold large" value="<?= $department['ROOT_ID'] ?>"><?= $department['ROOT_NAME'] ?></option>
                                                                 <?php if ($department['DOWN1_NAME'] != null){ ?>
-                                                                <option value="<?= $department['DOWN1_ID'] ?>"><?php if ($department['DOWN1_NAME'] != null) echo '>'.$department['DOWN1_NAME'] ?></option>
+                                                                <option value="not-accepted"><?php if ($department['DOWN1_NAME'] != null) echo '>'.$department['DOWN1_NAME'] ?></option>
                                                                 <?php }?>
                                                             <?php } else { ?>
-                                                                <option value="<?= $department['DOWN1_ID'] ?>"><?php if ($department['DOWN1_NAME'] != null) echo '>'.$department['DOWN1_NAME'] ?></option>
+                                                                <option value="not-accepted"><?php if ($department['DOWN1_NAME'] != null) echo '>'.$department['DOWN1_NAME'] ?></option>
                                                                 <?php
                                                             }
                                                         }
                                                         ?>
                                                     </select>
+                                                    <span class="help-inline">يجب إختيار إسم الإدارة فقط</span>
                                                 </div>
                                             </div>
                                             <div class="control-group">
@@ -230,7 +231,7 @@
                 }
             }
             
-            var checked;
+            var checked= 'sub';
             function checkType() {
                 if ($("input:radio[name=insertType]:checked").val() == 'main') {
                     checked = 'main';
@@ -278,15 +279,17 @@
                     },
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إضافة الدائرة  بنجاح");
-                            $('#reset').click();
-                        }else{
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        if (json['status'] == true) {
+                            $('#status').removeClass().addClass('alert alert-success');
+                            $('#message').html(json['msg']);
+                        } else if(json['status'] == false){
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').html(json['msg']);
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });

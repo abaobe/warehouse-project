@@ -119,16 +119,16 @@
                                                             <span class="text-info bold">مواد دائـمة</span>
                                                     <?php }?>
                                                     </td>
-                                                    <td><?= $value['NOTES'] ?></td>
+                                                    <td><?= substr($value['NOTES'], 0, 10).'...' ?></td>
                                                     <td>
                                                         <?php if(USER_ROLE == ROLE_ONE) {?>
                                                         <a href='<?php echo base_url() . "product/update_product/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
                                                         <a href="#" onclick="delete_product(<?= $value['PRODUCT_ID'] ?>,this);return false;" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
                                                         <?php }?>
                                                         <?php if($value['PRODUCT_TYPE'] == 1){ ?>
-                                                            <a href='<?php echo base_url() . "product/inserted_temp_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-th-list"> حركات الصنف</i></a>
+                                                            <a href='<?php echo base_url() . "product/inserted_temp_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple small"><i class="icon-th-list"> حركات الصنف</i></a>
                                                         <?php } else if($value['PRODUCT_TYPE'] ==2){?>    
-                                                            <a href='<?php echo base_url() . "product/inserted_static_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple"><i class="icon-th-list"> حركات الصنف</i></a>
+                                                            <a href='<?php echo base_url() . "product/inserted_static_prod/" . $value['PRODUCT_ID']; ?>' class="btn mini purple small"><i class="icon-th-list"> حركات الصنف</i></a>
                                                         <?php }?>
                                                     </td>
                                                 </tr>
@@ -183,15 +183,18 @@
                             data: {product_id: product_id},
                             dataType: "json",
                             success: function(json) {
-                                if(json == 1){
+                                if (json['status'] == true) {
                                     $(current).parents('tr').remove();
-                                    $('#status').removeClass('alert-error').addClass('alert alert-success');
-                                    $('#message').text("تم تعديل الصنف بنجاح");
-                                }else if(json == 0){
-                                    $('#status').addClass('alert alert-error');
-                                    $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");  
+                                    $('#status').removeClass().addClass('alert alert-success');
+                                    $('#message').html(json['msg']);
+                                } else if(json['status'] == false){
+                                    $('#status').removeClass().addClass('alert alert-error');
+                                    $('#message').html(json['msg']);
                                 }
-                            }, error: function() {
+                            },complete: function(){
+                                App.scrollTo();
+                            },error: function() {
+                                $('#status').removeClass().addClass('alert alert-error');
                                 $('#message').text("هناك خطأ في تخزين البيانات");
                             }
                         });

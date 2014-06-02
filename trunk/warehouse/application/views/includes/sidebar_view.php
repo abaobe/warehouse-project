@@ -19,6 +19,7 @@
             </a>
             <ul class="sub">
                 <li><a class="" href="<?php echo base_url() . "product/main_page"; ?>">الصفحة الرئيسية</a></li>
+                <li><a class="" href="<?php echo base_url() . "product/statistics"; ?>">الصفحة الرئيسية</a></li>
             </ul>
         </li>
         <?php if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO || USER_ROLE == ROLE_THREE) { ?>
