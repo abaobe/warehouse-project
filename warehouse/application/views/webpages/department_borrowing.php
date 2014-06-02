@@ -170,10 +170,13 @@
                                 $('#message').html('<b>تم الطلب بنجاح :  يجب عليك إرجاع هذا الصنف إلى أمين المخزن </b>');
                                 $(current).parent().empty().html('<span class="label label-warning"><b>بإنتظـار تأكيد المسؤول</b></span>');
                             } else {
-                                $('#status').addClass('alert alert-error');
-                                $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                                $('#status').removeClass().addClass('alert alert-error');
+                                $('#message').text("يجب عليك التأكد من البيانات المدخلة");
                             }
-                        }, error: function() {
+                        },complete: function(){
+                            App.scrollTo();
+                        },error: function() {
+                            $('#status').removeClass().addClass('alert alert-error');
                             $('#message').text("هناك خطأ في تخزين البيانات");
                         }
                     });

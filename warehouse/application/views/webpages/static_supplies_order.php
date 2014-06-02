@@ -330,7 +330,7 @@
                     dataType: "json",
                     success: function(json) {
                         if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
+                            $('#status').removeClass().addClass('alert alert-success');
                             $('#message').text('تم إرسال الطلب بنجاح');
                             $('tbody[id^=added_products]').empty().append('<tr>'
                                     + '<td colspan="6"><button type="button" id="final_add" class="btn btn-success" onclick="supply_order()">إعتماد نهائي</button></td>'
@@ -339,10 +339,13 @@
                             data.length = 0;
                             index = 0;
                         } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').text("يجب عليك التأكد من البيانات المدخلة");
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });
@@ -357,6 +360,7 @@
                         $('#order_number').val(json);
                         order_number = json;
                     }, error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("خطأ في جلب رقم الطلب");
                     }
                 });

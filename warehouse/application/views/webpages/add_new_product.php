@@ -15,9 +15,9 @@
         <link href="<?php echo base_url(); ?>resource/css/style.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
-        <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.css" rel="stylesheet" type="text/css"/>
+        <link href="<?php echo base_url(); ?>resource/assets/custombox/reveal.css" type="text/css" rel="stylesheet">
     </head>
     <!-- END HEAD -->
     <!-- BEGIN BODY -->
@@ -126,11 +126,11 @@
                                             <label class="control-label">هل تريد إظهار الكمية للدوائر</label>
                                             <div class="controls">
                                                 <label class="radio">
-                                                    <input type="radio" name="quntity_status" value="visible" checked/>
+                                                    <input type="radio" name="quantity_status" value="visible" checked/>
                                                     إظهار
                                                 </label>
                                                 <label class="radio">
-                                                    <input type="radio" name="quntity_status" value="invisible" />
+                                                    <input type="radio" name="quantity_status" value="invisible" />
                                                     إخفاء
                                                 </label>
                                             </div>
@@ -142,7 +142,7 @@
                                             </div>
                                         </div>
                                         <div class="control-group">
-                                            <label class="control-label">الفئةوالفرع التي ينتمي إليها</label>
+                                            <label class="control-label">الفئة والفرع التي ينتمي إليها</label>
                                             <div class="controls">
                                                 <select id="category_id" class="span6 chosen" data-placeholder="الفئة التي ينتمي إليها" tabindex="1">
                                                     <option value=""></option>
@@ -189,6 +189,8 @@
                 <!-- END PAGE CONTAINER-->
             </div>
             <!-- END PAGE -->
+            <div id="myModal" class="reveal-modal loadImage small">
+            </div>
         </div>
         <!-- END CONTAINER -->
         <!-- BEGIN FOOTER -->
@@ -207,6 +209,7 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/custombox/jquery.reveal.js"></script>
         <script>
             jQuery(document).ready(function() {
                 // initiate layout and plugins
@@ -214,6 +217,8 @@
             });
             
             function add_product() {
+                $('#myModal').html('<img src="<?php echo base_url(); ?>resource/assets/pre-loader/loaderbg.gif" id="loading_image">');
+                 $('#myModal').reveal($(this).data());
                 $.ajax({
                     type: "POST",
                     url: '<?php echo base_url() . "product/do_add_product/"; ?>',
@@ -231,19 +236,22 @@
                         secondary_unit_name: $('#secondary_unit_name').val(),
                         primary_unit_quantity: $('#primary_unit_quantity').val(),
                         secondary_unit_quantity: $('#secondary_unit_quantity').val(),
-                        quantity_status: $('#quantity_status').val()
+                        quantity_status: $('input[name="quantity_status"]:checked').val()
                     },
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إضافة الصنف بنجاح");
-                            $('#reset').click();
-                        } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        if (json['status'] == true) {
+                            $('#status').removeClass().addClass('alert alert-success');
+                            $('#message').html(json['msg']);
+                        } else if(json['status'] == false){
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').html(json['msg']);
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        $('#myModal').trigger('reveal:close');
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });

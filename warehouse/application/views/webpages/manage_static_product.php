@@ -90,7 +90,6 @@
                                                 <th class="hidden-phone">السعر</th>
                                                 <th class="hidden-phone">طبيعة الصنف</th>
                                                 <th class="hidden-phone">حالة الصنف</th>
-                                                <th class="hidden-phone">المدة الزمنية</th>
                                                 <th class="hidden-phone">تاريخ الإنتهاء</th>
                                                 <th class="hidden-phone">الرقم التسلسلي</th>
                                                 <th class="hidden-phone">ملاحظات</th>
@@ -109,15 +108,14 @@
                                                     <td class="hidden-phone"><?= $value['UNIT_PRICE'].' '.$value['CURRENCY_TYPE'] ?></td>
                                                     <td class="hidden-phone"><?= $value['PRODUCT_NATURE'] ?></td>
                                                     <td class="hidden-phone"><?= $value['PRODUCT_STATUS'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['SUPPLY_TYPE'] ?></td>
                                                     <td class="hidden-phone"><?= $value['EXPIRE_DATE'] ?></td>
                                                     <td class="hidden-phone"><?= $value['SERIAL_NUMBER'] ?></td>
-                                                    <td class="hidden-phone"><?= $value['NOTES'] ?></td>
+                                                    <td class="hidden-phone"><?= substr($value['NOTES'], 0, 10).'...' ?></td>
                                                     <td class="hidden-phone">
                                                         <?php if($value['RESERVE_STATUS'] == 'متاح'){ ?>
                                                         <a href='<?php echo base_url() . "product/update_static_product/" . $value['VOUCHER_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
                                                         <a id="delete" href="javascript:delete_inserted_product(<?= $value['VOUCHER_ID'] ?>)" class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
-                                                        <a id="temporary_disburse" href="javascript:temporary_disburse(<?= $value['VOUCHER_ID'] ?>)" class="btn mini purple"><i class="icon-magnet"></i> إخراج مؤقت</a>
+                                                        <a id="temporary_disburse" href="javascript:temporary_disburse(<?= $value['VOUCHER_ID'] ?>)" class="btn mini purple small"><i class="icon-magnet"></i> إخراج مؤقت</a>
                                                         <?php }else if($value['RESERVE_STATUS'] == 'محجوز'){ echo '<span class="label label-warning">محجوز</span>';?>
                                                         <?php }else if($value['RESERVE_STATUS'] == 'تالف'){echo '<span class="label label-danger">تالف</span>';?>
                                                         <?php }else if($value['RESERVE_STATUS'] == 'إخراج مؤقت'){echo '<span class="label label-info">إخراج مؤقت</span>';?>
@@ -218,7 +216,8 @@
                                 }
                                 isLoaded = true;
                             }
-                        }, error: function() {
+                        },error: function() {
+                            $('#status').removeClass().addClass('alert alert-error');
                             $('#message').text("هناك خطأ في تخزين البيانات");
                         }
                     });
@@ -248,17 +247,18 @@
                     },
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم الطلب بنجاح");
+                        if (json['status'] == true) {
+                            $('#status').removeClass().addClass('alert alert-success');
+                            $('#message').html(json['msg']);
                             $('#reset').click();
-                            vouchers = [];
-                            vouchers.length = 0;
-                        } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        } else if(json['status'] == false){
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').html(json['msg']);
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });

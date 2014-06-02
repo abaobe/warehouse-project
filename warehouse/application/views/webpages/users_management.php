@@ -19,7 +19,7 @@
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link  href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
         <link href="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.css" type="text/css" rel="stylesheet">
-        <link href="<?php echo base_url(); ?>resource/assets/custombox/reveal.css" type="text/css" rel="stylesheet">	
+        <link href="<?php echo base_url(); ?>resource/assets/custombox/reveal.css" type="text/css" rel="stylesheet">
     </head>
     <!-- END HEAD -->
     <!-- BEGIN BODY -->
@@ -189,15 +189,17 @@
                             data: {user_id: user_id},
                             dataType: "json",
                             success: function(json) {
-                                if(json == 1){
-                                    $(current).parents('tr').remove();
-                                    $('#status').removeClass('alert-error').addClass('alert alert-success');
-                                    $('#message').text("تم حذف المستخدم بنجاح");
-                                }else if(json == 0){
-                                    $('#status').addClass('alert alert-error');
-                                    $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");  
+                                if (json['status'] == true) {
+                                    $('#status').removeClass().addClass('alert alert-success');
+                                    $('#message').html(json['msg']);
+                                } else if(json['status'] == false){
+                                    $('#status').removeClass().addClass('alert alert-error');
+                                    $('#message').html(json['msg']);
                                 }
-                            }, error: function() {
+                            },complete: function(){
+                                App.scrollTo();
+                            },error: function() {
+                                $('#status').removeClass().addClass('alert alert-error');
                                 $('#message').text("هناك خطأ في تخزين البيانات");
                             }
                         });

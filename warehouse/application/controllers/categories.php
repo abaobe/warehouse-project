@@ -73,12 +73,24 @@ class categories extends CI_Controller {
      */
     public function do_add_category() {
         if (USER_ROLE == ROLE_ONE) {
-            $data['category_name'] = $this->input->post('category_name');
-            $data['category_description'] = $this->input->post('category_description');
-            $data['subs'] = $this->input->post('subs');
+            $this->form_validation->set_rules('category_name', 'إسم الفئة', 'required|trim|max_length[50]');
+            $this->form_validation->set_rules('category_description', 'وصف الفئة', 'trim|max_length[100]');
+            $this->form_validation->set_rules('subs', 'الفئات الفرعية', 'trim');
 
-            $result = $this->category_model->add_category($data);
-            echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => $errorMsg));
+            } else {
+                $data['category_name'] = $this->input->post('category_name');
+                $data['category_description'] = $this->input->post('category_description');
+                $data['subs'] = $this->input->post('subs');
+
+                $result = $this->category_model->add_category($data);
+                if ($result)
+                    echo json_encode(array('status' => true, 'msg' => 'تم إضافة الفئة بنجاح'));
+                else
+                    echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
+            }
         }
     }
 
@@ -115,13 +127,25 @@ class categories extends CI_Controller {
      */
     public function do_update_category() {
         if (USER_ROLE == ROLE_ONE) {
-            $data['category_id'] = $this->input->post('category_id');
-            $data['category_name'] = $this->input->post('category_name');
-            $data['category_description'] = $this->input->post('category_description');
-            $data['parent_id'] = $this->input->post('parent_id');
+            $this->form_validation->set_rules('category_name', 'إسم الفئة', 'required|trim|max_length[50]');
+            $this->form_validation->set_rules('category_description', 'وصف الفئة', 'trim|max_length[100]');
+            $this->form_validation->set_rules('parent_id', 'الفئة الرئيسية', 'required|trim|numeric');
 
-            $result = $this->category_model->update_category($data);
-            echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => $errorMsg));
+            } else {
+                $data['category_id'] = $this->input->post('category_id');
+                $data['category_name'] = $this->input->post('category_name');
+                $data['category_description'] = $this->input->post('category_description');
+                $data['parent_id'] = $this->input->post('parent_id');
+
+                $result = $this->category_model->update_category($data);
+                if ($result)
+                    echo json_encode(array('status' => true, 'msg' => 'تم إضافة الفئة بنجاح'));
+                else
+                    echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
+            }
         }
     }
 
@@ -139,7 +163,10 @@ class categories extends CI_Controller {
         if (USER_ROLE == ROLE_ONE) {
             $data['category_id'] = $this->input->post('category_id');
             $result = $this->category_model->delete_category($data);
-            echo json_encode($result);
+            if ($result)
+                echo json_encode(array('status' => true, 'msg' => "تم حذف الفئة بنجاح"));
+            else
+                echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة أو قد يكون هناك أصناف مدرجة لهذة الفئة'));
         }
     }
 
@@ -155,11 +182,22 @@ class categories extends CI_Controller {
      */
     public function do_add_subCategory() {
         if (USER_ROLE == ROLE_ONE) {
-            $data['category_name'] = $this->input->post('category_name');
-            $data['parent_id'] = $this->input->post('parent_id');
+            $this->form_validation->set_rules('category_name', 'إسم الفئة', 'required|trim|max_length[50]');
+            $this->form_validation->set_rules('parent_id', 'الفئة الرئيسية', 'required|trim|numeric');
 
-            $result = $this->category_model->add_subCategory($data);
-            echo json_encode($result);
+            if ($this->form_validation->run() == FALSE) {
+                $errorMsg = validation_errors();
+                echo json_encode(array('status' => false, 'msg' => $errorMsg));
+            } else {
+                $data['category_name'] = $this->input->post('category_name');
+                $data['parent_id'] = $this->input->post('parent_id');
+
+                $result = $this->category_model->add_subCategory($data);
+                if ($result)
+                    echo json_encode(array('status' => true, 'msg' => 'تم إضافة الفئة بنجاح'));
+                else
+                    echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
+            }
         }
     }
 

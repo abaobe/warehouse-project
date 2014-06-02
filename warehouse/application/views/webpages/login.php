@@ -5,7 +5,7 @@
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title>Login page</title>
+        <title>تسجيل الدخول</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -24,7 +24,7 @@
         <div class="login-header">
             <!-- BEGIN LOGO -->
             <div id="logo" class="center">
-                <img src="<?php echo base_url(); ?>resource/img/logo.png" alt="logo" class="center" />
+                <img src="<?php echo base_url(); ?>resource/img/logo.png" width="50" height="50" alt="logo" class="center" />
             </div>
             <!-- END LOGO -->
         </div>
@@ -116,14 +116,14 @@
                     success: function(json) {
                         if (json['status'] == 'true') {
                             $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text(json['msg']);
+                            $('#message').html(json['msg']);
                             window.location.assign('<?php echo base_url() . "product/main_page/"; ?>');
                         } else if(json['status'] == 'false'){
                             $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text(json['msg']);
+                            $('#message').removeClass('alert-success').html(json['msg']);
                         } else if(json['status'] == 'blocked'){
                             $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text(json['msg']);
+                            $('#message').removeClass('alert-success').html(json['msg']);
                         }
                     }, error: function() {
                         $('#message').text("هناك خطأ في تخزين البيانات");

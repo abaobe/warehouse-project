@@ -12,7 +12,7 @@ Website: http://thevectorlab.net/
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title> Admin Lab Dashboard</title>
+        <title> الصفحة الرئيسية</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -50,17 +50,16 @@ Website: http://thevectorlab.net/
                             <!-- END THEME CUSTOMIZER-->
                             <!-- BEGIN PAGE TITLE & BREADCRUMB-->
                             <h3 class="page-title">
-                                <small> General Information </small>
-                                Dashboard
+                                الصفحة الرئيسية
                             </h3>
                             <ul class="breadcrumb">
                                 <li>
                                     <a href="#"><i class="icon-home"></i></a><span class="divider">&nbsp;</span>
                                 </li>
                                 <li>
-                                    <a href="#">Admin Lab</a> <span class="divider">&nbsp;</span>
+                                    <a href="#">إحصائيات</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">Dashboard</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">الصفحة الرئيسية</a><span class="divider-last">&nbsp;</span></li>
                                 <li class="pull-right search-wrap">
                                     <form class="hidden-phone">
                                         <div class="search-input-area">
@@ -87,7 +86,7 @@ Website: http://thevectorlab.net/
                                 <!-- BEGIN SITE VISITS PORTLET-->
                                 <div class="widget">
                                     <div class="widget-title">
-                                        <h4><i class="icon-bar-chart"></i> Line Chart</h4>
+                                        <h4><i class="icon-bar-chart"></i> معدل تزايد الطلب على الأصناف</h4>
                                         <span class="tools">
                                             <a href="javascript:;" class="icon-chevron-down"></a>
                                             <a href="javascript:;" class="icon-remove"></a>
@@ -108,7 +107,7 @@ Website: http://thevectorlab.net/
                                 <!-- BEGIN SERVER LOAD PORTLET-->
                                 <div class="widget">
                                     <div class="widget-title">
-                                        <h4><i class="icon-umbrella"></i> Live Chart</h4>
+                                        <h4><i class="icon-umbrella"></i> مدى إستخدام النظام</h4>
                                         <span class="tools">
                                             <a href="javascript:;" class="icon-chevron-down"></a>
                                             <a href="javascript:;" class="icon-remove"></a>

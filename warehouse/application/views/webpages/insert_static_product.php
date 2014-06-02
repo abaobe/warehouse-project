@@ -256,19 +256,22 @@
                         product_nature: $('#product_nature').val(),
                         supply_type: $('#supply_type').val(),
                         expire_date: $('#expire_date').val(),
-                        serial_number: $('#serial_number').val()
+                        serial_number: $('#serial_number').val(),
+                        insert_number: $('#insert_number').val()
                     },
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تم إدخال الكمية بنجاح");
-                            //$('#reset').click();
-                        } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                        if (json['status'] == true) {
+                            $('#status').removeClass().addClass('alert alert-success');
+                            $('#message').html(json['msg']);
+                        } else if(json['status'] == false){
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').html(json['msg']);
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });
@@ -304,6 +307,7 @@
                         $('#insert_number').val(json);
                         insert_number = json;
                     }, error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("خطأ في جلب رقم السند");
                     }
                 });

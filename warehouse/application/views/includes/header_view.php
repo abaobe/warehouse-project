@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <!-- BEGIN LOGO -->
             <a class="brand" href="">
-                <img src="<?php echo base_url(); ?>resource/img/logo.png" alt="Admin Lab" />
+                <img src="<?php echo base_url(); ?>resource/img/logo-panel.png" alt="Admin Lab" />
             </a>
             <!-- END LOGO -->
             <!-- BEGIN RESPONSIVE MENU TOGGLER -->
@@ -20,7 +20,7 @@
                 <ul class="nav top-menu">
                     <!-- BEGIN SETTINGS -->
                     <li class="dropdown">
-                        <a class="dropdown-toggle element" data-placement="bottom" data-toggle="tooltip" href="#" data-original-title="Settings">
+                        <a class="dropdown-toggle element" data-placement="bottom" data-toggle="tooltip" href="#" data-original-title="إعدادات">
                             <i class="icon-cog"></i>
                         </a>
                     </li>
@@ -33,17 +33,17 @@
                         </a>
                         <ul class="dropdown-menu extended inbox">
                             <li>
-                                <p>You have 5 new messages</p>
+                                <p>يوجد 5 رسائل غير مقروؤة في البريد</p>
                             </li>
                             <li>
                                 <a href="#">
                                     <span class="photo"><img src="<?php echo base_url(); ?>resource/img/avatar-mini.png" alt="avatar" /></span>
                                     <span class="subject">
-                                        <span class="from">Dulal Khan</span>
-                                        <span class="time">Just now</span>
+                                        <span class="from">حازم الغلاييني</span>
+                                        <span class="time">قبل ساعة</span>
                                     </span>
                                     <span class="message">
-                                        Hello, this is an example messages please check
+                                        إستفسار بخصوص الأصناف طويلة الأجل
                                     </span>
                                 </a>
                             </li>
@@ -51,11 +51,11 @@
                                 <a href="#">
                                     <span class="photo"><img src="<?php echo base_url(); ?>resource/img/avatar-mini.png" alt="avatar" /></span>
                                     <span class="subject">
-                                        <span class="from">Rafiqul Islam</span>
-                                        <span class="time">10 mins</span>
+                                        <span class="from">حازم الغلاييني</span>
+                                        <span class="time">قبل ساعة</span>
                                     </span>
                                     <span class="message">
-                                        Hi, Mosaddek Bhai how are you ?
+                                        إستفسار بخصوص الأصناف طويلة الأجل
                                     </span>
                                 </a>
                             </li>
@@ -63,11 +63,11 @@
                                 <a href="#">
                                     <span class="photo"><img src="<?php echo base_url(); ?>resource/img/avatar-mini.png" alt="avatar" /></span>
                                     <span class="subject">
-                                        <span class="from">Sumon Ahmed</span>
-                                        <span class="time">3 hrs</span>
+                                        <span class="from">حازم الغلاييني</span>
+                                        <span class="time">قبل ساعة</span>
                                     </span>
                                     <span class="message">
-                                        This is awesome dashboard templates
+                                        إستفسار بخصوص الأصناف طويلة الأجل
                                     </span>
                                 </a>
                             </li>
@@ -75,16 +75,25 @@
                                 <a href="#">
                                     <span class="photo"><img src="<?php echo base_url(); ?>resource/img/avatar-mini.png" alt="avatar" /></span>
                                     <span class="subject">
-                                        <span class="from">Dulal Khan</span>
-                                        <span class="time">Just now</span>
+                                        <span class="from">حازم الغلاييني</span>
+                                        <span class="time">قبل ساعة</span>
                                     </span>
                                     <span class="message">
-                                        Hello, this is an example messages please check
+                                        إستفسار بخصوص الأصناف طويلة الأجل
                                     </span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#">See all messages</a>
+                                <a href="#">
+                                    <span class="photo"><img src="<?php echo base_url(); ?>resource/img/avatar-mini.png" alt="avatar" /></span>
+                                    <span class="subject">
+                                        <span class="from">حازم الغلاييني</span>
+                                        <span class="time">قبل ساعة</span>
+                                    </span>
+                                    <span class="message">
+                                        إستفسار بخصوص الأصناف طويلة الأجل
+                                    </span>
+                                </a>
                             </li>
                         </ul>
                     </li>
@@ -110,12 +119,12 @@
                     <!-- BEGIN SUPPORT -->
                     <li class="dropdown mtop5">
 
-                        <a class="dropdown-toggle element" data-placement="bottom" data-toggle="tooltip" href="#" data-original-title="Chat">
+                        <a class="dropdown-toggle element" data-placement="bottom" data-toggle="tooltip" href="#" data-original-title="محادثة">
                             <i class="icon-comments-alt"></i>
                         </a>
                     </li>
                     <li class="dropdown mtop5">
-                        <a class="dropdown-toggle element" data-placement="bottom" data-toggle="tooltip" href="#" data-original-title="Help">
+                        <a class="dropdown-toggle element" data-placement="bottom" data-toggle="tooltip" href="#" data-original-title="مساعدة">
                             <i class="icon-headphones"></i>
                         </a>
                     </li>

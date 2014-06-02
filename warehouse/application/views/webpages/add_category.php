@@ -201,7 +201,6 @@
 
             function add_category() {
                 if ($("input:radio[name=category_type]:checked").val() == 'main') {
-
                     var subs = ",";
                     for (var i = 1; i < count; i++) {
                         if($("#sub_" + i).val() != null || $("#sub_" + i).val() !='')
@@ -217,16 +216,17 @@
                         },
                         dataType: "json",
                         success: function(json) {
-                            if (json == 1) {
-                                $('#status').removeClass('alert-error').addClass('alert alert-success');
-                                $('#message').text("تم إضافة الفئة  بنجاح");
-                                $('#reset').click();
-                                count = 0;
-                            } else {
-                                $('#status').addClass('alert alert-error');
-                                $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                            if (json['status'] == true) {
+                                $('#status').removeClass().addClass('alert alert-success');
+                                $('#message').html(json['msg']);
+                            } else if(json['status'] == false){
+                                $('#status').removeClass().addClass('alert alert-error');
+                                $('#message').html(json['msg']);
                             }
-                        }, error: function() {
+                        },complete: function(){
+                            App.scrollTo();
+                        },error: function() {
+                            $('#status').removeClass().addClass('alert alert-error');
                             $('#message').text("هناك خطأ في تخزين البيانات");
                         }
                     });
@@ -241,15 +241,17 @@
                         },
                         dataType: "json",
                         success: function(json) {
-                            if (json == 1) {
-                                $('#status').removeClass('alert-error').addClass('alert alert-success');
-                                $('#message').text("تم إضافة الفئة  بنجاح");
-                                $('#reset').click();
-                            } else {
-                                $('#status').addClass('alert alert-error');
-                                $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                            if (json['status'] == true) {
+                                $('#status').removeClass().addClass('alert alert-success');
+                                $('#message').html(json['msg']);
+                            } else if(json['status'] == false){
+                                $('#status').removeClass().addClass('alert alert-error');
+                                $('#message').html(json['msg']);
                             }
-                        }, error: function() {
+                        },complete: function(){
+                            App.scrollTo();
+                        },error: function() {
+                            $('#status').removeClass().addClass('alert alert-error');
                             $('#message').text("هناك خطأ في تخزين البيانات");
                         }
                     });

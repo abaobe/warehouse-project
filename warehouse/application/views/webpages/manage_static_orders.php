@@ -226,7 +226,7 @@
                 var orderID= $(current).parents('tr').attr('orderID');
                 for (var i=0; i < info.length; i++){
                     if(info[i][0] === orderID){
-                        delete info[i];
+                        info.splice(i, 1);
                     }
                 }
             }
@@ -245,7 +245,6 @@
             
             function getInserted(product_id,current){
                 currentProduct = current;
-//                $(currentProduct).parents('td').children('#clear').hide();
                 $.ajax({
                     type: "POST",
                     url: '<?php echo base_url() . "product/spec_inserted_info/" ?>',
@@ -255,8 +254,8 @@
                         if (json) {
                             $("#inserted").html(json);
                         } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').text("يجب عليك التأكد من البيانات المدخلة");
                         }
                     }, error: function() {
                         $('#message').text("هناك خطأ في تخزين البيانات");
@@ -265,27 +264,49 @@
             }
             
             function supply_order() {
-                $.ajax({
-                    type: "POST",
-                    url: '<?php echo base_url() . "product/disburse_static_supplies/"; ?>',
-                    data: {disbursed: JSON.stringify(info)
-                    },
-                    dataType: "json",
-                    success: function(json) {
-                        if (json == 1) {
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text('تـم الصرف بنجاح');
-                            info = [];
-                            info.length = 0;
-                            index = 0;
-                        } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                var newArray= new Array();
+                for (var i = 0; i < info.length; i++) {
+                  if (info[i] !== undefined && info[i] !== null && info[i] !== "") {
+                    newArray.push(info[i]);
+                  }
+                }
+                if(newArray.length !== 0){
+                    $.ajax({
+                        type: "POST",
+                        url: '<?php echo base_url() . "product/disburse_static_supplies/"; ?>',
+                        data: {disbursed: JSON.stringify(newArray)},
+                        dataType: "json",
+                        success: function(json) {
+                            if (json['status'] === 'warning') {
+                                $('#status').removeClass().addClass('alert show');
+                                $('#message').html(json['msg']);
+                                newArray = [];
+                                newArray.length = 0;
+                            } else if(json['status'] === 'success'){
+                                $('#status').removeClass().addClass('alert alert-success');
+                                $('#message').html(json['msg']);
+                                info = [];
+                                info.length = 0;
+                                newArray = [];
+                                newArray.length = 0;
+                                index = 0;
+                            } else if(json['status'] === 'danger'){
+                                $('#status').removeClass().addClass('alert alert-error');
+                                $('#message').html(json['msg']);
+                            }
+                        },complete: function(){
+                            App.scrollTo();
+                            setTimeout(function () { window.location = '<?php echo base_url() . "product/manage_static_orders/" .str_replace('/', '-', $order_number);?>';}, 5000);
+                        }, error: function() {
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').text("هناك خطأ في تخزين البيانات");
                         }
-                    }, error: function() {
-                        $('#message').text("هناك خطأ في تخزين البيانات");
-                    }
-                });
+                    });
+                }else{
+                    $('#status').removeClass().addClass('alert alert-info');
+                    $('#message').text("عذرا لم تقم بصرف أي صنف");
+                    App.scrollTo();
+                }
             }
         </script>
     </body>

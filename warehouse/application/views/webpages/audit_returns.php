@@ -226,20 +226,23 @@
                     url: '<?php echo base_url() . "product/changeProdStatus/"; ?>',
                     data: {
                          product_status: $('#product_status').val(),
-                         voucher_id: $(parent).attr('voucher_id'),
+                         voucher_id: $(parent).attr('voucher_id')
                     },
                     dataType: "json",
                     success: function(json) {
                         if (json == 1) {
                             $('#myModal').trigger('reveal:close');
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
+                            $('#status').removeClass().addClass('alert alert-success');
                             $('#message').text("تـم تأكيد الإستلام وتعديل حالة الصنف");
-                            $(parent).parent().remove();
+                            $(parent).parents('tr').remove();
                         } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').text("يجب عليك التأكد من البيانات المدخلة");
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });
@@ -294,14 +297,17 @@
                     success: function(json) {
                         if (json == 1) {
                             $('#myModal').trigger('reveal:close');
-                            $('#status').removeClass('alert-error').addClass('alert alert-success');
-                            $('#message').text("تـم تأكيد الإستلام وتعديل حالة الصنف");
+                            $('#status').removeClass().addClass('alert alert-success');
+                            $('#message').text(" تم تمديد وقت إرجاع هذا الصنف إلى تاريخ"+$('#new_return_date').val());
                             $(parent).parent().empty();
                         } else {
-                            $('#status').addClass('alert alert-error');
-                            $('#message').removeClass('alert-success').text("يجب عليك التأكد من البيانات المدخلة");
+                            $('#status').removeClass().addClass('alert alert-error');
+                            $('#message').text("يجب عليك التأكد من البيانات المدخلة");
                         }
-                    }, error: function() {
+                    },complete: function(){
+                        App.scrollTo();
+                    },error: function() {
+                        $('#status').removeClass().addClass('alert alert-error');
                         $('#message').text("هناك خطأ في تخزين البيانات");
                     }
                 });
