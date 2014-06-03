@@ -14,7 +14,7 @@
         <link href="<?php echo base_url(); ?>resource/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style.css" type="text/css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" type="text/css" rel="stylesheet" />
-        <link href="<?php echo base_url(); ?>resource/css/style_default.css" type="text/css" rel="stylesheet"/>
+        <link href="<?php echo base_url().'resource/css/'.CUSTOM_THEME.'.css'?>" type="text/css" rel="stylesheet"/>
 
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" type="text/css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
@@ -88,11 +88,11 @@
                                             <?php foreach ($orders as $value) { ?>
                                                 <tr class="odd gradeX">
                                                     <?php if ($value['STATUS'] == "refuse") {?>
-                                                        <td class="label-important"><input type="checkbox" class="checkboxes" value="1" /></td>
+                                                        <td class="label-important"><input type="checkbox" class="checkboxes" /></td>
                                                     <?php } else if ($value['STATUS'] == "accept") {?>
-                                                        <td class="label-success"><input type="checkbox" class="checkboxes" value="1" /></td>
+                                                        <td class="label-success"><input type="checkbox" class="checkboxes" /></td>
                                                     <?php } else if ($value['STATUS'] == "some") {?>
-                                                        <td class="label-info"><input type="checkbox" class="checkboxes" value="1" /></td>
+                                                        <td class="label-info"><input type="checkbox" class="checkboxes" /></td>
                                                     <?php }else{?>
                                                         <td><input type="checkbox" class="checkboxes" value="1" /></td>
                                                     <?php }?>
@@ -112,7 +112,7 @@
                                                         <a href='#' onclick="redirect(this);return false;" order_number="<?=$value["ORDER_NUMBER"]?>" product_type="<?=$value['PRODUCT_TYPE']?>" class="btn mini purple">صرف لوازم</a>
                                                         <?php }?>
                                                         <a href='#' class="btn mini purple"><i class="icon-edit"></i> عرض</a>
-                                                        <button id="refuse" class="btn mini purple" onclick="refuse_order('<?= $value['ORDER_NUMBER'] ?>', this)"><i class="icon-edit"></i> رفـض</button>
+                                                        <button id="refuse" class="btn mini purple" onclick="refuse_order('<?= $value['ORDER_NUMBER'] ?>', this)"><i class="icon-ban-circle icon-white"></i> رفـض</button>
                                                     </td>
                                                 </tr>
                                             <?php } ?>

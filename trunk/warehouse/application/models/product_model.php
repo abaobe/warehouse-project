@@ -720,6 +720,10 @@ class Product_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
+    
+    function get_temporary_output(){
+        return $this->DBObject->readCursor("product_actions.get_temporary_output", null);
+    }
 
     /**
      * get_temp_products
@@ -732,6 +736,22 @@ class Product_model extends CI_Model {
      */
     function get_temp_products() {
         return $this->DBObject->readCursor("product_actions.get_temp_products", null);
+    }
+    
+    function acceptOutputProduct($data) {
+        $params = array(
+            array('name' => ':product_status', 'value' => &$data['product_status']),
+            array('name' => ':voucher_id', 'value' => &$data['voucher_id']),
+            array('name' => ':res', 'value' => &$result)
+        );
+
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := product_actions.acceptOutputProduct(:product_status,:voucher_id); end;");
+        foreach ($params as $variable) {
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
+        }
+        oci_execute($stmt);
+        return $result;
     }
 
     /**

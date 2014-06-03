@@ -1,5 +1,5 @@
 --------------------------------------------------------
---  File created - Monday-June-02-2014   
+--  File created - Tuesday-June-03-2014   
 --------------------------------------------------------
 --------------------------------------------------------
 --  DDL for Type STATISTICS_NUMBERS
@@ -12,17 +12,17 @@
 
 /
 --------------------------------------------------------
---  DDL for Type SYS_PLSQL_13697_9_2
+--  DDL for Type SYS_PLSQL_13697_9_1
 --------------------------------------------------------
 
-  CREATE OR REPLACE TYPE "ORCL"."SYS_PLSQL_13697_9_2" as table of ORCL."STATISTICS_NUMBERS";
+  CREATE OR REPLACE TYPE "ORCL"."SYS_PLSQL_13697_9_1" as table of ORCL."STATISTICS_NUMBERS";
 
 /
 --------------------------------------------------------
---  DDL for Type SYS_PLSQL_13697_DUMMY_2
+--  DDL for Type SYS_PLSQL_13697_DUMMY_1
 --------------------------------------------------------
 
-  CREATE OR REPLACE TYPE "ORCL"."SYS_PLSQL_13697_DUMMY_2" as table of number;
+  CREATE OR REPLACE TYPE "ORCL"."SYS_PLSQL_13697_DUMMY_1" as table of number;
 
 /
 --------------------------------------------------------
@@ -84,7 +84,7 @@
 --  DDL for Sequence TEMPORARY_OUTPUT_SEQ
 --------------------------------------------------------
 
-   CREATE SEQUENCE  "ORCL"."TEMPORARY_OUTPUT_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999999 INCREMENT BY 1 START WITH 21 CACHE 20 NOORDER  NOCYCLE ;
+   CREATE SEQUENCE  "ORCL"."TEMPORARY_OUTPUT_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999999 INCREMENT BY 1 START WITH 41 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
 --  DDL for Sequence USERS_SEQ
 --------------------------------------------------------
@@ -274,7 +274,8 @@
 	"INSERT_VOUCHER_ID" NUMBER, 
 	"REASONS" VARCHAR2(150 BYTE), 
 	"COMPANY_ID" NUMBER, 
-	"ADDED_DATE" DATE DEFAULT sysdate
+	"ADDED_DATE" DATE DEFAULT sysdate, 
+	"ORDER_STATUS" VARCHAR2(20 BYTE) DEFAULT 'wait'
    ) PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT)
@@ -422,7 +423,6 @@ Insert into ORCL.BORROWING_VOUCHER (VOUCHER_ID,ORDER_SUPPLIES_ID,ADDED_DATE,NOTE
 REM INSERTING into ORCL.CATEGORIES
 SET DEFINE OFF;
 Insert into ORCL.CATEGORIES (CATEGORY_ID,CATEGORY_NAME,CATEGORY_DESCRIPTION,PARENT_ID,INC_NUMBER) values (116,'fff','sdjlkjasd',0,3);
-Insert into ORCL.CATEGORIES (CATEGORY_ID,CATEGORY_NAME,CATEGORY_DESCRIPTION,PARENT_ID,INC_NUMBER) values (47,'second_two1',null,81,null);
 Insert into ORCL.CATEGORIES (CATEGORY_ID,CATEGORY_NAME,CATEGORY_DESCRIPTION,PARENT_ID,INC_NUMBER) values (48,'second_two1_one',null,45,null);
 Insert into ORCL.CATEGORIES (CATEGORY_ID,CATEGORY_NAME,CATEGORY_DESCRIPTION,PARENT_ID,INC_NUMBER) values (117,'f1',null,116,1);
 Insert into ORCL.CATEGORIES (CATEGORY_ID,CATEGORY_NAME,CATEGORY_DESCRIPTION,PARENT_ID,INC_NUMBER) values (114,'asdasd',null,41,1);
@@ -567,8 +567,8 @@ Insert into ORCL.STATIC_PRODUCT (VOUCHER_ID,PRODUCT_STATUS,PRODUCT_NATURE,SUPPLY
 Insert into ORCL.STATIC_PRODUCT (VOUCHER_ID,PRODUCT_STATUS,PRODUCT_NATURE,SUPPLY_TYPE,EXPIRE_DATE,SERIAL_NUMBER,RESERVE_STATUS) values (223,'تالفه','مستأجرة','مؤقتة','2014/03/04','454asdd','تم إتلافة');
 Insert into ORCL.STATIC_PRODUCT (VOUCHER_ID,PRODUCT_STATUS,PRODUCT_NATURE,SUPPLY_TYPE,EXPIRE_DATE,SERIAL_NUMBER,RESERVE_STATUS) values (222,'تالفه','مستأجرة','مؤقتة','2014/05/03','454as','محجوز');
 Insert into ORCL.STATIC_PRODUCT (VOUCHER_ID,PRODUCT_STATUS,PRODUCT_NATURE,SUPPLY_TYPE,EXPIRE_DATE,SERIAL_NUMBER,RESERVE_STATUS) values (261,'مستخدمة جيدة','مستأجرة','دائمة','2014/04/25','56554546546','محجوز');
-Insert into ORCL.STATIC_PRODUCT (VOUCHER_ID,PRODUCT_STATUS,PRODUCT_NATURE,SUPPLY_TYPE,EXPIRE_DATE,SERIAL_NUMBER,RESERVE_STATUS) values (344,'مستخدمة جيدة','مشتراه','دائمة','2014/04/17','45454654656','إخراج مؤقت');
-Insert into ORCL.STATIC_PRODUCT (VOUCHER_ID,PRODUCT_STATUS,PRODUCT_NATURE,SUPPLY_TYPE,EXPIRE_DATE,SERIAL_NUMBER,RESERVE_STATUS) values (219,'مستخدمة جيدة','مستأجرة','مؤقتة','2014/03/06','12313','متاح');
+Insert into ORCL.STATIC_PRODUCT (VOUCHER_ID,PRODUCT_STATUS,PRODUCT_NATURE,SUPPLY_TYPE,EXPIRE_DATE,SERIAL_NUMBER,RESERVE_STATUS) values (344,'جديدة','مشتراه','دائمة','2014/04/17','45454654656','متاح');
+Insert into ORCL.STATIC_PRODUCT (VOUCHER_ID,PRODUCT_STATUS,PRODUCT_NATURE,SUPPLY_TYPE,EXPIRE_DATE,SERIAL_NUMBER,RESERVE_STATUS) values (219,'جديدة','مستأجرة','مؤقتة','2014/03/06','12313','إخراج مؤقت');
 Insert into ORCL.STATIC_PRODUCT (VOUCHER_ID,PRODUCT_STATUS,PRODUCT_NATURE,SUPPLY_TYPE,EXPIRE_DATE,SERIAL_NUMBER,RESERVE_STATUS) values (570,'جديدة','مستأجرة','مؤقتة','2014/06/02','1215464','محجوز');
 Insert into ORCL.STATIC_PRODUCT (VOUCHER_ID,PRODUCT_STATUS,PRODUCT_NATURE,SUPPLY_TYPE,EXPIRE_DATE,SERIAL_NUMBER,RESERVE_STATUS) values (572,'جديدة','مستأجرة','مؤقتة','2014/06/02','1254515464','محجوز');
 Insert into ORCL.STATIC_PRODUCT (VOUCHER_ID,PRODUCT_STATUS,PRODUCT_NATURE,SUPPLY_TYPE,EXPIRE_DATE,SERIAL_NUMBER,RESERVE_STATUS) values (573,'جديدة','مستأجرة','مؤقتة','2014/06/02','5451254515464','متاح');
@@ -582,15 +582,13 @@ Insert into ORCL.SUPPLIES_CORRUPTED (ORDER_ID,INSERT_VOUCHER_ID,MONITOR_WAYS,COR
 Insert into ORCL.SUPPLIES_CORRUPTED (ORDER_ID,INSERT_VOUCHER_ID,MONITOR_WAYS,CORRUPTED_DATE,DAMAGE_MEMBERS) values (8,223,'asdkjsadk,ksjaldkas,kjklasdsd,',to_date('20-APR-14','DD-MON-RR'),1);
 REM INSERTING into ORCL.TEMPORARY_OUTPUT
 SET DEFINE OFF;
-Insert into ORCL.TEMPORARY_OUTPUT (ORDER_ID,INSERT_VOUCHER_ID,REASONS,COMPANY_ID,ADDED_DATE) values (8,null,null,null,to_date('27-APR-14','DD-MON-RR'));
-Insert into ORCL.TEMPORARY_OUTPUT (ORDER_ID,INSERT_VOUCHER_ID,REASONS,COMPANY_ID,ADDED_DATE) values (9,null,null,null,to_date('27-APR-14','DD-MON-RR'));
-Insert into ORCL.TEMPORARY_OUTPUT (ORDER_ID,INSERT_VOUCHER_ID,REASONS,COMPANY_ID,ADDED_DATE) values (10,344,'jkljasdlas,',2,to_date('27-APR-14','DD-MON-RR'));
-Insert into ORCL.TEMPORARY_OUTPUT (ORDER_ID,INSERT_VOUCHER_ID,REASONS,COMPANY_ID,ADDED_DATE) values (7,344,'jaskldjksjadl,jaskldjlasd,',2,to_date('27-APR-14','DD-MON-RR'));
+Insert into ORCL.TEMPORARY_OUTPUT (ORDER_ID,INSERT_VOUCHER_ID,REASONS,COMPANY_ID,ADDED_DATE,ORDER_STATUS) values (7,344,'jaskldjksjadl,jaskldjlasd,',2,to_date('27-APR-14','DD-MON-RR'),'end');
+Insert into ORCL.TEMPORARY_OUTPUT (ORDER_ID,INSERT_VOUCHER_ID,REASONS,COMPANY_ID,ADDED_DATE,ORDER_STATUS) values (21,219,'للصيانة,للصيانة,',1,to_date('03-JUN-14','DD-MON-RR'),'wait');
 REM INSERTING into ORCL.USERS
 SET DEFINE OFF;
 Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (1,'محمود','محمد','أبو دقة',111111,'28144444444','hazim.alghalayi@hotmail.com','role3','21232f297a57a5a743894a0e4a801fc3',3,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('31-MAY-14 06.40.16.000000000 PM','DD-MON-RR HH.MI.SSXFF AM'),'active','7effbb2251d42a344258ec73d2d76d16.jpg','059999999999999',46);
 Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (2,'أحمد','أحمد','الأغا',1321,'6765675','hazim.alghalayidni@hotmail','role2','21232f297a57a5a743894a0e4a801fc3',2,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('14-MAY-14 03.19.27.000000000 PM','DD-MON-RR HH.MI.SSXFF AM'),'active','f45663fc2704e0bbf8a5266780b0dd84.jpg','56757',44);
-Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (3,'حازم','أسامة','الغلاييني',5446,'445456','hazim.alghalayidnsi@hotmail','role1','21232f297a57a5a743894a0e4a801fc3',1,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('02-JUN-14 08.05.56.000000000 PM','DD-MON-RR HH.MI.SSXFF AM'),'active','f45663fc2704e0bbf8a5266780b0dd84.jpg','56757',50);
+Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (3,'حازم','أسامة','الغلاييني',5446,'445456','hazim.alghalayidnsi@hotmail','role1','21232f297a57a5a743894a0e4a801fc3',1,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('03-JUN-14 09.26.43.000000000 AM','DD-MON-RR HH.MI.SSXFF AM'),'active','f45663fc2704e0bbf8a5266780b0dd84.jpg','56757',50);
 Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (4,'عاصم','سليم','العلمي',45645456,'6765675','hazim.alghalaydidnsi@hotmail','role4','21232f297a57a5a743894a0e4a801fc3',4,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('14-MAY-14 03.18.39.000000000 PM','DD-MON-RR HH.MI.SSXFF AM'),'active','f45663fc2704e0bbf8a5266780b0dd84.jpg','56757',61);
 REM INSERTING into ORCL.USERS_ROLES
 SET DEFINE OFF;
@@ -906,6 +904,10 @@ Insert into ORCL.VOUCHER_OUTPUT (VOUCHER_ID,UNIT_TYPE,QUANTITY_DISBURSED,ORDER_S
 --------------------------------------------------------
 
   ALTER TABLE "ORCL"."TEMPORARY_OUTPUT" MODIFY ("ORDER_ID" NOT NULL ENABLE);
+ 
+  ALTER TABLE "ORCL"."TEMPORARY_OUTPUT" MODIFY ("ORDER_STATUS" NOT NULL ENABLE);
+ 
+  ALTER TABLE "ORCL"."TEMPORARY_OUTPUT" MODIFY ("INSERT_VOUCHER_ID" NOT NULL ENABLE);
  
   ALTER TABLE "ORCL"."TEMPORARY_OUTPUT" ADD CONSTRAINT "TEMPORARY_OUTPUT_PK" PRIMARY KEY ("ORDER_ID")
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
@@ -1707,6 +1709,14 @@ AS
       voucherID    IN NUMBER,
       reasons      IN VARCHAR2,
       company_id   IN VARCHAR2)
+    RETURN NUMBER;
+  -----------------------------------------------------------
+  FUNCTION get_temporary_output
+    RETURN SYS_REFCURSOR;
+    ---------------------------------------------------------    
+    FUNCTION acceptOutputProduct(      
+      productStatus    IN VARCHAR2,
+      voucherID        IN NUMBER)
     RETURN NUMBER;
   -------------------------------------------------------------
   FUNCTION getUnreadableOrders
@@ -3154,6 +3164,43 @@ END DEPARTMENT_ACTIONS;
         RETURN 0;
   END disburse_servicing;
   --------------------------------------------------------------
+  FUNCTION get_temporary_output
+    RETURN SYS_REFCURSOR
+  AS
+    products_cursor SYS_REFCURSOR;
+  BEGIN
+    OPEN products_cursor FOR SELECT (select product_name from products p where p.product_id= i.product_id) as product_name,
+    i.serial_number,i.voucher_id,product_status,get_company_nameBy_id(i.received_from) as company_name,
+    t.reasons,get_company_nameBy_id(t.company_id) as send_to,to_char(t.added_date,'DD/MM/YYYY HH PM') as added_date
+      FROM INSERTED_STATIC_PRODUCT i JOIN TEMPORARY_OUTPUT t ON t.order_status= 'wait' AND t.insert_voucher_id = i.voucher_id;
+    
+    RETURN products_cursor;
+  END get_temporary_output;
+  --------------------------------------------------------------
+  FUNCTION acceptOutputProduct(
+      productStatus    IN VARCHAR2,
+      voucherID        IN NUMBER)
+    RETURN NUMBER AS 
+    BEGIN
+      SAVEPOINT beforUpdate;
+      IF productstatus = 'تالفه' THEN
+        UPDATE static_product SET reserve_status= 'تالف', product_status= productStatus WHERE voucher_id= voucherID;
+        UPDATE temporary_output SET order_status= 'end' WHERE insert_voucher_id= voucherID;
+      ELSE
+        UPDATE static_product SET reserve_status= 'متاح', product_status= productStatus WHERE voucher_id= voucherID;
+        UPDATE temporary_output SET order_status= 'end' WHERE insert_voucher_id= voucherID;
+      END IF;
+      
+      IF SQL%ROWCOUNT > 0 THEN
+      COMMIT;
+      RETURN 1;
+    END IF;
+    EXCEPTION
+      WHEN OTHERS THEN
+        ROLLBACK TO before;
+        RETURN 0;
+    END acceptOutputProduct;
+  --------------------------------------------------------------------------
   FUNCTION getUnreadableOrders
     RETURN SYS_REFCURSOR
   AS

@@ -1022,7 +1022,10 @@ class Product extends CI_Controller {
             $data['product_status'] = $this->input->post('product_status');
             $data['voucher_id'] = $this->input->post('voucher_id');
             $result = $this->product_model->changeProdStatus($data);
-            echo json_encode($result);
+            if ($result)
+                echo json_encode(array('status' => true, 'msg' => "تـم إستلام وتغير حالة الصنف بنجاح"));
+            else
+                echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
         }
     }
 
@@ -1125,7 +1128,28 @@ class Product extends CI_Controller {
             $this->load->view('webpages/404');
         }
     }
+    
+    public function manage_temp_output() {
+        if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) {
+            $result['products'] = $this->product_model->get_temporary_output();
+            $this->load->view('webpages/manage_temporary_output', $result);
+        } else {
+            $this->load->view('webpages/404');
+        }
+    }
 
+    public function acceptOutputProduct() {
+        if (USER_ROLE == ROLE_ONE) {
+            $data['product_status'] = $this->input->post('product_status');
+            $data['voucher_id'] = $this->input->post('voucher_id');
+            $result = $this->product_model->acceptOutputProduct($data);
+            if ($result)
+                echo json_encode(array('status' => true, 'msg' => "تـم إستلام وتغير حالة الصنف بنجاح"));
+            else
+                echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
+        }
+    }
+    
     /**
      * getNotification 
      * 

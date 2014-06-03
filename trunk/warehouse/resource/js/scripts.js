@@ -3,7 +3,7 @@ var App = function() {
     var isMainPage = false;
     var isMapPage = false;
     var isIE8 = false;
-    
+
     var handleDashboardCalendar = function() {
 
         if (!jQuery().fullCalendar) {
@@ -1229,8 +1229,32 @@ var App = function() {
             setLayout();
         });
 
-        var setColor = function(color) {
-            $('#style_color').attr("href", color);
+        var setColor = function(color, url) {
+            $('#style_color').attr("href", "../resource/css/" + color + ".css");
+            delete_cookie("customTheme");
+            setCookie("customTheme", color, 60);
+        }
+
+        function delete_cookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toGMTString();
+            document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i].trim();
+                if (c.indexOf(name) == 0)
+                    return c.substring(name.length, c.length);
+            }
+            return "";
         }
 
     }

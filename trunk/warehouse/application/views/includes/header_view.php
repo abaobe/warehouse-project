@@ -142,9 +142,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="#"><i class="icon-user"></i> الصـفحة الشـخصية</a></li>
-                            <li class="divider"></li>
                             <li><a href="#"><i class="icon-tasks"></i> المـهام</a></li>
-                            <li class="divider"></li>
                             <li><a href="#"><i class="icon-calendar"></i> جـدولة</a></li>
                             <li class="divider"></li>
                             <li><a href="<?php echo base_url() . "users/logout"; ?>"><i class="icon-key"></i> تسجـيل خـروج</a></li>

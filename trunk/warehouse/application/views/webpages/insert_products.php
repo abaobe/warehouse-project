@@ -14,7 +14,7 @@
         <link href="<?php echo base_url(); ?>resource/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" rel="stylesheet" />
-        <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
+        <link href="<?php echo base_url().'resource/css/'.CUSTOM_THEME.'.css'?>" rel="stylesheet" id="style_color" />
 
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
@@ -334,35 +334,36 @@
             function insert_product() {
                 get_products_added();
                 if(data.length > 0){
-                $.ajax({
-                    type: "POST",
-                    url: '<?php echo base_url() . "product/do_insert_product/"; ?>',
-                    data: {insert_orders: JSON.stringify(data)},
-                    dataType: "json",
-                    success: function(json) {
-                        if (json['status'] == true) {
-                            $('#status').removeClass().addClass('alert alert-success');
-                            $('#message').html(json['msg']);
-                            lastRow = count;
-                            data = [];
-                            data.length = 0;
-                        } else if(json['status'] == false){
+                    $.ajax({
+                        type: "POST",
+                        url: '<?php echo base_url() . "product/do_insert_product/"; ?>',
+                        data: {insert_orders: JSON.stringify(data)},
+                        dataType: "json",
+                        success: function(json) {
+                            if (json['status'] == true) {
+                                $('#status').removeClass().addClass('alert alert-success');
+                                $('#message').html(json['msg']);
+                                lastRow = count;
+                                data = [];
+                                data.length = 0;
+                            } else if(json['status'] == false){
+                                $('#status').removeClass().addClass('alert alert-error');
+                                $('#message').html(json['msg']);
+                            }
+                        },complete: function(){
+                            App.scrollTo();
+                        },error: function() {
                             $('#status').removeClass().addClass('alert alert-error');
-                            $('#message').html(json['msg']);
+                            $('#message').text("هناك خطأ في تخزين البيانات");
                         }
-                    }, error: function() {
-                        $('#status').removeClass().addClass('alert alert-error');
-                        $('#message').text("هناك خطأ في تخزين البيانات");
-                    }
-                });
-                },complete: function(){
+                    });
+                }else{
+                    $('#status2').removeClass().addClass('alert alert-info');
+                    $('#message2').text("تم إضافة هذة البيانات سابقا لايوجد بيانات جديدة");
                     App.scrollTo();
-                },error: function() {
-                    $('#status').removeClass().addClass('alert alert-error');
-                    $('#message').text("هناك خطأ في تخزين البيانات");
                 }
             }
-
+            
             function product_unit_names(current) {
             if ($(current).val()) {
                 $.ajax({

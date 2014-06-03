@@ -40,6 +40,7 @@
                         echo "<li><a class='' href=".base_url() . "product/show_static_products".">إدارة المواد الطويلة الأجل</a></li>";
                         echo "<li><a class='' href=".base_url() . "product/audit_returns".">تدقيق العهد المرجعه والمستحقه</a></li>";
                         echo "<li><a class='' href=".base_url() . "product/damage_products".">إدارة العهد التالفة</a></li>";
+                        echo "<li><a class='' href=".base_url() . "product/manage_temp_output".">إدارة المخرجات مؤقتا </a></li>";
                         echo "<li><a class='' href=".base_url() . "departments/inventory_supplies".">جـرد اللوازم</a></li>";
                         echo "<li><a class='' href=".base_url() . "services/add_service".">إضـافة خـدمة</a></li>";
                     break;
@@ -50,6 +51,7 @@
                         echo "<li><a class='' href=".base_url() . "product/audit_returns".">تدقيق العهد المرجعه والمستحقه</a></li>";
                         echo "<li><a class='' href=".base_url() . "product/damage_products".">إدارة العهد التالفة</a></li>";
                         echo "<li><a class='' href=".base_url() . "departments/inventory_supplies".">جـرد اللوازم</a></li>";
+                        echo "<li><a class='' href=".base_url() . "product/manage_temp_output".">إدارة المخرجات مؤقتا </a></li>";
                     break;
                     case ROLE_THREE:
                         echo "<li><a class='' href=".base_url() . "product/supplies_order".">طلب لوازم مستهلكة</a></li>";
