@@ -14,7 +14,7 @@
         <link href="<?php echo base_url(); ?>resource/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style.css" type="text/css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" type="text/css" rel="stylesheet" />
-        <link href="<?php echo base_url(); ?>resource/css/style_default.css" type="text/css" rel="stylesheet"/>
+        <link href="<?php echo base_url().'resource/css/'.CUSTOM_THEME.'.css'?>" type="text/css" rel="stylesheet"/>
 
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" type="text/css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>

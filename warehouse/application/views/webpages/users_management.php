@@ -14,7 +14,7 @@
         <link href="<?php echo base_url(); ?>resource/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" rel="stylesheet" />
-        <link href="<?php echo base_url(); ?>resource/css/style_default.css" rel="stylesheet" id="style_color" />
+        <link href="<?php echo base_url().'resource/css/'.CUSTOM_THEME.'.css'?>" rel="stylesheet" id="style_color" />
 
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link  href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
@@ -113,7 +113,7 @@
                                                          ?>
                                                     </td>
                                                     <td>
-                                                        <a href="#" onclick="show_user(<?= $value['USER_ID']?>);" class="btn mini purple" data-reveal-id="myModal"><i class="icon-edit"></i>  عـرض البيانات</a>
+                                                        <a href="#" onclick="show_user(<?= $value['USER_ID']?>);" class="btn mini purple" data-reveal-id="myModal"><i class="icon-eye-open"></i>  عـرض البيانات</a>
                                                         <?php if(USER_ROLE == ROLE_ONE) {?>
                                                         <a href='<?php echo base_url() . "users/update_user/" . $value['USER_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i>  تعديل</a>
                                                         <a href="#" onclick="delete_user(<?= $value['USER_ID'] ?>,this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a>

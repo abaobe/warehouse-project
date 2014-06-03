@@ -14,7 +14,7 @@
         <link href="<?php echo base_url(); ?>resource/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style.css" type="text/css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/css/style_responsive.css" type="text/css" rel="stylesheet" />
-        <link href="<?php echo base_url(); ?>resource/css/style_default.css" type="text/css" rel="stylesheet"/>
+        <link href="<?php echo base_url().'resource/css/'.CUSTOM_THEME.'.css'?>" type="text/css" rel="stylesheet"/>
 
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" type="text/css" rel="stylesheet" />
         <link href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
@@ -230,14 +230,14 @@
                     },
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
+                        if (json['status'] == true) {
                             $('#myModal').trigger('reveal:close');
                             $('#status').removeClass().addClass('alert alert-success');
-                            $('#message').text("تـم تأكيد الإستلام وتعديل حالة الصنف");
+                            $('#message').html(json['msg']);
                             $(parent).parents('tr').remove();
-                        } else {
+                        } else if(json['status'] == false){
                             $('#status').removeClass().addClass('alert alert-error');
-                            $('#message').text("يجب عليك التأكد من البيانات المدخلة");
+                            $('#message').html(json['msg']);
                         }
                     },complete: function(){
                         App.scrollTo();

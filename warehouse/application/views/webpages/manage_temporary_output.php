@@ -5,7 +5,7 @@
     <!-- BEGIN HEAD -->
     <head>
         <meta charset="utf-8" />
-        <title>الأصناف التالفة</title>
+        <title>إدارة المواد المخرجة مؤقتا</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
@@ -19,6 +19,7 @@
         <link href="<?php echo base_url(); ?>resource/assets/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
         <link  href="<?php echo base_url(); ?>resource/assets/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
         <link href="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.css" type="text/css" rel="stylesheet">
+        <link href="<?php echo base_url(); ?>resource/assets/custombox/reveal.css" type="text/css" rel="stylesheet">	
     </head>
     <!-- END HEAD -->
     <!-- BEGIN BODY -->
@@ -52,7 +53,7 @@
                                 <li>
                                     <a href="#">قسم الأصناف</a> <span class="divider">&nbsp;</span>
                                 </li>
-                                <li><a href="#">إداة العهد التالفة</a><span class="divider-last">&nbsp;</span></li>
+                                <li><a href="#">إدارة المواد المخرجة مؤقتا</a><span class="divider-last">&nbsp;</span></li>
                             </ul>
                             <!-- END PAGE TITLE & BREADCRUMB-->
                         </div>
@@ -65,7 +66,7 @@
                             <!-- BEGIN EXAMPLE TABLE widget-->
                             <div class="widget">
                                 <div class="widget-title">
-                                    <h4><i class="icon-reorder"></i>جدول يحتوي على جميع الأصناف التالفة</h4>
+                                    <h4><i class="icon-reorder"></i>جدول يحتوي المواد المخرجة مؤقتا </h4>
                                     <span class="tools">
                                         <a href="javascript:;" class="icon-chevron-down"></a>
                                         <a href="javascript:;" class="icon-remove"></a>
@@ -78,52 +79,39 @@
                                         <span id="message"></span>
                                     </div>
                                     <!-- End Alert Message -->
-                                    <?php if(USER_ROLE == ROLE_ONE) {?>
-                                    <div id="monitor_ways" class="control-group form-horizontal">
-                                        <label class="control-label">طرق الإشراف على الإتلاف</label>
-                                        <div class="controls">
-                                            <input type="text" id="way_1" class="span6 " />
-                                            <button id="more" class="btn btn-info"><i class="icon-plus icon-white"></i> مزيد</button>
-                                            <button id="accept" onclick="accept_damage()" class="btn btn-success"><i class="icon-ok"></i> إعتماد</button>
-                                        </div>
-                                        <br/>
-                                    </div>
-                                    <?php }?>
-                                    <div>
-                                        <table class="table table-striped table-bordered" id="sample_1">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width:8px;"></th>
-                                                    <th class="hidden-phone">رقم الصنف</th>
-                                                    <th class="hidden-phone">إسم الصنف</th>
-                                                    <th class="hidden-phone">الرقم التسلسلي</th>
-                                                    <th class="hidden-phone">إسم المحكمة</th>
-                                                    <th class="hidden-phone">إسم الدائرة</th>
-                                                    <th class="hidden-phone">تاريخ الإرجاع</th>
-                                                    <th class="hidden-phone">طول</th>
-                                                    <th class="hidden-phone">عرض</th>
-                                                    <th class="hidden-phone">إرتفاع</th>
+                                    <table class="table table-striped table-bordered" id="sample_1">
+                                        <thead>
+                                            <tr>
+                                                <th class="hidden-phone">إسم الصنف</th>
+                                                <th class="hidden-phone">الرقم التسلسلي</th>
+                                                <th class="hidden-phone">تاريخ إخراج الصنف</th>
+                                                <th class="hidden-phone">تم شراءه من</th>
+                                                <th class="hidden-phone">الشركة المرسل لها الصنف</th>
+                                                <th class="hidden-phone">الحالة قبل الإخراج</th>
+                                                <th class="hidden-phone">أسباب الإخراج</th>
+                                                <th class="hidden-phone">قائـمة المهام</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            foreach ($products as $value) { ?>
+                                                <tr class="odd gradeX">
+                                                    <td class="hidden-phone"><?= $value['PRODUCT_NAME'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['SERIAL_NUMBER'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['ADDED_DATE'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['COMPANY_NAME'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['SEND_TO'] ?></td>
+                                                    <td class="hidden-phone"><?= $value['PRODUCT_STATUS'] ?></td>
+                                                    <td class="hidden-phone" title="<?=$value['REASONS']?>"><?= substr($value['REASONS'], 0, 50).'...' ?></td>
+                                                    <td class="hidden-phone">
+                                                        <?php if(USER_ROLE == ROLE_ONE) { ?>
+                                                        <a class="btn mini purple" onclick="accept(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-ok"></i> تأكيد الإستلام</a>
+                                                        <?php }?>
+                                                    </td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php $i = 0;
-                                                foreach ($products as $value) { ?>
-                                                    <tr class="odd gradeX">
-                                                        <td><input type="checkbox" index="<?= $i ?>" onclick="addToDamage(this,<?= $value['VOUCHER_ID'] ?>)" class="checkboxes" /></td>
-                                                        <td><?= $value['PRODUCT_NUMBER'] ?></td>
-                                                        <td class="text-info bold"><?= $value['PRODUCT_NAME'] ?></td>
-                                                        <td><?= $value['SERIAL_NUMBER'] ?></td>
-                                                        <td><?= $value['MAIN_DEPARTMENT'] ?></td>
-                                                        <td><?= $value['DEPARTMENT_NAME'] ?></td>
-                                                        <td><?= $value['RETURN_DATE'] ?></td>
-                                                        <td><?= $value['H_LENGTH'] ?></td>
-                                                        <td><?= $value['WIDTH'] ?></td>
-                                                        <td><?= $value['HEIGHT'] ?></td>
-                                                    </tr>
-                                                 <?php $i++;} ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                             <!-- END EXAMPLE TABLE widget-->
@@ -131,6 +119,21 @@
                     </div>
                     <!-- END ADVANCED TABLE widget-->
                     <!-- END PAGE CONTENT-->
+                    <!-- START MODAL FORM -->
+                    <div id="myModal" class="reveal-modal medium">
+                        <a class="close-reveal-modal">&#215;</a>
+                        <div class="widget">
+                            <form method="POST" id="add_form" onsubmit="return false;" class="form-horizontal">
+                            <div class="widget-title">
+                                <h4><i class="icon-reorder"></i>معلومات حالة الصنف بعد الإرجاع</h4>
+                            </div>
+                            <div class="widget-body" id="orderInfo">
+
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- END MODAL FORM -->
                 </div>
                 <!-- END PAGE CONTAINER-->
             </div>
@@ -153,53 +156,55 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/uniform/jquery.uniform.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/data-tables/jquery.dataTables.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/data-tables/DT_bootstrap.js"></script>
+        <script type="text/javascript" src="<?php echo base_url(); ?>resource/assets/custombox/jquery.reveal.js"></script>
         <script src="<?php echo base_url(); ?>resource/js/scripts.js"></script>
+        <script src="<?php echo base_url(); ?>resource/js/jquery.confirm.js"></script>
         <script>
-            var vouchers = new Array();
-            var count = 2;
             jQuery(document).ready(function() {
                 // initiate layout and plugins
                 App.init();
             });
-
-            $('#more').click(function() {
-                var new_way = '<div class="control-group"><div class="controls"><input type="text" class="span6" id="way_' + count + '"/></div></div>';
-                $('#monitor_ways').append(new_way);
-                count++;
-            });
-
-            function addToDamage(current, voucherID) {
-                if ($(current).is(':checked'))
-                    vouchers[$(current).attr('index')] = voucherID;
-                else
-                    vouchers.splice($(current).attr('index'), 1);
+            
+            var parent;
+            function accept(current){
+                parent = current;
+                var fields = '<div class="control-group">'+
+                '<label class="control-label">حالة الصنف</label>'+
+                    '<div class="controls">'+
+                        '<select class="span12" id="product_status">'+
+                        '<option value="جديدة">جديدة</option>'+
+                        '<option value="مستخدمة جيدة">مستخدمة جيدة</option>'+
+                        '<option value="تالفه">تالفه</option>'+
+                        '</select>'+
+                    '</div>'+
+                '</div>'+
+                '<div class="control-group">'+
+                    '<div class="controls">'+
+                    '<button type="button" class="btn btn-success" onclick="acceptOutputProduct()">حـفظ</button>'+
+                    '</div>'+
+                '</div>';
+                $('#orderInfo').html(fields);
+                $('#myModal').reveal();
             }
-
-            function accept_damage() {
-                var monitor_ways = "";
-                var vouchersID = "," + vouchers;
-                for (var i = 1; i < count; i++) {
-                    if ($("#way_" + i).val() != null || $("#sub_" + i).val() != '')
-                        monitor_ways += $("#way_" + i).val() + ',';
-                }
+            
+            function acceptOutputProduct(){
                 $.ajax({
                     type: "POST",
-                    url: '<?php echo base_url() . "product/accept_damage/"; ?>',
+                    url: '<?php echo base_url() . "product/acceptOutputProduct/"; ?>',
                     data: {
-                        vouchers: vouchersID,
-                        monitor_ways: monitor_ways
+                         product_status: $('#product_status').val(),
+                         voucher_id: $(parent).attr('voucher_id')
                     },
                     dataType: "json",
                     success: function(json) {
-                        if (json == 1) {
+                        if (json['status'] == true) {
+                            $('#myModal').trigger('reveal:close');
                             $('#status').removeClass().addClass('alert alert-success');
-                            $('#message').text("تم الإعتماد بنجاح");
-                            $('#reset').click();
-                            vouchers = [];
-                            vouchers.length = 0;
-                        } else {
+                            $('#message').html(json['msg']);
+                            $(parent).parents('tr').remove();
+                        } else if(json['status'] == false){
                             $('#status').removeClass().addClass('alert alert-error');
-                            $('#message').text("يجب عليك التأكد من البيانات المدخلة");
+                            $('#message').html(json['msg']);
                         }
                     },complete: function(){
                         App.scrollTo();
