@@ -1,5 +1,5 @@
 --------------------------------------------------------
---  File created - Tuesday-June-03-2014   
+--  File created - Thursday-June-05-2014   
 --------------------------------------------------------
 --------------------------------------------------------
 --  DDL for Type STATISTICS_NUMBERS
@@ -12,17 +12,17 @@
 
 /
 --------------------------------------------------------
---  DDL for Type SYS_PLSQL_13697_9_1
+--  DDL for Type SYS_PLSQL_13697_9_2
 --------------------------------------------------------
 
-  CREATE OR REPLACE TYPE "ORCL"."SYS_PLSQL_13697_9_1" as table of ORCL."STATISTICS_NUMBERS";
+  CREATE OR REPLACE TYPE "ORCL"."SYS_PLSQL_13697_9_2" as table of ORCL."STATISTICS_NUMBERS";
 
 /
 --------------------------------------------------------
---  DDL for Type SYS_PLSQL_13697_DUMMY_1
+--  DDL for Type SYS_PLSQL_13697_DUMMY_2
 --------------------------------------------------------
 
-  CREATE OR REPLACE TYPE "ORCL"."SYS_PLSQL_13697_DUMMY_1" as table of number;
+  CREATE OR REPLACE TYPE "ORCL"."SYS_PLSQL_13697_DUMMY_2" as table of number;
 
 /
 --------------------------------------------------------
@@ -49,7 +49,7 @@
 --  DDL for Sequence INSERT_NUMBER_SEQ
 --------------------------------------------------------
 
-   CREATE SEQUENCE  "ORCL"."INSERT_NUMBER_SEQ"  MINVALUE 1 MAXVALUE 99999999999999999 INCREMENT BY 1 START WITH 99 NOCACHE  NOORDER  NOCYCLE ;
+   CREATE SEQUENCE  "ORCL"."INSERT_NUMBER_SEQ"  MINVALUE 1 MAXVALUE 99999999999999999 INCREMENT BY 1 START WITH 100 NOCACHE  NOORDER  NOCYCLE ;
 --------------------------------------------------------
 --  DDL for Sequence ORDERED_SUPPLIES_SEQ
 --------------------------------------------------------
@@ -396,8 +396,8 @@ FROM products p,categories  g WHERE p.category_id = g.category_id ORDER BY g.cat
 --  DDL for View USER_INFORMATIONS
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE VIEW "ORCL"."USER_INFORMATIONS" ("USER_ID", "FIRST_NAME", "MIDDLE_NAME", "LAST_NAME", "EMPLOYEE_NUMBER", "PHONE_NUMBER", "EMAIL", "USERNAME", "USER_PASSWORD", "USER_ROLE", "REGISTEREDDATE", "LASTLOGGENINDATE", "ACCOUNT_STATUS", "USER_PICTURE", "MOBILE_NUMBER", "DEPARTMENT_ID", "DEPARTMENT_NAME", "ROLE_NAME") AS 
-  SELECT u.*,d.department_name,r.role_name
+  CREATE OR REPLACE FORCE VIEW "ORCL"."USER_INFORMATIONS" ("USER_ID", "FIRST_NAME", "MIDDLE_NAME", "LAST_NAME", "EMPLOYEE_NUMBER", "PHONE_NUMBER", "EMAIL", "USERNAME", "USER_PASSWORD", "USER_ROLE", "REGISTEREDDATE", "LASTLOGGENINDATE", "ACCOUNT_STATUS", "USER_PICTURE", "MOBILE_NUMBER", "DEPARTMENT_ID", "DEPARTMENT_NAME", "ROLE_NAME", "MAIN_DEPARTMENT") AS 
+  SELECT u.*,d.department_name,r.role_name,DEPARTMENT_ACTIONS.GET_MAIN_DEPARTMENT(d.department_id) AS main_department
 FROM users u join departments d on u.department_id=d.department_id
 join users_roles r on r.role_id=u.user_role;
 REM INSERTING into ORCL.BORROWING_VOUCHER
@@ -422,7 +422,6 @@ Insert into ORCL.BORROWING_VOUCHER (VOUCHER_ID,ORDER_SUPPLIES_ID,ADDED_DATE,NOTE
 Insert into ORCL.BORROWING_VOUCHER (VOUCHER_ID,ORDER_SUPPLIES_ID,ADDED_DATE,NOTES,INSERTED_VOUCHERID,RETURN_DATE,ORDER_STATUS) values (45,186,to_date('02-JUN-14','DD-MON-RR'),'kjaskldasd',572,'2014/06/10','active');
 REM INSERTING into ORCL.CATEGORIES
 SET DEFINE OFF;
-Insert into ORCL.CATEGORIES (CATEGORY_ID,CATEGORY_NAME,CATEGORY_DESCRIPTION,PARENT_ID,INC_NUMBER) values (116,'fff','sdjlkjasd',0,3);
 Insert into ORCL.CATEGORIES (CATEGORY_ID,CATEGORY_NAME,CATEGORY_DESCRIPTION,PARENT_ID,INC_NUMBER) values (48,'second_two1_one',null,45,null);
 Insert into ORCL.CATEGORIES (CATEGORY_ID,CATEGORY_NAME,CATEGORY_DESCRIPTION,PARENT_ID,INC_NUMBER) values (117,'f1',null,116,1);
 Insert into ORCL.CATEGORIES (CATEGORY_ID,CATEGORY_NAME,CATEGORY_DESCRIPTION,PARENT_ID,INC_NUMBER) values (114,'asdasd',null,41,1);
@@ -464,7 +463,7 @@ Insert into ORCL.DEPARTMENTS (DEPARTMENT_ID,DEPARTMENT_NAME,ADDRESS,PHONE,NOTES,
 Insert into ORCL.DEPARTMENTS (DEPARTMENT_ID,DEPARTMENT_NAME,ADDRESS,PHONE,NOTES,ADDED_DATE,PARENT_ID,MOBILE,FAX) values (3,'محكمة صلح دير البلح','غزة الوسطى','28666666','ملاحظات',to_date('21-FEB-14','DD-MON-RR'),0,null,null);
 Insert into ORCL.DEPARTMENTS (DEPARTMENT_ID,DEPARTMENT_NAME,ADDRESS,PHONE,NOTES,ADDED_DATE,PARENT_ID,MOBILE,FAX) values (41,'محمكة خانيونس','al-remal',null,'test notes',to_date('18-APR-14','DD-MON-RR'),0,null,null);
 Insert into ORCL.DEPARTMENTS (DEPARTMENT_ID,DEPARTMENT_NAME,ADDRESS,PHONE,NOTES,ADDED_DATE,PARENT_ID,MOBILE,FAX) values (44,'فرع1','05555555555','08888888','test',to_date('18-APR-14','DD-MON-RR'),41,'055555555555','526547342');
-Insert into ORCL.DEPARTMENTS (DEPARTMENT_ID,DEPARTMENT_NAME,ADDRESS,PHONE,NOTES,ADDED_DATE,PARENT_ID,MOBILE,FAX) values (46,'فرع2',null,'kakdkas;l',null,to_date('18-APR-14','DD-MON-RR'),41,null,null);
+Insert into ORCL.DEPARTMENTS (DEPARTMENT_ID,DEPARTMENT_NAME,ADDRESS,PHONE,NOTES,ADDED_DATE,PARENT_ID,MOBILE,FAX) values (46,'فرع2',null,'kakdkas;l','asdjkasjdklajskldjaskdjlaskjdklajsdkjalskdjas',to_date('18-APR-14','DD-MON-RR'),41,null,null);
 Insert into ORCL.DEPARTMENTS (DEPARTMENT_ID,DEPARTMENT_NAME,ADDRESS,PHONE,NOTES,ADDED_DATE,PARENT_ID,MOBILE,FAX) values (50,'فرع3','k;laskd;l','kdas;ld',';lk;asd',to_date('18-APR-14','DD-MON-RR'),41,'lk;lasdk;l','klkas;kd;');
 Insert into ORCL.DEPARTMENTS (DEPARTMENT_ID,DEPARTMENT_NAME,ADDRESS,PHONE,NOTES,ADDED_DATE,PARENT_ID,MOBILE,FAX) values (61,'فرع4','jhaskjdh',null,'hkashdas',to_date('11-MAY-14','DD-MON-RR'),41,null,null);
 REM INSERTING into ORCL.ORDERED_SUPPLIES
@@ -586,10 +585,10 @@ Insert into ORCL.TEMPORARY_OUTPUT (ORDER_ID,INSERT_VOUCHER_ID,REASONS,COMPANY_ID
 Insert into ORCL.TEMPORARY_OUTPUT (ORDER_ID,INSERT_VOUCHER_ID,REASONS,COMPANY_ID,ADDED_DATE,ORDER_STATUS) values (21,219,'للصيانة,للصيانة,',1,to_date('03-JUN-14','DD-MON-RR'),'wait');
 REM INSERTING into ORCL.USERS
 SET DEFINE OFF;
-Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (1,'محمود','محمد','أبو دقة',111111,'28144444444','hazim.alghalayi@hotmail.com','role3','21232f297a57a5a743894a0e4a801fc3',3,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('31-MAY-14 06.40.16.000000000 PM','DD-MON-RR HH.MI.SSXFF AM'),'active','7effbb2251d42a344258ec73d2d76d16.jpg','059999999999999',46);
-Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (2,'أحمد','أحمد','الأغا',1321,'6765675','hazim.alghalayidni@hotmail','role2','21232f297a57a5a743894a0e4a801fc3',2,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('14-MAY-14 03.19.27.000000000 PM','DD-MON-RR HH.MI.SSXFF AM'),'active','f45663fc2704e0bbf8a5266780b0dd84.jpg','56757',44);
-Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (3,'حازم','أسامة','الغلاييني',5446,'445456','hazim.alghalayidnsi@hotmail','role1','21232f297a57a5a743894a0e4a801fc3',1,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('03-JUN-14 09.26.43.000000000 AM','DD-MON-RR HH.MI.SSXFF AM'),'active','f45663fc2704e0bbf8a5266780b0dd84.jpg','56757',50);
-Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (4,'عاصم','سليم','العلمي',45645456,'6765675','hazim.alghalaydidnsi@hotmail','role4','21232f297a57a5a743894a0e4a801fc3',4,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('14-MAY-14 03.18.39.000000000 PM','DD-MON-RR HH.MI.SSXFF AM'),'active','f45663fc2704e0bbf8a5266780b0dd84.jpg','56757',61);
+Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (1,'محمود','محمد','أبو دقة',111111,'28144444444','hazim.alghalayi@hotmail.com','role3','21232f297a57a5a743894a0e4a801fc3',3,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('03-JUN-14 10.49.03.000000000 AM','DD-MON-RR HH.MI.SSXFF AM'),'active','7effbb2251d42a344258ec73d2d76d16.jpg','059999999999999',46);
+Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (2,'أحمد','أحمد','الأغا',1321,'6765675','hazim.alghalayidni@hotmail','role2','21232f297a57a5a743894a0e4a801fc3',2,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('03-JUN-14 10.49.23.000000000 AM','DD-MON-RR HH.MI.SSXFF AM'),'active','f45663fc2704e0bbf8a5266780b0dd84.jpg','56757',44);
+Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (3,'حازم','أسامة','الغلاييني',5446,'445456','hazim.alghalayidnsi@hotmail','role1','21232f297a57a5a743894a0e4a801fc3',1,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('05-JUN-14 09.02.06.000000000 AM','DD-MON-RR HH.MI.SSXFF AM'),'active','f45663fc2704e0bbf8a5266780b0dd84.jpg','56757',50);
+Insert into ORCL.USERS (USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,EMPLOYEE_NUMBER,PHONE_NUMBER,EMAIL,USERNAME,USER_PASSWORD,USER_ROLE,REGISTEREDDATE,LASTLOGGENINDATE,ACCOUNT_STATUS,USER_PICTURE,MOBILE_NUMBER,DEPARTMENT_ID) values (4,'عاصم','سليم','العلمي',45645456,'6765675','hazim.alghalaydidnsi@hotmail','role4','21232f297a57a5a743894a0e4a801fc3',4,to_date('10-MAY-14','DD-MON-RR'),to_timestamp('03-JUN-14 10.49.13.000000000 AM','DD-MON-RR HH.MI.SSXFF AM'),'active','f45663fc2704e0bbf8a5266780b0dd84.jpg','56757',61);
 REM INSERTING into ORCL.USERS_ROLES
 SET DEFINE OFF;
 Insert into ORCL.USERS_ROLES (ROLE_ID,ROLE_NAME) values (1,'مدير المخازن');
@@ -1296,7 +1295,10 @@ IS
   FUNCTION get_categories_id_name
     RETURN SYS_REFCURSOR;
 ----------------------------------------------------    
-  FUNCTION get_all_categories
+  FUNCTION get_all_categories(  
+    i_search        IN VARCHAR2,  
+    i_start_index   IN NUMBER,  
+    i_end_index     IN NUMBER)
     RETURN SYS_REFCURSOR;
 ----------------------------------------------------    
   FUNCTION add_category(
@@ -1323,6 +1325,9 @@ IS
   FUNCTION delete_category(categoryID  IN NUMBER)
     RETURN NUMBER;
   --------------------------------------------------
+  FUNCTION get_categories_count(i_search IN VARCHAR)
+    RETURN NUMBER;
+  -------------------------------------------------- 
   
 END CATEGORY_ACTIONS;
 
@@ -1337,7 +1342,10 @@ AS
   FUNCTION get_companies_id_name
     RETURN SYS_REFCURSOR;
 ------------------------------------------------
-  FUNCTION get_all_companies
+  FUNCTION get_all_companies(  
+    i_search        IN VARCHAR2,  
+    i_start_index   IN NUMBER,  
+    i_end_index     IN NUMBER)
     RETURN SYS_REFCURSOR;
 ----------------------------------------------------    
   FUNCTION get_company_byID(companyID  IN NUMBER)
@@ -1364,7 +1372,10 @@ AS
   -----------------------------------------------------------
   FUNCTION delete_company(companyID  IN NUMBER)
     RETURN NUMBER;
-  --------------------------------------------------
+  -----------------------------------------------------------
+  FUNCTION get_companies_count(i_search IN VARCHAR)
+    RETURN NUMBER;
+  -------------------------------------------------- 
 END COMPANY_ACTIONS;
 
 /
@@ -1408,7 +1419,10 @@ AS
     sub_departmentId    IN NUMBER)
     RETURN VARCHAR2;
 ------------------------------------------------ 
-  FUNCTION get_all_departments
+  FUNCTION get_all_departments(  
+    i_search        IN VARCHAR2,  
+    i_start_index   IN NUMBER,  
+    i_end_index     IN NUMBER)
     RETURN SYS_REFCURSOR;
 ----------------------------------------------------
   FUNCTION delete_department(departmentID  IN NUMBER)
@@ -1416,7 +1430,10 @@ AS
 ------------------------------------------------ 
   FUNCTION get_department_ByID(departmentID  IN NUMBER)
     RETURN SYS_REFCURSOR;
-------------------------------------------------     
+------------------------------------------------   
+  FUNCTION get_departments_count(i_search IN VARCHAR)
+    RETURN NUMBER;
+  -------------------------------------------------- 
 END DEPARTMENT_ACTIONS;
 
 /
@@ -1453,8 +1470,11 @@ AS
       quantity_status         IN VARCHAR2)
     RETURN NUMBER;
   -----------------------------------------------------------  
-  FUNCTION get_all_products
-    RETURN SYS_REFCURSOR;
+  FUNCTION get_all_products(  
+    i_search            IN   VARCHAR2,  
+    i_start_index       IN   NUMBER,  
+    i_end_index         IN   NUMBER)  
+  RETURN SYS_REFCURSOR;
   -----------------------------------------------------------  
   FUNCTION get_static_products
     RETURN SYS_REFCURSOR;
@@ -1727,7 +1747,10 @@ AS
  -----------------------------------------------------------
  FUNCTION getProductsTopOrdered
     RETURN SYS_REFCURSOR;
-  -----------------------------------------------------------
+-----------------------------------------------------------
+  FUNCTION get_products_count(i_search IN VARCHAR)
+    RETURN NUMBER;
+-----------------------------------------------------------
 END PRODUCT_ACTIONS;
 
 /
@@ -1781,7 +1804,11 @@ AS
     account_status   IN VARCHAR2)
   RETURN NUMBER;
 ----------------------------------------------------
-  FUNCTION get_users(fields IN VARCHAR2)
+  FUNCTION get_users(  
+    i_search        IN VARCHAR2,  
+    i_start_index   IN NUMBER,  
+    i_end_index     IN NUMBER,
+    fields          IN VARCHAR2)
   RETURN SYS_REFCURSOR;
 ----------------------------------------------------
 FUNCTION get_user_byID(userID  IN NUMBER)
@@ -1814,6 +1841,9 @@ FUNCTION get_user_byID(userID  IN NUMBER)
 --------------------------------------------------
   FUNCTION users_statistics
     RETURN SYS_REFCURSOR;
+--------------------------------------------------  
+  FUNCTION get_users_count(i_search IN VARCHAR)
+    RETURN NUMBER;
 --------------------------------------------------  
 END USER_ACTIONS;
 
@@ -1853,15 +1883,22 @@ AS
     RETURN categories_cursor;
   END get_categories_id_name;
 -----------------------------------------------------------------------
-  FUNCTION get_all_categories
+  FUNCTION get_all_categories(  
+    i_search        IN VARCHAR2,  
+    i_start_index   IN NUMBER,  
+    i_end_index     IN NUMBER)
     RETURN SYS_REFCURSOR
     AS
+      i_start number := i_start_index;
+      i_end number := i_start_index + i_end_index;
+      search_val VARCHAR2(200) := '%' || i_search || '%';
       categories_cursor SYS_REFCURSOR;
     BEGIN
-      OPEN categories_cursor FOR SELECT c.category_id,c.category_name,c.category_description,
+      OPEN categories_cursor FOR SELECT * FROM (select inner_query.*, rownum rnum FROM (
+      SELECT c.category_id,c.category_name,c.category_description,
       (SELECT category_name FROM categories r WHERE r.category_id=c.parent_id) AS parent_name, 
       (select COUNT(*) FROM products p WHERE p.category_id= c.category_id) AS products_number
-      FROM categories c;
+      FROM categories c WHERE category_name like search_val) inner_query WHERE rownum < i_end) WHERE rnum >= i_start;
       
       RETURN categories_cursor;
   END get_all_categories;
@@ -1965,6 +2002,19 @@ AS
         RETURN 0;
   END delete_category;
   -----------------------------------------------------------------------------
+  FUNCTION get_categories_count(  
+    i_search        IN VARCHAR)
+    RETURN NUMBER
+  AS
+    records_number NUMBER := 0;
+    search_val VARCHAR2(200) := '%'||i_search||'%';
+  BEGIN
+    SELECT COUNT(*) INTO records_number FROM categories WHERE
+      category_name like search_val;
+    
+    RETURN records_number;
+  END get_categories_count;
+--------------------------------------------------------------
 END CATEGORY_ACTIONS;
 
 /
@@ -1983,15 +2033,21 @@ END CATEGORY_ACTIONS;
     RETURN company_cursor;
   END get_companies_id_name;
   -----------------------------------------------------------------------
-  FUNCTION get_all_companies
-    RETURN SYS_REFCURSOR
-  AS
+  FUNCTION get_all_companies(  
+    i_search        IN VARCHAR2,  
+    i_start_index   IN NUMBER,  
+    i_end_index     IN NUMBER)
+    RETURN SYS_REFCURSOR 
+    AS
+    i_start number := i_start_index;
+    i_end number := i_start_index + i_end_index;
+    search_val VARCHAR2(200) := '%' || i_search || '%';
     companies_cursor SYS_REFCURSOR;
   BEGIN
-    OPEN companies_cursor FOR SELECT * FROM companies;
-    
+    OPEN companies_cursor FOR SELECT * FROM (select inner_query.*, rownum rnum FROM (
+      SELECT * FROM companies WHERE
+      company_name like search_val OR license_number like search_val) inner_query WHERE rownum < i_end) WHERE rnum >= i_start;
     RETURN companies_cursor;
-    CLOSE companies_cursor;
   END get_all_companies;
   -------------------------------------------------------------------------
   FUNCTION get_company_byID(companyID  IN NUMBER)
@@ -2062,6 +2118,19 @@ FUNCTION update_company(
         RETURN 0;
   END delete_company;
   -----------------------------------------------------------------------------
+  FUNCTION get_companies_count(  
+    i_search        IN VARCHAR)
+    RETURN NUMBER
+  AS
+    records_number NUMBER := 0;
+    search_val VARCHAR2(200) := '%'||i_search||'%';
+  BEGIN
+    SELECT COUNT(*) INTO records_number FROM companies WHERE
+      company_name like search_val OR license_number like search_val;
+    
+    RETURN records_number;
+  END get_companies_count;
+--------------------------------------------------------------
 END COMPANY_ACTIONS;
 
 /
@@ -2170,22 +2239,28 @@ END COMPANY_ACTIONS;
         RETURN 0;
   END delete_department;
 -----------------------------------------------------     
-  FUNCTION get_all_departments
+  FUNCTION get_all_departments(  
+    i_search        IN VARCHAR2,  
+    i_start_index   IN NUMBER,  
+    i_end_index     IN NUMBER)
     RETURN SYS_REFCURSOR
   AS
+    i_start number := i_start_index;
+    i_end number := i_start_index + i_end_index;
+    search_val VARCHAR2(200) := '%' || i_search || '%';
     departments_cursor SYS_REFCURSOR;
   BEGIN
-    OPEN departments_cursor FOR select root.department_name as root_name,root.address as root_address,u.user_id,u.first_name,u.last_name,u.middle_name
+    OPEN departments_cursor FOR SELECT * FROM (select inner_query.*, rownum rnum FROM (
+      SELECT root.department_name as root_name,root.address as root_address,u.user_id,u.first_name,u.last_name,u.middle_name
      ,down1.department_id as down1_id,down1.department_name as down1_name,down1.address as down1_address,down1.MOBILE,down1.PHONE,down1.fax,down1.notes
-    from departments root
-    right outer
-      join departments down1
-        on down1.parent_id = root.department_id
-     left outer join users u on down1.department_id = u.department_id
-     where root.parent_id = 0
-    order 
-        by root_name 
-         , down1_name;
+      from departments root
+      right outer
+        join departments down1
+          on down1.parent_id = root.department_id
+       left outer join users u on down1.department_id = u.department_id
+      WHERE root.department_name like search_val OR down1.department_id LIKE search_val OR u.first_name||' '||u.last_name||' '||u.middle_name||' '||u.last_name LIKE search_val order by root_name, down1_name)
+      inner_query WHERE rownum < i_end) WHERE rnum >= i_start;
+      
     RETURN departments_cursor;
   END get_all_departments;
 ----------------------------------------------------- 
@@ -2208,6 +2283,18 @@ END COMPANY_ACTIONS;
     RETURN departments_cursor;
   END get_department_ByID;
 -----------------------------------------------------
+  FUNCTION get_departments_count(  
+    i_search        IN VARCHAR)
+    RETURN NUMBER
+  AS
+    records_number NUMBER := 0;
+    search_val VARCHAR2(200) := '%'||i_search||'%';
+  BEGIN
+    SELECT COUNT(*) INTO records_number FROM departments root WHERE department_id LIKE search_val;
+    
+    RETURN records_number;
+  END get_departments_count;
+--------------------------------------------------------------
 END DEPARTMENT_ACTIONS;
 
 /
@@ -2289,12 +2376,21 @@ END DEPARTMENT_ACTIONS;
         RETURN 0;
   END add_new_product;
 -----------------------------------------------------------
-  FUNCTION get_all_products
+  FUNCTION get_all_products(  
+    i_search        IN VARCHAR2,  
+    i_start_index   IN NUMBER,  
+    i_end_index     IN NUMBER)
     RETURN SYS_REFCURSOR
   AS
+    i_start number := i_start_index;
+    i_end number := i_start_index + i_end_index;
+    search_val VARCHAR2(200) := '%'||i_search||'%';
     products_cursor SYS_REFCURSOR;
   BEGIN
-    OPEN products_cursor FOR SELECT product_id,product_name, product_number, product_type, notes, category_id, width, height, h_length, re_demand_border, primary_unit_name, primary_unit_quantity,quantity_status FROM products;
+    OPEN products_cursor FOR SELECT * FROM (select inner_query.*, rownum rnum FROM (
+      SELECT product_id,product_name, product_number, product_type, notes, category_id, width, height, h_length, re_demand_border, primary_unit_name, primary_unit_quantity,quantity_status FROM products WHERE
+      product_number like search_val OR product_name like search_val ORDER BY product_id) inner_query WHERE rownum < i_end) WHERE rnum >= i_start;
+    
     RETURN products_cursor;
   END get_all_products;
   -----------------------------------------------------------
@@ -3248,6 +3344,19 @@ END DEPARTMENT_ACTIONS;
     OPEN productsInfo FOR SELECT * FROM (SELECT product_name,product_id,COUNT(*) AS orders_count FROM ORDERS_JOIN_PRODUCTS GROUP BY product_name,product_id) WHERE ROWNUM <=10 ORDER BY orders_count DESC;
     RETURN productsInfo;
   END getProductsTopOrdered;
+  -----------------------------------------------------------
+  FUNCTION get_products_count(  
+    i_search        IN VARCHAR)
+    RETURN NUMBER
+  AS
+    records_number NUMBER := 0;
+    search_val VARCHAR2(200) := '%'||i_search||'%';
+  BEGIN
+    SELECT COUNT(*) INTO records_number FROM products WHERE
+      product_number like search_val OR product_name like search_val ORDER BY product_id;
+    
+    RETURN records_number;
+  END get_products_count;
   --------------------------------------------------------------  
 END PRODUCT_ACTIONS;
 
@@ -3355,12 +3464,21 @@ END SERVICE_ACTIONS;
        RETURN 0;
   END add_user;
 -------------------------------------------------------------- 
-  FUNCTION get_users(fields IN  VARCHAR2)
+  FUNCTION get_users(  
+    i_search        IN VARCHAR2,  
+    i_start_index   IN NUMBER,  
+    i_end_index     IN NUMBER,
+    fields          IN VARCHAR2)
     RETURN SYS_REFCURSOR 
     AS
+    i_start number := i_start_index;
+    i_end number := i_start_index + i_end_index;
+    search_val VARCHAR2(200) := '%' || i_search || '%';
     users_cursor SYS_REFCURSOR;
   BEGIN
-    OPEN users_cursor FOR 'SELECT ' ||fields|| ' FROM USER_INFORMATIONS';
+    OPEN users_cursor FOR 'SELECT * FROM (select inner_query.*, rownum rnum FROM (
+      SELECT '  ||fields|| ' FROM USER_INFORMATIONS WHERE
+      username like ''' || search_val || ''' OR first_name||'' ''||middle_name||'' ''||last_name like '''||search_val||''') inner_query WHERE rownum <'|| i_end||') WHERE rnum >='|| i_start;
     RETURN users_cursor;
   END get_users;
 --------------------------------------------------------------
@@ -3441,6 +3559,19 @@ END SERVICE_ACTIONS;
   OPEN users_cursor FOR SELECT (SELECT COUNT(*) FROM users WHERE account_status='inactive' )AS inactive_users,(SELECT COUNT(*) FROM users WHERE account_status='active')AS active_users FROM  users GROUP BY ACCOUNT_STATUS;
     RETURN users_cursor;
   END users_statistics;
+--------------------------------------------------  
+  FUNCTION get_users_count(  
+    i_search        IN VARCHAR)
+    RETURN NUMBER
+  AS
+    records_number NUMBER := 0;
+    search_val VARCHAR2(200) := '%'||i_search||'%';
+  BEGIN
+    SELECT COUNT(*) INTO records_number FROM users WHERE
+      username like search_val OR first_name||' '||middle_name||' '||last_name like search_val;
+    
+    RETURN records_number;
+  END get_users_count;
 --------------------------------------------------------------
 END USER_ACTIONS;
 

@@ -38,8 +38,12 @@ class Category_model extends CI_Model {
      * @access public
      * @return cursor
      */
-    function get_all_categories() {
-        return $this->DBObject->readCursor("category_actions.get_all_categories", null);
+    function get_all_categories($i_search, $i_start_index, $i_end_index) {
+        $params = array(array("name" => ":i_search", "value" => &$i_search),
+            array("name" => ":i_start_index", "value" => &$i_start_index),
+            array("name" => ":i_end_index", "value" => &$i_end_index)
+        );
+        return $this->DBObject->readCursor("category_actions.get_all_categories(:i_search,:i_start_index,:i_end_index)", $params);
     }
 
     /**
@@ -162,6 +166,20 @@ class Category_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
+    function get_categories_count($searchKey) {
+        $params = array(
+            array('name' => ':i_seach', 'value' => &$searchKey),
+            array('name' => ':res', 'value' => &$result)
+        );
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := category_actions.get_categories_count(:i_seach); end;");
+        foreach ($params as $variable) {
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
+        }
+        oci_execute($stmt);
+        return $result;
+    }
+    
 
 }
 

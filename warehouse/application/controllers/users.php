@@ -213,12 +213,56 @@ class Users extends CI_Controller {
      */
     public function users_management() {
         if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO || USER_ROLE == ROLE_FOUR) {
-            $fields = '"USER_ID","FIRST_NAME","MIDDLE_NAME","LAST_NAME","EMPLOYEE_NUMBER","ROLE_NAME","PHONE_NUMBER","MOBILE_NUMBER","ACCOUNT_STATUS","DEPARTMENT_NAME"';
-            $result['users'] = $this->user_model->get_users($fields);
-            $this->load->view('webpages/users_management', $result);
+            $this->load->view('webpages/users_management');
         } else {
             $this->load->view('webpages/404');
         }
+    }
+
+    function get_all_users() {
+        $searchKey = $this->checkSearchKey(isset($_POST['sSearch']) ? $_POST['sSearch'] : '');
+        $records_number = $this->user_model->get_users_count($searchKey);
+        $fields = '"USER_ID","FIRST_NAME","MIDDLE_NAME","LAST_NAME","EMPLOYEE_NUMBER","ROLE_NAME","MAIN_DEPARTMENT","ACCOUNT_STATUS","DEPARTMENT_NAME"';
+        $result['aaData'] = $this->user_model->get_users($searchKey, $_POST['iDisplayStart'], $_POST['iDisplayLength'], $fields);
+        $row = array();
+        foreach ($result['aaData'] as $value) {
+            $options = '';
+            $record = array();
+            $record[] = $value['RNUM'];
+            $record[] = $value['FIRST_NAME'] . ' ' . $value['MIDDLE_NAME'] . ' ' . $value['LAST_NAME'];
+            $record[] = $value['MAIN_DEPARTMENT'];
+            $record[] = $value['DEPARTMENT_NAME'];
+            $record[] = $value['EMPLOYEE_NUMBER'];
+            $record[] = $value['ROLE_NAME'];
+            ($value['ACCOUNT_STATUS'] == 'active')? $record[] = '<span class="label label-success">فـعال</span>' :$record[] = '<span class="label label-important">غير فعال</span>'; ;
+            $options .= '<a href="#" onclick="show_user(' . $value['USER_ID'] . ');" class="btn mini purple" data-reveal-id="myModal"><i class="icon-eye-open"></i>  عـرض البيانات</a> ';
+            if (USER_ROLE == ROLE_ONE) {
+                $options .= '<a href=update_user/' . $value['USER_ID'] . ' class="btn mini purple"><i class="icon-edit"></i>  تعديل</a> ';
+                $options .= '<a href="#" onclick="delete_user(' . $value['USER_ID'] . ',this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a> ';
+            }
+            $record[] = $options;
+            array_push($row, $record);
+        }
+        $output = $this->createOutput(intval($_POST['sEcho']), $records_number, $row);
+        echo json_encode($output);
+    }
+
+    function checkSearchKey($searchKey = '') {
+        if ($searchKey != '') {
+            return $seachKey = $searchKey;
+        } else {
+            return $seachKey = '';
+        }
+    }
+
+    function createOutput($sEcho, $records_number, $aaData = array()) {
+        $output = array(
+            "sEcho" => $sEcho,
+            "iTotalRecords" => $records_number,
+            "iTotalDisplayRecords" => $records_number,
+            "aaData" => $aaData
+        );
+        return $output;
     }
 
     /**
@@ -362,4 +406,5 @@ class Users extends CI_Controller {
     }
 
 }
+
 //End of File

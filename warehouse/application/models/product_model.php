@@ -67,10 +67,18 @@ class Product_model extends CI_Model {
      * @access public
      * @return cursor
      */
-    function get_all_products() {
-        return $this->DBObject->readCursor("product_actions.get_all_products", null);
+    function get_all_products($i_search, $i_start_index,$i_end_index) {
+        try {
+            $params = array(array("name" => ":i_search", "value" => &$i_search),
+                array("name" => ":i_start_index", "value" => &$i_start_index),
+                array("name" => ":i_end_index", "value" => &$i_end_index)
+             );
+            return $this->DBObject->readCursor("product_actions.get_all_products(:i_search,:i_start_index,:i_end_index)", $params);
+        } catch (Exception $ex) {
+            return $ex;
+        }
     }
-
+    
     /**
      * get_static_products
      * 
@@ -827,7 +835,20 @@ class Product_model extends CI_Model {
     function getProductsTopOrdered() {
         return $this->DBObject->readCursor("product_actions.getProductsTopOrdered", null);
     }
-
+    
+    function get_products_count($searchKey= ''){
+        $params = array(
+            array('name' => ':i_seach', 'value' => &$searchKey),
+            array('name' => ':res', 'value' => &$result)
+        );
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := product_actions.get_products_count(:i_seach); end;");
+        foreach ($params as $variable) {
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
+        }
+        oci_execute($stmt);
+        return $result;
+    }
 }
 
 /* End of file product_model.php */

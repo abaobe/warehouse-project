@@ -15,7 +15,7 @@ class Company_model extends CI_Model {
         $this->load->library('OracleModel');
         $this->DBObject = new OracleModel();
     }
-    
+
     /**
      * add_company
      * 
@@ -56,7 +56,7 @@ class Company_model extends CI_Model {
     function get_companies_id_name() {
         return $this->DBObject->readCursor("company_actions.get_companies_id_name", null);
     }
-    
+
     /**
      * get_all_companies
      * 
@@ -66,10 +66,14 @@ class Company_model extends CI_Model {
      * @access public
      * @return cursor
      */
-    function get_all_companies() {
-        return $this->DBObject->readCursor("company_actions.get_all_companies", null);
+    function get_all_companies($i_search, $i_start_index, $i_end_index) {
+        $params = array(array("name" => ":i_search", "value" => &$i_search),
+            array("name" => ":i_start_index", "value" => &$i_start_index),
+            array("name" => ":i_end_index", "value" => &$i_end_index)
+        );
+        return $this->DBObject->readCursor("company_actions.get_all_companies(:i_search,:i_start_index,:i_end_index)", $params);
     }
-    
+
     /**
      * update_company
      * 
@@ -100,7 +104,7 @@ class Company_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
-    
+
     /**
      * get_company_byID
      * 
@@ -114,7 +118,7 @@ class Company_model extends CI_Model {
         $params[0] = array('name' => ':company_id', 'value' => &$data['company_id']);
         return $this->DBObject->readCursor("company_actions.get_company_byID(:company_id)", $params);
     }
-    
+
     /**
      * delete_company
      * 
@@ -138,6 +142,21 @@ class Company_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
+
+    function get_companies_count($searchKey) {
+        $params = array(
+            array('name' => ':i_seach', 'value' => &$searchKey),
+            array('name' => ':res', 'value' => &$result)
+        );
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := company_actions.get_companies_count(:i_seach); end;");
+        foreach ($params as $variable) {
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
+        }
+        oci_execute($stmt);
+        return $result;
+    }
+
 }
 
 /* End of file company_model.php */

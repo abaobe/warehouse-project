@@ -78,7 +78,7 @@
                                         <span id="message"></span>
                                     </div>
                                     <!-- End Alert Message -->
-                                    <table class="table table-striped table-bordered" id="sample_1">
+                                    <table class="table table-striped table-bordered">
                                         <thead>
                                             <tr>
                                                 <th style="width:8px;"></th>
@@ -96,6 +96,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            
                                             <?php foreach ($products as $value) { ?>
                                                 <tr class="odd gradeX">
                                                     <td>
@@ -135,14 +136,13 @@
                                             <?php } ?>
                                         </tbody>
                                     </table>
+                                    <div class="pagination text-center"><?php echo $links; ?></div>
                                 </div>
                             </div>
                             <!-- END EXAMPLE TABLE widget-->
                         </div>
                     </div>
-
                     <!-- END ADVANCED TABLE widget-->
-
                     <!-- END PAGE CONTENT-->
                 </div>
                 <!-- END PAGE CONTAINER-->

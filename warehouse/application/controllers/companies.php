@@ -108,11 +108,54 @@ class Companies extends CI_Controller {
      */
     public function manage_companies() {
         if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) {
-            $result['companies'] = $this->company_model->get_all_companies();
-            $this->load->view('webpages/manage_companies', $result);
+            $this->load->view('webpages/manage_companies');
         } else {
             $this->load->view('webpages/404');
         }
+    }
+
+    function get_all_companies() {
+        $searchKey = $this->checkSearchKey(isset($_POST['sSearch']) ? $_POST['sSearch'] : '');
+        $records_number = $this->company_model->get_companies_count($searchKey);
+        $result['aaData'] = $this->company_model->get_all_companies($searchKey, $_POST['iDisplayStart'], $_POST['iDisplayLength']);
+        $row = array();
+        foreach ($result['aaData'] as $value) {
+            $options = '';
+            $record = array();
+            $record[] = $value['RNUM'];
+            $record[] = $value['COMPANY_NAME'];
+            $record[] = $value['LICENSE_NUMBER'];
+            $record[] = $value['TELEPHONE'];
+            $record[] = $value['MOBILE'];
+            $record[] = $value['FAX_NUMBER'];
+            $record[] = $value['ADDRESS'];
+            if (USER_ROLE == ROLE_ONE) {
+                $options .= '<a href=update_company/' . $value['COMPANY_ID'] . ' class="btn mini purple"><i class="icon-edit"></i> تعديل</a> ';
+                $options .= '<a href="#" onclick="delete_company('.$value['COMPANY_ID'].'?>,this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a>';
+            }
+            $record[] = $options;
+            array_push($row, $record);
+        }
+        $output = $this->createOutput(intval($_POST['sEcho']), $records_number, $row);
+        echo json_encode($output);
+    }
+
+    function checkSearchKey($searchKey = '') {
+        if ($searchKey != '') {
+            return $seachKey = $searchKey;
+        } else {
+            return $seachKey = '';
+        }
+    }
+
+    function createOutput($sEcho, $records_number, $aaData = array()) {
+        $output = array(
+            "sEcho" => $sEcho,
+            "iTotalRecords" => $records_number,
+            "iTotalDisplayRecords" => $records_number,
+            "aaData" => $aaData
+        );
+        return $output;
     }
 
     /**

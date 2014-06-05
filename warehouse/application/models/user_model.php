@@ -84,9 +84,13 @@ class User_model extends CI_Model {
         return $result;
     }
 
-    function get_users($fields) {
-        $params[0] = array('name' => ':fields', 'value' => &$fields);
-        return $this->DBObject->readCursor("user_actions.get_users(:fields)", $params);
+    function get_users($i_search,$i_start_index,$i_end_index,$fields) {
+        $params = array(array("name" => ":i_search", "value" => &$i_search),
+            array("name" => ":i_start_index", "value" => &$i_start_index),
+            array("name" => ":i_end_index", "value" => &$i_end_index),
+            array("name" => ":fields", "value" => &$fields)
+        );
+        return $this->DBObject->readCursor("user_actions.get_users(:i_search,:i_start_index,:i_end_index,:fields)", $params);
     }
 
     function get_user_byID($user_id) {
@@ -108,9 +112,23 @@ class User_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
-    
-    function users_statistics(){
+
+    function users_statistics() {
         return $this->DBObject->readCursor("user_actions.users_statistics", null);
+    }
+
+    function get_users_count($searchKey) {
+        $params = array(
+            array('name' => ':i_seach', 'value' => &$searchKey),
+            array('name' => ':res', 'value' => &$result)
+        );
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := user_actions.get_users_count(:i_seach); end;");
+        foreach ($params as $variable) {
+            oci_bind_by_name($stmt, $variable["name"], $variable["value"]);
+        }
+        oci_execute($stmt);
+        return $result;
     }
 
 }

@@ -80,10 +80,29 @@ class Product extends CI_Controller {
      * @access public
      * @return load view
      */
+//    public function show_all_products() {
+//        if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) {
+//            $this->load->view('webpages/show_all_products');
+//        } else {
+//            $this->load->view('webpages/404');
+//        }
+//    }
+
+
     public function show_all_products() {
         if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) {
-            $result['products'] = $this->product_model->get_all_products();
-            $this->load->view('webpages/show_all_products', $result);
+            $config = array();
+            $config["base_url"] = base_url() . "product/show_all_products";
+            $config["total_rows"] = $this->product_model->get_products_count('');//param search
+            $config["per_page"] = 10;
+            $config["uri_segment"] = 3;
+            $this->pagination->initialize($config);
+
+            $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+            $data["products"] = $this->product_model->get_all_products('', $page, $config["per_page"]);
+            $data["links"] = $this->pagination->create_links();
+
+            $this->load->view('webpages/show_all_products',$data);
         } else {
             $this->load->view('webpages/404');
         }
@@ -1128,7 +1147,7 @@ class Product extends CI_Controller {
             $this->load->view('webpages/404');
         }
     }
-    
+
     public function manage_temp_output() {
         if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) {
             $result['products'] = $this->product_model->get_temporary_output();
@@ -1149,7 +1168,7 @@ class Product extends CI_Controller {
                 echo json_encode(array('status' => false, 'msg' => 'هناك خطأ في البيانات المدخلة'));
         }
     }
-    
+
     /**
      * getNotification 
      * 
