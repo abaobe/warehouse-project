@@ -54,11 +54,53 @@ class categories extends CI_Controller {
      */
     public function manage_categories() {
         if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) {
-            $result['categories'] = $this->category_model->get_all_categories();
-            $this->load->view('webpages/manage_categories', $result);
+            $this->load->view('webpages/manage_categories');
         } else {
             $this->load->view('webpages/404');
         }
+    }
+    
+    function get_all_categories() {
+        $searchKey = $this->checkSearchKey(isset($_POST['sSearch']) ? $_POST['sSearch'] : '');
+        $records_number = $this->category_model->get_categories_count($searchKey);
+        $result['aaData'] = $this->category_model->get_all_categories($searchKey, $_POST['iDisplayStart'], $_POST['iDisplayLength']);
+        $row = array();
+        foreach ($result['aaData'] as $value) {
+            $options = '';
+            $record = array();
+            $record[] = $value['RNUM'];
+            $record[] = $value['CATEGORY_NAME'];
+            $record[] = $value['PARENT_NAME'];
+            $record[] = $value['CATEGORY_DESCRIPTION'];
+            $record[] = $value['CATEGORY_ID'];
+            $record[] = $value['PRODUCTS_NUMBER'];
+            if (USER_ROLE == ROLE_ONE) {
+                $options .= '<a href=update_category/' . $value['CATEGORY_ID'].' class="btn mini purple"><i class="icon-edit"></i> تعديل</a> ';
+                $options .= '<a href="#" onclick="delete_category('.$value['CATEGORY_ID'].',this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a>';
+            }
+            $record[] = $options;
+            array_push($row, $record);
+        }
+        $output = $this->createOutput(intval($_POST['sEcho']), $records_number, $row);
+        echo json_encode($output);
+    }
+
+    function checkSearchKey($searchKey = '') {
+        if ($searchKey != '') {
+            return $seachKey = $searchKey;
+        } else {
+            return $seachKey = '';
+        }
+    }
+
+    function createOutput($sEcho, $records_number, $aaData = array()) {
+        $output = array(
+            "sEcho" => $sEcho,
+            "iTotalRecords" => $records_number,
+            "iTotalDisplayRecords" => $records_number,
+            "aaData" => $aaData
+        );
+        return $output;
     }
 
     /**

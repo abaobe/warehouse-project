@@ -79,7 +79,7 @@
                                         <span id="message"></span>
                                     </div>
                                     <!-- End Alert Message -->
-                                    <table class="table table-striped table-bordered" id="sample_1">
+                                    <table class="table table-striped table-bordered" id="departments">
                                         <thead>
                                             <tr>
                                                 <th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
@@ -91,34 +91,10 @@
                                                 <th class="hidden-phone">الهاتف المحمول</th>
                                                 <th class="hidden-phone">رقم الفاكس</th>
                                                 <th class="hidden-phone">ملاحظات</th>
-                                                <th class="hidden-phone">قائـمة المهام</th>
+                                                <th class="hidden-phone span3">قائـمة المهام</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($departments as $value) { ?>
-                                                <tr class="odd gradeX">
-                                                    <td><input type="checkbox" class="checkboxes" value="1" /></td>
-                                                    <td><?= $value['ROOT_NAME'] ?></td>
-                                                    <td><?= $value['DOWN1_NAME'] ?></td>
-                                                    <td>
-                                                        <a href="#" onclick="show_user(<?= $value['USER_ID']?>);" data-reveal-id="myModal"><?= $value['FIRST_NAME'].' '.$value['MIDDLE_NAME'].' '.$value['LAST_NAME'] ?></a>
-                                                    </td>
-                                                    <td>
-                                                        <?php if($value['DOWN1_ADDRESS'] != NULL) echo $value['DOWN1_ADDRESS'];?>
-                                                        <?php if($value['ROOT_ADDRESS'] != NULL) echo $value['ROOT_ADDRESS'];?>
-                                                    </td>
-                                                    <td><?= $value['MOBILE'] ?></td>
-                                                    <td><?= $value['PHONE'] ?></td>
-                                                    <td><?= $value['FAX'] ?></td>
-                                                    <td><?= $value['NOTES'] ?></td>
-                                                    <td>
-                                                        <?php if(USER_ROLE == ROLE_ONE) {?>
-                                                        <a href='<?php echo base_url() . "departments/update_department/" . $value['DOWN1_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i>  تعديل</a>
-                                                        <a href="#" onclick="delete_department(<?= $value['DOWN1_ID'] ?>,this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
-                                                        <?php }?>
-                                                    </td>
-                                                </tr>
-                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -164,6 +140,29 @@
                 // initiate layout and plugins
                 App.init();
             });
+            
+            var oTable = $('#departments').dataTable({
+                    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+                    "sPaginationType": "bootstrap",
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "sAjaxSource": '<?php echo base_url(); ?>departments/get_all_departments/',
+                    "iDisplayStart ": 10,
+                    "oLanguage": {
+                        "sProcessing": "<img src='<?php echo base_url(); ?>resource/ajax-loader_dark.gif'>"
+                    },
+                    'fnServerData': function(sSource, aoData, fnCallback)
+                    {
+                        $.ajax
+                        ({
+                            'dataType': 'json',
+                            'type': 'POST',
+                            'url': sSource,
+                            'data': aoData,
+                            'success': fnCallback
+                        });
+                    },"bSort": false
+                });
             
             function show_user(user_id) {
                 $.ajax({

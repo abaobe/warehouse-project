@@ -78,37 +78,20 @@
                                         <span id="message"></span>
                                     </div>
                                     <!-- End Alert Message -->
-                                    <table class="table table-striped table-bordered" id="sample_1">
+                                    <table class="table table-striped table-bordered" id="companies">
                                         <thead>
                                             <tr>
-                                                <th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
+                                                <th style="width:8px;"></th>
                                                 <th class="hidden-phone">إسم الشركة</th>
                                                 <th class="hidden-phone">رقم الترخيص</th>
                                                 <th class="hidden-phone">رقـم الهاتف</th>
                                                 <th class="hidden-phone">رقـم الجوال</th>
                                                 <th class="hidden-phone">رقـم الفاكس</th>
                                                 <th class="hidden-phone">العنوان</th>
-                                                <th class="hidden-phone">قائـمة المهام</th>
+                                                <th class="hidden-phone span3">قائـمة المهام</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($companies as $value) { ?>
-                                                <tr class="odd gradeX">
-                                                    <td><input type="checkbox" class="checkboxes" value="1" /></td>
-                                                    <td><?= $value['COMPANY_NAME'] ?></td>
-                                                    <td><?= $value['LICENSE_NUMBER'] ?></td>
-                                                    <td><?= $value['TELEPHONE'] ?></td>
-                                                    <td><?= $value['MOBILE'] ?></td>
-                                                    <td><?= $value['FAX_NUMBER'] ?></td>
-                                                    <td><?= $value['ADDRESS'] ?></td>
-                                                    <td>
-                                                        <?php if(USER_ROLE == ROLE_ONE) {?>
-                                                        <a href='<?php echo base_url() . "companies/update_company/" . $value['COMPANY_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
-                                                        <a href="#" onclick="delete_company(<?= $value['COMPANY_ID'] ?>,this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
-                                                        <?php }?>
-                                                    </td>
-                                                </tr>
-                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -147,6 +130,30 @@
                 // initiate layout and plugins
                 App.init();
             });
+            
+            var oTable = $('#companies').dataTable({
+                    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+                    "sPaginationType": "bootstrap",
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "sAjaxSource": '<?php echo base_url(); ?>companies/get_all_companies',
+                    "iDisplayStart ": 10,
+                    "oLanguage": {
+                        "sProcessing": "<img src='<?php echo base_url(); ?>resource/ajax-loader_dark.gif'>"
+                    },
+                    'fnServerData': function(sSource, aoData, fnCallback)
+                    {
+                        $.ajax
+                        ({
+                            'dataType': 'json',
+                            'type': 'POST',
+                            'url': sSource,
+                            'data': aoData,
+                            'success': fnCallback
+                        });
+                    },"bSort": false
+
+                });
 
             function delete_company(company_id,current) {
                 $.confirm({

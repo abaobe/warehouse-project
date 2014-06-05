@@ -78,7 +78,7 @@
                                         <span id="message"></span>
                                     </div>
                                     <!-- End Alert Message -->
-                                    <table class="table table-striped table-bordered" id="sample_1">
+                                    <table class="table table-striped table-bordered" id="categories">
                                         <thead>
                                             <tr>
                                                 <th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
@@ -91,22 +91,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($categories as $value) { ?>
-                                                <tr class="odd gradeX">
-                                                    <td><input type="checkbox" class="checkboxes" value="1" /></td>
-                                                    <td><?= $value['CATEGORY_NAME'] ?></td>
-                                                    <td><?= $value['PARENT_NAME'] ?></td>
-                                                    <td><?= $value['CATEGORY_DESCRIPTION'] ?></td>
-                                                    <td></td>
-                                                    <td><?= $value['PRODUCTS_NUMBER'] ?></td>
-                                                    <td>
-                                                        <?php if(USER_ROLE == ROLE_ONE) {?>
-                                                        <a href='<?php echo base_url() . "categories/update_category/" . $value['CATEGORY_ID']; ?>' class="btn mini purple"><i class="icon-edit"></i> تعديل</a>
-                                                        <a href="#" onclick="delete_category(<?= $value['CATEGORY_ID'] ?>,this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a>
-                                                        <?php }?>
-                                                    </td>
-                                                </tr>
-                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -147,6 +131,29 @@
                 // initiate layout and plugins
                 App.init();
             });
+            
+            var oTable = $('#categories').dataTable({
+                    "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+                    "sPaginationType": "bootstrap",
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "sAjaxSource": '<?php echo base_url(); ?>categories/get_all_categories/',
+                    "iDisplayStart ": 10,
+                    "oLanguage": {
+                        "sProcessing": "<img src='<?php echo base_url(); ?>resource/ajax-loader_dark.gif'>"
+                    },
+                    'fnServerData': function(sSource, aoData, fnCallback)
+                    {
+                        $.ajax
+                        ({
+                            'dataType': 'json',
+                            'type': 'POST',
+                            'url': sSource,
+                            'data': aoData,
+                            'success': fnCallback
+                        });
+                    },"bSort": false
+                });
 
             function delete_category(category_id,current) {
                 $.confirm({

@@ -56,11 +56,60 @@ class Departments extends CI_Controller {
      */
     public function manage_departments() {
         if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) {
-            $result['departments'] = $this->department_model->get_all_departments();
-            $this->load->view('webpages/manage_departments', $result);
+            $this->load->view('webpages/manage_departments');
         } else {
             $this->load->view('webpages/404');
         }
+    }
+
+    function get_all_departments() {
+        $searchKey = $this->checkSearchKey(isset($_POST['sSearch']) ? $_POST['sSearch'] : '');
+        $records_number = $this->department_model->get_departments_count($searchKey);
+        $result['aaData'] = $this->department_model->get_all_departments($searchKey, $_POST['iDisplayStart'], $_POST['iDisplayLength']);
+        $row = array();
+        foreach ($result['aaData'] as $value) {
+            $options = '';
+            $record = array();
+            $record[] = $value['RNUM'];
+            $record[] = $value['ROOT_NAME'];
+            $record[] = $value['DOWN1_NAME'];
+            $record[] = '<a href="#" onclick="show_user(' . $value['USER_ID'] . ');" data-reveal-id="myModal">' . $value['FIRST_NAME'] . ' ' . $value['MIDDLE_NAME'] . ' ' . $value['LAST_NAME'] . '</a>';
+            if ($value['DOWN1_ADDRESS'] != NULL)
+                $record[] = $value['DOWN1_ADDRESS'];
+            else if ($value['ROOT_ADDRESS'] != NULL)
+                $record[] = $value['ROOT_ADDRESS'];
+
+            $record[] = $value['MOBILE'];
+            $record[] = $value['PHONE'];
+            $record[] = $value['FAX'];
+            $record[] = substr($value['NOTES'], 0,20).'...';
+            if (USER_ROLE == ROLE_ONE) {
+                $options .= '<a href=departments/update_department/' . $value['DOWN1_ID'] . ' class="btn mini purple"><i class="icon-edit"></i>  تعديل</a> ';
+                $options .= '<a href="#" onclick="delete_department(' . $value['DOWN1_ID'] . ',this);return false;"  class="btn mini purple"><i class="icon-trash"></i> حـذف</a>';
+            }
+            $record[] = $options;
+            array_push($row, $record);
+        }
+        $output = $this->createOutput(intval($_POST['sEcho']), $records_number, $row);
+        echo json_encode($output);
+    }
+
+    function checkSearchKey($searchKey = '') {
+        if ($searchKey != '') {
+            return $seachKey = $searchKey;
+        } else {
+            return $seachKey = '';
+        }
+    }
+
+    function createOutput($sEcho, $records_number, $aaData = array()) {
+        $output = array(
+            "sEcho" => $sEcho,
+            "iTotalRecords" => $records_number,
+            "iTotalDisplayRecords" => $records_number,
+            "aaData" => $aaData
+        );
+        return $output;
     }
 
     /**
