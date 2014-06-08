@@ -1,0 +1,74 @@
+#footer
+{
+    clear: both;
+    border-top: 1px groove #aaaaaa;
+    //background: blue;
+    //color: White;
+    padding:0;
+    text-align: center;
+    vertical-align: middle;
+    //line-height: normal;
+    margin: 0;
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+}
+
+#note
+{
+    //clear: both;
+    //border: 1px groove #aaaaaa;
+    //background: blue;
+    //color: White;
+    //padding-right: 30px;
+    //text-align: center;
+    //vertical-align: middle;
+   // line-height: normal;
+    margin-right:20px;
+    position: absolute;
+    bottom: 100px;
+    width: 100%;
+}
+/*.header{
+	border:1px solid blue;
+	margin:15px;
+
+}*/
+.wrapper{
+border:1px solid green;
+width:100%;
+height:29.7cm;
+}
+
+.row{
+	
+	margin:15 15px;
+	padding:0;
+
+}
+.header{
+	
+	margin:0 15px;
+	padding:0;
+
+}
+
+
+
+
+
+table
+{
+border-collapse:collapse;
+}
+table, td, th
+{
+border:1px solid black;
+}
+
+.bordered_row{
+    
+	margin:15 15px;
+	padding:0;
+        border:1px solid;
+}

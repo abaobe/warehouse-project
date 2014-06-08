@@ -85,6 +85,7 @@
                                             <input type="text" id="way_1" class="span6 " />
                                             <button id="more" class="btn btn-info"><i class="icon-plus icon-white"></i> مزيد</button>
                                             <button id="accept" onclick="accept_damage()" class="btn btn-success"><i class="icon-ok"></i> إعتماد</button>
+                                            <button type="button" class="btn btn-success" onclick="print_()">طباعة</button>
                                         </div>
                                         <br/>
                                     </div>
@@ -161,6 +162,39 @@
                 // initiate layout and plugins
                 App.init();
             });
+            
+            function print_() {
+                var monitor_ways = new Array();
+                for (var i = 1; i < count; i++) {
+                    if ($("#way_" + i).val() != null || $("#sub_" + i).val() != '')
+                        monitor_ways[i]= $("#way_" + i).val();
+                }
+//                var newArray= new Array();
+//                for (var i = 0; i < info.length; i++) {
+//                  if (info[i] !== undefined && info[i] !== null && info[i] !== "") {
+//                    newArray.push(info[i]);
+//                  }
+//                }
+                if(vouchers.length !== 0){
+                    $.ajax({
+                        url: '<?php echo base_url() . "reports/corrupted/"; ?>',
+                        data: {
+                            vouchers: JSON.stringify(vouchers),
+                            monitor_ways: JSON.stringify(monitor_ways)
+                        },
+                        success: function(data) {
+                            alert(data );
+                            //$('#modal').html(data);
+                            //$('#hide_header').hide();
+                        }
+                    });
+                }else{
+                    $('#status').removeClass().addClass('alert alert-info');
+                    $('#message').text("عذرا لم تقم بتحديد أي صنف");
+                    App.scrollTo();
+                }
+                
+            }
 
             $('#more').click(function() {
                 var new_way = '<div class="control-group"><div class="controls"><input type="text" class="span6" id="way_' + count + '"/></div></div>';

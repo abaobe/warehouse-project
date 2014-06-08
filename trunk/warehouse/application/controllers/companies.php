@@ -237,7 +237,7 @@ class Companies extends CI_Controller {
             }
         }
     }
-
+    
 }
 
 //End of File

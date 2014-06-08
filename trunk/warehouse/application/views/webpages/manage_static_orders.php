@@ -82,7 +82,7 @@
                                             <span id="message"></span>
                                         </div>
                                         <!-- End Alert Message -->
-                                    <table class="table table-striped table-bordered" id="sample_1">
+                                    <table class="table table-striped table-bordered" id="sample_1" order_number='<?= $order_number ?>'>
                                         <thead>
                                             <tr>
                                                 <th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
@@ -136,6 +136,7 @@
                                     <div class="form-actions">
                                         <div class='span6'></div>
                                         <button type="button" class="btn btn-success" onclick="supply_order()">إعتماد نهائي</button>
+                                        <button type="button" class="btn btn-success" onclick="print_()">طباعة</button>
                                         <button type="reset" id="reset" class="btn">إلغاء</button>
                                     </div>
                                 </div>
@@ -200,12 +201,42 @@
                 App.init();
             });
             
+            function print_() {
+                var newArray= new Array();
+                for (var i = 0; i < info.length; i++) {
+                  if (info[i] !== undefined && info[i] !== null && info[i] !== "") {
+                    newArray.push(info[i]);
+                  }
+                }
+                if(newArray.length !== 0){
+                    $.ajax({
+                        url: '<?php echo base_url() . "reports/borrow/"; ?>',
+                        data: {
+                            borrows: JSON.stringify(newArray)
+                        },
+                        success: function(data) {
+                            //alert(data );
+                            //$('#modal').html(data);
+                            //$('#hide_header').hide();
+                        }
+                    });
+                }else{
+                    $('#status').removeClass().addClass('alert alert-info');
+                    $('#message').text("عذرا لم تقم بصرف أي صنف");
+                    App.scrollTo();
+                }
+                
+            }
+            
             function addToCart(current){
                 var d = new Array();
                 d[0] = $(currentProduct).parents('tr').attr('orderID');
                 d[1] = $(current).parents('tr').children().find($('td #notes')).val();
                 d[2] = $(current).parents('tr').children().find($('td #return_date')).val();
                 d[3] = $(current).parents('tr').attr('voucherID');
+                d[4] = $('#sample_1').attr('order_number');
+                d[5] = $(current).parents('tr').attr('product_status');
+                d[6] = $(current).parents('tr').attr('serial_number');
                 info[index] = d;
                 ++index;
                 $(current).parent().empty().append('<button class="btn btn-danger" onclick="undo(this)"><i class="icon-remove"></i></button>');

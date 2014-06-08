@@ -113,7 +113,7 @@
                                                             <a class="btn mini purple" onclick="borrowing_info(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-eye-open"></i> عـرض</a>
                                                             <button class="btn mini purple" onclick="return_borrow(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-envelope-alt"></i> رسالة</button>
                                                         <?php } else if ($value['ORDER_STATUS'] == 'inactive') { ?>
-                                                            <a class="btn mini purple" onclick="accept(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-ok"></i> تأكيد الإستلام</a>
+                                                            <a class="btn mini purple" onclick="accept(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>" depart_name="<?= $value['DEPARTMENT_NAME'] ?>" main_depart="<?= $value['MAIN_DEPARTMENT'] ?>"><i class="icon-ok"></i> تأكيد الإستلام</a>
                                                             <a class="btn mini purple" onclick="borrowing_info(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-eye-open"></i> عـرض</a>
                                                             <button class="btn mini purple" onclick="extend_date(this)" voucher_id="<?= $value['VOUCHER_ID'] ?>"><i class="icon-retweet"></i> تمديد الوقت</button>
                                                         <?php }
@@ -194,6 +194,23 @@
                 App.init();
             });
             
+            function print_() {
+                $.ajax({
+                    url: '<?php echo base_url() . "reports/back/"; ?>',
+                    data: {
+                        product_status: $('#product_status').val(),
+                        voucher_id: $(parent).attr('voucher_id'),
+                        department_name: $(parent).attr('depart_name'),
+                        main_department: $(parent).attr('main_depart')
+                    },
+                    success: function(data) {
+                        alert(data );
+                        //$('#modal').html(data);
+                        //$('#hide_header').hide();
+                    }
+                });
+             }
+            
             $('.date-picker').datepicker({
                 format: "yyyy/mm/dd"
             });
@@ -214,6 +231,7 @@
                 '<div class="control-group">'+
                     '<div class="controls">'+
                     '<button type="button" class="btn btn-success" onclick="changeProductStatus()">حـفظ</button>'+
+                    '<button onclick="print_()" class="btn btn-success" ><i class="icon-edit"></i>طباعة المستند</button>'+
                     '</div>'+
                 '</div>';
                 $('#orderInfo').html(fields);

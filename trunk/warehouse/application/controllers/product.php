@@ -1192,7 +1192,48 @@ class Product extends CI_Controller {
             echo json_encode($result['NotificationsNumber']);
         }
     }
-
+    
+    public function show_vouchers_output() {
+        if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) {
+            $result['vouchers'] = $this->product_model->get_vouchers_output();
+            for ($index = 0; $index < count($result['vouchers']); $index++) {
+                $result['vouchers'][$index]['OUTPUT_DATE']=  $this->product_model->get_output_date($result['vouchers'][$index]['ORDER_NUMBER']);
+            } 
+            $this->load->view('webpages/show_vouchers_output', $result);
+        } else {
+            $this->load->view('webpages/404');
+        }
+    }
+    
+    public function show_vouchers_borrowing() {
+        if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) {
+            $result['vouchers'] = $this->product_model->get_vouchers_borrowing();
+            for ($index = 0; $index < count($result['vouchers']); $index++) {
+                $result['vouchers'][$index]['OUTPUT_DATE']=  $this->product_model->get_output_date($result['vouchers'][$index]['ORDER_NUMBER']);
+            } 
+            $this->load->view('webpages/show_vouchers_borrowing', $result);
+        } else {
+            $this->load->view('webpages/404');
+        }
+    }
+    
+    public function show_vouchers_backing() {
+        if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) {
+            $result['returns'] = $this->product_model->get_vouchers_backing();
+            $this->load->view('webpages/show_vouchers_backing', $result);
+        } else {
+            $this->load->view('webpages/404');
+        }
+    }
+    
+    public function show_vouchers_corrupted() {
+        if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) {
+            $result['products'] = $this->product_model->get_vouchers_corrupted();
+            $this->load->view('webpages/show_vouchers_corrupted', $result);
+        } else {
+            $this->load->view('webpages/404');
+        }
+    }
 }
 
 /* End of file product.php */

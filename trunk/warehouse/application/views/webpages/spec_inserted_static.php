@@ -15,7 +15,7 @@
     <tbody>
         <?php $i=0; foreach ($product_info as $value) {
                 ?>
-                <tr class="odd gradeX" index="<?=$i?>" voucherID="<?=$value['VOUCHER_ID']?>">
+                <tr class="odd gradeX" index="<?=$i?>" voucherID="<?=$value['VOUCHER_ID']?>" serial_number="<?= $value['SERIAL_NUMBER'] ?>" product_status="<?= $value['PRODUCT_STATUS'] ?>">
                     <td class="hidden-phone"><?= $value['COMPANY_NAME'] ?></td>
                     <td class="hidden-phone"><?= $value['PRODUCT_NATURE'] ?></td>
                     <td class="hidden-phone"><?= $value['UNIT_PRICE'] ?></td>

@@ -81,7 +81,7 @@
                                             <span id="message"></span>
                                         </div>
                                      <!-- End Alert Message -->
-                                    <table class="table table-striped table-bordered" id="sample_1">
+                                    <table class="table table-striped table-bordered" id="sample_1" order_number='<?= $order_number ?>'>
                                         <thead>
                                             <tr>
                                                 <th style="width:8px;"><input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /></th>
@@ -97,7 +97,7 @@
                                         </thead>
                                         <tbody>
                                             <?php $i=1; foreach ($supplies as $value) { ?>
-                                                <tr class="odd gradeX" index='<?=$i?>' orderID='<?=$value['ORDER_ID']?>'>
+                                                <tr class="odd gradeX" index='<?=$i?>' orderID='<?=$value['ORDER_ID']?>' product_name='<?= $value['PRODUCT_NAME'] ?>'>
                                                     <td><input type="checkbox" class="checkboxes" value="1" /></td>
                                                     <td class="hidden-phone"><?= $value['PRODUCT_NAME'] ?></td>
                                                     <td class="hidden-phone">
@@ -119,7 +119,7 @@
                                                     <td class="hidden-phone"><?php echo $value['PRIMARY_UNIT_NAME'] ." ". $value['PRIMARY_UNIT_QUANTITY'] ?></td>
                                                     <td class="hidden-phone"><?= $value['NOTES'] ?></td>
                                                     <td class="hidden-phone">
-                                                        <select class="span4" id="unit_type" name="unit_type" data-placeholder="الوحدة" tabindex="1">
+                                                        <select class="span4" id="unit_type" name="unit_type" data-placeholder="الوحدة" tabindex="1" primary_unit='<?= $value['PRIMARY_UNIT_NAME'] ?>' secondary_unit='<?= $value['SECONDARY_UNIT_NAME'] ?>'>
                                                             <option selected value="primary"><?= $value['PRIMARY_UNIT_NAME'] ?></option>
                                                             <option value="secondary" disabled="disabled"><?= $value['SECONDARY_UNIT_NAME'] ?></option>
                                                         </select>
@@ -136,6 +136,7 @@
                                     <div class="form-actions">
                                         <div class='span6'></div>
                                         <button type="button" class="btn btn-success" onclick="supply_order()">إعتماد نهائي</button>
+                                        <button type="button" class="btn btn-success" onclick="print_()">طباعة</button>
                                         <button type="reset" id="reset" class="btn">إلغاء</button>
                                     </div>
                                 </div>
@@ -175,6 +176,34 @@
                 // initiate layout and plugins
                 App.init();
             });
+            
+            function print_() {
+                var newArray= new Array();
+                for (var i = 1; i < info.length; i++) {
+                  if (info[i] !== undefined && info[i] !== null && info[i] !== "") {
+                    newArray.push(info[i]);
+                  }
+                }
+                if(newArray.length !== 0){
+                    $.ajax({
+                        url: '<?php echo base_url() . "reports/output/"; ?>',
+                        data: {
+                            disbursed: JSON.stringify(newArray)
+                        },
+                        success: function(data) {
+                            //alert(data );
+                            //$('#modal').html(data);
+                            //$('#hide_header').hide();
+                        }
+                    });
+                }else{
+                    $('#status').removeClass().addClass('alert alert-info');
+                    $('#message').text("عذرا لم تقم بصرف أي صنف");
+                    App.scrollTo();
+                }
+                
+            }
+            
             var inc= 1;
             function addToCart(current){
                 var d = new Array();
@@ -183,6 +212,13 @@
                 d[2] = $(current).parents('tr').children().find($('td #unit_type')).val();
                 d[3] = $(current).parents('tr').children().find($('td #notes')).val();
                 d[4] = inc;
+                d[5] = $('#sample_1').attr('order_number');
+                d[6] = $(current).parents('tr').attr('product_name');
+                if ($(current).parents('tr').children().find($('td #unit_type')).val()=='primary') {
+                    d[7] = $(current).parents('tr').children().find($('td #unit_type')).attr('primary_unit');
+                }else{
+                    d[7] = $(current).parents('tr').children().find($('td #unit_type')).attr('secondary_unit');
+                }
                 info[index] = d;
                 ++index;
                 ++inc;
