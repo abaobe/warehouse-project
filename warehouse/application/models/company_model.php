@@ -157,6 +157,18 @@ class Company_model extends CI_Model {
         return $result;
     }
 
-}
+    function get_companyName_by_id($company_id) {
+        
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "BEGIN :v_Return := company_actions.get_companyName_by_id(:comp_id); END;");
+        oci_bind_by_name($stmt, ':comp_id', $company_id);
+        oci_bind_by_name($stmt, ':v_Return', $result, 32);
 
+        if (!oci_execute($stmt)) {
+            return oci_error($stmt);
+        }
+        return $result;
+    }
+    
+}
 /* End of file company_model.php */

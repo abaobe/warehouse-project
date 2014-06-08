@@ -153,15 +153,20 @@
                 </ul>
             </li>
         <?php } ?>
-        <li class="has-sub">
-            <a href="javascript:;" class="">
-                <span class="icon-box"><i class="icon-file-alt"></i></span> قسم التقارير
-                <span class="arrow"></span>
-            </a>
-            <ul class="sub">
-
-            </ul>
-        </li>
+        <?php if (USER_ROLE == ROLE_ONE || USER_ROLE == ROLE_TWO) { ?>
+            <li class="has-sub">
+                <a href="javascript:;" class="">
+                    <span class="icon-box"><i class="icon-file-alt"></i></span> قسم التقارير
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li><a class='' href="<?php echo base_url() . 'product/show_vouchers_borrowing'?>">مستنـــد إعـــارة</a></li>
+                    <li><a class='' href="<?php echo base_url() . 'product/show_vouchers_backing'?>">مستنـــد إرجاع</a></li>
+                    <li><a class='' href="<?php echo base_url() . 'product/show_vouchers_output'?>">مستند إخراج اللوازم</a></li>
+                    <li><a class='' href="<?php echo base_url() . 'product/show_vouchers_corrupted'?>">محضر ضبط واتلاف لوازم</a></li>
+                </ul>
+            </li>
+        <?php }?>
         <?php if (USER_ROLE == ROLE_ONE) { ?>
             <li class="has-sub">
                 <a href="javascript:;" class="">

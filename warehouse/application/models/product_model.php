@@ -67,18 +67,18 @@ class Product_model extends CI_Model {
      * @access public
      * @return cursor
      */
-    function get_all_products($i_search, $i_start_index,$i_end_index) {
+    function get_all_products($i_search, $i_start_index, $i_end_index) {
         try {
             $params = array(array("name" => ":i_search", "value" => &$i_search),
                 array("name" => ":i_start_index", "value" => &$i_start_index),
                 array("name" => ":i_end_index", "value" => &$i_end_index)
-             );
+            );
             return $this->DBObject->readCursor("product_actions.get_all_products(:i_search,:i_start_index,:i_end_index)", $params);
         } catch (Exception $ex) {
             return $ex;
         }
     }
-    
+
     /**
      * get_static_products
      * 
@@ -353,8 +353,8 @@ class Product_model extends CI_Model {
             return ">>" . $ex;
         }
     }
-    
-    function delete_many_inserted_products($vouchers_ids){
+
+    function delete_many_inserted_products($vouchers_ids) {
         $params = array(array('name' => ':vouchers_ids', 'value' => &$vouchers_ids),
             array('name' => ':res', 'value' => &$result));
         $conn = $this->db->conn_id;
@@ -728,8 +728,8 @@ class Product_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
-    
-    function get_temporary_output(){
+
+    function get_temporary_output() {
         return $this->DBObject->readCursor("product_actions.get_temporary_output", null);
     }
 
@@ -745,7 +745,7 @@ class Product_model extends CI_Model {
     function get_temp_products() {
         return $this->DBObject->readCursor("product_actions.get_temp_products", null);
     }
-    
+
     function acceptOutputProduct($data) {
         $params = array(
             array('name' => ':product_status', 'value' => &$data['product_status']),
@@ -835,8 +835,8 @@ class Product_model extends CI_Model {
     function getProductsTopOrdered() {
         return $this->DBObject->readCursor("product_actions.getProductsTopOrdered", null);
     }
-    
-    function get_products_count($searchKey= ''){
+
+    function get_products_count($searchKey = '') {
         $params = array(
             array('name' => ':i_seach', 'value' => &$searchKey),
             array('name' => ':res', 'value' => &$result)
@@ -849,6 +849,88 @@ class Product_model extends CI_Model {
         oci_execute($stmt);
         return $result;
     }
+
+    function get_static_product_by_voucherId_borrowing($voucher_id) {
+        try {
+            $params[0] = array("name" => ":voucher_id", "value" => &$voucher_id);
+            return $this->DBObject->readCursor("product_actions.get_static_prod_ByVouchID_borr(:voucher_id)", $params);
+        } catch (Exception $ex) {
+            echo ">>" . ex;
+        }
+    }
+
+    //get_product_by_VoucherID(vouch_id IN Number)
+    function get_product_info_by_inserted_voucherId($voucher_id) {
+        try {
+            $params[0] = array("name" => ":voucher_id", "value" => &$voucher_id);
+            return $this->DBObject->readCursor("product_actions.get_product_by_VoucherID(:voucher_id)", $params);
+        } catch (Exception $ex) {
+            echo ">>" . ex;
+        }
+    }
+
+    function get_vouchers_output() {
+        return $this->DBObject->readCursor("product_actions.get_all_vouchers_output", null);
+    }
+
+    function get_output_date($order_number) {
+        $conn = $this->db->conn_id;
+        $stmt = oci_parse($conn, "begin :res := product_actions.get_output_date_by_order_num(:order_number); end;");
+        oci_bind_by_name($stmt, ':order_number', $order_number);
+        oci_bind_by_name($stmt, ':res', $result,20);
+        oci_execute($stmt);
+        return $result;
+    }
+    
+    
+    function get_voucher_output_by_order_number($order_number) {
+        try {
+            $params[0] = array("name" => ":order_number", "value" => &$order_number);
+            return $this->DBObject->readCursor("product_actions.get_voucher_output_by_orderNUM(:order_number)", $params);
+        } catch (Exception $ex) {
+            echo ">>" . ex;
+        }
+    }
+    
+    function get_vouchers_borrowing() {
+        return $this->DBObject->readCursor("product_actions.get_all_vouchers_borrowing", null);
+    }
+    
+    function get_voucher_borroing_by_order_number($order_number) {
+        try {
+            $params[0] = array("name" => ":order_number", "value" => &$order_number);
+            return $this->DBObject->readCursor("product_actions.get_borrwoing_by_orderNUM(:order_number)", $params);
+        } catch (Exception $ex) {
+            echo ">>" . ex;
+        }
+    }
+    
+    function get_vouchers_backing() {
+        return $this->DBObject->readCursor("product_actions.get_all_vouchres_backing", null);
+    }
+    
+    function get_voucher_backing_by_voudcher_id($voucher_id) {
+        try {
+            $params[0] = array("name" => ":voucher_id", "value" => &$voucher_id);
+            return $this->DBObject->readCursor("product_actions.get_backing_by_voucherID(:voucher_id)", $params);
+        } catch (Exception $ex) {
+            echo ">>" . ex;
+        }
+    }
+    
+    function get_vouchers_corrupted() {
+        return $this->DBObject->readCursor("product_actions.get_all_vouchers_corrupted", null);
+    }
+    
+    function get_voucher_corrupted_by_order_id($order_id) {
+        try {
+            $params[0] = array("name" => ":order_id", "value" => &$order_id);
+            return $this->DBObject->readCursor("product_actions.get_corrupted_by_order_id(:order_id)", $params);
+        } catch (Exception $ex) {
+            echo ">>" . ex;
+        }
+    }
+
 }
 
 /* End of file product_model.php */

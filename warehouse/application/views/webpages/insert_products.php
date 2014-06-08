@@ -84,6 +84,7 @@
                                         <div class="controls form-horizontal">
                                             <input readonly form="anyThing" type="text" id="insert_number" class="input-small" />
                                             <button type="button" class="btn btn-success" onclick="get_insert_number()">مستند إدخال جديد</button>
+                                            <button onclick="print_()" class="btn btn-success" ><i class="icon-edit"></i>طباعة المستند</button>
                                         </div>
                                     </div>
                                     <form method="POST" id="add_form" onsubmit="return false;" class="form-horizontal">
@@ -269,6 +270,21 @@
                 format: "yyyy/mm/dd"
             });
             
+            function print_() {
+                //get_products_added();
+                //get_services_added();
+                $.ajax({
+                    url: '<?php echo base_url() . "reports/insert_products/"; ?>',
+                    data: {
+                        insert_orders: JSON.stringify(get_products_added()),
+                        services: JSON.stringify(get_services_added())
+                    },
+                    success: function(data) {
+                        alert(data);
+                    }
+                });
+            }
+            
             function addnew_row(current){
                 var new_row = jQuery('<tr id=row'+count+'>'+
                 '<td><select style="width:100%;" id=product_id'+count+' onchange="product_unit_names(this)" class="chosen" data-placeholder="رقم الصنف - إسم الصنف" tabindex="1">'+
@@ -325,6 +341,7 @@
                         index++;
                     }
                 }
+                return data;
             }
             
             function remove_row(current){
@@ -406,6 +423,7 @@
                         SecIndex++;
                     }
                 }
+                return SecData;
             }
             
             function insert_service(){
